@@ -1,0 +1,4 @@
+build/
+*.so
+.lock-waf*
+__pycache__

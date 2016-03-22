@@ -1,0 +1,10 @@
+def build(bld):
+    bld.recurse('base')
+
+def test(ctx):
+    import unittest
+    loader = unittest.TestLoader()
+    tests = loader.discover('.')
+    runner = unittest.runner.TextTestRunner()
+    runner.run(tests)
+
