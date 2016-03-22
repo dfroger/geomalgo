@@ -1,8 +1,12 @@
-from .point cimport Point
+cdef struct CVector:
+    double x
+    double y
+    double z
+
+cdef CVector* new_vector()
+
+cdef void del_vector(CVector* cvector)
 
 cdef class Vector:
-
-    cdef public:
-        double x, y, z
-
-    cdef void from_points(self, Point A, Point B)
+    cdef:
+        CVector* cvector
