@@ -1,6 +1,6 @@
 cdef class Vector:
 
-    def __init__(self, x, y, z):
+    def __cinit__(self, double x, double y, double z):
         self.x = x
         self.y = y
         self.z = z
