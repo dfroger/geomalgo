@@ -7,6 +7,16 @@ cdef void del_vector(CVector* cvector):
     if cvector is not NULL:
         free(cvector)
 
+cdef void cross_product(CVector *c, CVector *a, CVector *b):
+    c.x = a.y*b.z - a.z*b.y
+    c.y = a.z*b.x - a.x*b.z
+    c.z = a.x*b.y - a.y*b.x
+
+cdef void subtract_vector(CVector *c, CVector *b, CVector *a):
+    c.x = b.x - a.x
+    c.y = b.y - a.y
+    c.z = b.z - a.z
+
 cdef class Vector:
 
     property x:
@@ -39,6 +49,18 @@ cdef class Vector:
         self.cvector.y = y
         self.cvector.z = z
 
+    def __mul__(Vector self, Vector other):
+        cdef:
+            Vector result = Vector.__new__(Vector)
+        cross_product(result.cvector, self.cvector, other.cvector)
+        return result
+
+    def __sub__(Vector self, Vector other):
+        cdef:
+            Vector result = Vector.__new__(Vector)
+        subtract_vector(result.cvector, self.cvector, other.cvector)
+        return result
+
     def __str__(self):
-        return "<Vector({},{})>".format(self.cvector.x, self.cvector.y,
+        return "<Vector({},{},{})>".format(self.cvector.x, self.cvector.y,
                                         self.cvector.z)

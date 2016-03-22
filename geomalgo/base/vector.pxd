@@ -7,6 +7,10 @@ cdef CVector* new_vector()
 
 cdef void del_vector(CVector* cvector)
 
+cdef void cross_product(CVector *c, CVector *a, CVector *b)
+
+cdef void subtract_vector(CVector *c, CVector *b, CVector *a)
+
 cdef class Vector:
     cdef:
         CVector* cvector
