@@ -11,6 +11,9 @@ cdef void del_point(CPoint* cpoint)
 
 cdef void subtract_points(CVector * u, const CPoint * B, const CPoint * A)
 
+cdef void point_plus_vector(CPoint* result, CPoint* start, double factor,
+                            CVector* vector)
+
 cdef class Point:
     cdef:
         CPoint* cpoint

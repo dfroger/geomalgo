@@ -12,6 +12,12 @@ cdef void subtract_points(CVector * u, const CPoint * B, const CPoint * A):
     u.y = B.y - A.y
     u.z = B.z - A.z
 
+cdef void point_plus_vector(CPoint* result, CPoint* start, double factor,
+                            CVector* vector):
+    result.x = start.x + factor*vector.x
+    result.y = start.y + factor*vector.y
+    result.z = start.z + factor*vector.z
+
 cdef class Point:
 
     property x:
