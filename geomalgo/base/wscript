@@ -3,6 +3,8 @@ import os
 def build(bld):
     cython_sources = [
         'point.pyx',
+        'segment.pyx',
+        'triangle.pyx',
         'vector.pyx',
     ]
 
