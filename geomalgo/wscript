@@ -1,6 +1,7 @@
 def build(bld):
     bld.recurse('base')
     bld.recurse('intersection')
+    #bld.recurse('work')
 
 def test(ctx):
     import unittest

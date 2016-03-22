@@ -11,4 +11,3 @@ def build(bld):
             source   = src,
             target   = os.path.splitext(src)[0]
         )
-

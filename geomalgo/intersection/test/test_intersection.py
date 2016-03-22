@@ -1,6 +1,7 @@
 import unittest
 
-from geomalgo import Point, intersec3d_triangle_segment
+from geomalgo import Point, Triangle, Segment, \
+                     intersec3d_triangle_segment
 
 class TestIntersection(unittest.TestCase):
 
@@ -10,14 +11,15 @@ class TestIntersection(unittest.TestCase):
         B = Point(1, 0, 0)
         C = Point(0, 1, 0)
 
-        #triangle = Triangle(A,B,C)
+        triangle = Triangle(A,B,C)
 
-        #S = Point(0.25, 0.25, -1)
-        #T = Point(0.25, 0.25,  1)
+        S = Point(0.25, 0.25, -1)
+        T = Point(0.25, 0.25,  1)
 
-        #segment = Segment(S,T)
+        segment = Segment(S,T)
     
-        #intersec3d_triangle_segment(triangle, segment)
+        res = intersec3d_triangle_segment(triangle, segment)
+        self.assertEqual(res, 2)
 
 if __name__ == '__main__':
     unittest.main()
