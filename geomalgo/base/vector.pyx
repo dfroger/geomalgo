@@ -17,6 +17,9 @@ cdef void subtract_vector(CVector *c, CVector *b, CVector *a):
     c.y = b.y - a.y
     c.z = b.z - a.z
 
+cdef double dot_product(CVector *a, CVector *b):
+    return a.x*b.x + a.y*b.y + a.z*b.z
+
 cdef class Vector:
 
     property x:
@@ -48,6 +51,11 @@ cdef class Vector:
         self.cvector.x = x
         self.cvector.y = y
         self.cvector.z = z
+
+    def dot(Vector self, Vector other):
+        cdef:
+            Vector result = Vector.__new__(Vector)
+        return dot_product(self.cvector, other.cvector)
 
     def __mul__(Vector self, Vector other):
         cdef:

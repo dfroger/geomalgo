@@ -4,6 +4,12 @@ from geomalgo import Vector
 
 class TestVector(unittest.TestCase):
 
+    def test_dot_product(self):
+        A = Vector(1,-2,3)
+        B = Vector(4,6,5)
+        x = A.dot(B)
+        self.assertEqual(x, 7)
+
     def test_cross_product(self):
         A = Vector(1,2,3)
         B = Vector(4,6,5)

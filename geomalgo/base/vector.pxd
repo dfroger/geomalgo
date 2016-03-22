@@ -11,6 +11,8 @@ cdef void cross_product(CVector *c, CVector *a, CVector *b)
 
 cdef void subtract_vector(CVector *c, CVector *b, CVector *a)
 
+cdef double dot_product(CVector *a, CVector *b)
+
 cdef class Vector:
     cdef:
         CVector* cvector
