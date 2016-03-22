@@ -19,7 +19,7 @@ class TestIntersection(unittest.TestCase):
         segment = Segment(S,T)
     
         res = intersec3d_triangle_segment(triangle, segment)
-        self.assertEqual(res, 2)
+        self.assertEqual(res, -2)
 
 if __name__ == '__main__':
     unittest.main()

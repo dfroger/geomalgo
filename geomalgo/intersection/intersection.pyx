@@ -1,12 +1,8 @@
-from ..base.point cimport CPoint
-#from ..base.vector cimport Vector
+from ..base.point cimport CPoint, subtract_points
+from ..base.vector cimport CVector
 from ..base.segment cimport Segment, CSegment, new_segment, del_segment
 from ..base.triangle cimport Triangle, CTriangle, new_triangle, del_triangle
-#from ..work.work cimport v0
-
-#cdef:
-    #Vector u = Vector(0,0,0)
-
+from ..work cimport work
 
 def intersec3d_triangle_segment(Triangle triangle, Segment segment):
     cdef:
@@ -27,7 +23,7 @@ def intersec3d_triangle_segment(Triangle triangle, Segment segment):
 
     return res
 
-cdef int c_intersec3d_triangle_segment(CTriangle* ctriangle, CSegment* csegment):
+cdef int c_intersec3d_triangle_segment(CTriangle* tri, CSegment* seg):
     """
     Return value:
         * -1 = triangle is degenerated (a segment or point)
@@ -46,14 +42,20 @@ cdef int c_intersec3d_triangle_segment(CTriangle* ctriangle, CSegment* csegment)
       S   
     """
     
-    return 2
-
-    #cdef:
-        #Vector u = work.vector0, v, n
+    cdef:
+        CVector* u = &work.vector0
+        CVector* v = &work.vector1
 
     # Get triangle edge vectors
+    subtract_points(u, tri.B, tri.A)
+    subtract_points(v, tri.C, tri.A)
+    print(u.x, u.y)
+
     #v0.from_points(triangle.B, triangle.A)
 
     #print(u.x, u.y)
     
     # Get triangle plane normal.
+
+    return -2
+
