@@ -11,7 +11,8 @@ Install dependencies:
     source activate geomalgo
 
 Configure, build and test:
-   waf configure
-   waf build # or just: waf
-   python linkso.py # one-time step. will be integrated in wscript latter.
-   waf test
+
+    waf configure
+    waf build # or just: waf
+    python linkso.py # one-time step. will be integrated in wscript latter.
+    waf test
