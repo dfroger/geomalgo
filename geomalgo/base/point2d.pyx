@@ -1,3 +1,5 @@
+import math
+
 from libc.stdlib cimport malloc, free
 
 cdef CPoint2D* new_point2d():
@@ -7,28 +9,7 @@ cdef void del_point2d(CPoint2D* cpoint2d):
     if cpoint2d is not NULL:
         free(cpoint2d)
 
-cdef double c_signed_double_area(CPoint2D* A, CPoint2D* B, CPoint2D* C):
-    return (B.x-A.x)*(C.y-A.y) - (C.x-A.x)*(B.y-A.y)
-
-def signed_double_area(Point2D A, Point2D B, Point2D C):
-    """
-    Return twice the signed area of triangle ABC
-    
-    Positive if triangle ABC is oriented counterclockwise.
-    Negative if triangle ABC is oriented clockwise.
-
-    Positive if point C is left segment AB.
-    Negative if point C is right segment AB.
-
-    See: http://geomalgorithms.com/a01-_area.html
-    """
-    return c_signed_double_area(A.cpoint2d, B.cpoint2d, C.cpoint2d)
-
 cdef inline double c_is_left(CPoint2D* A, CPoint2D* B, CPoint2D* P):
-    return (B.x - A.x) * (P.y - A.y) \
-         - (P.x - A.x) * (B.y - A.y)
-
-def is_left(Point2D A, Point2D B, Point2D P):
     """
     Test if a point P is left|on|right of an infinite line (AB).
 
@@ -37,7 +18,37 @@ def is_left(Point2D A, Point2D B, Point2D P):
       - =0 if P is on the line (AB).
       - <0 if P is right of the line through A to B.
     """
-    return c_is_left(A.cpoint2d, B.cpoint2d, P.cpoint2d)
+    return (B.x - A.x) * (P.y - A.y) \
+         - (P.x - A.x) * (B.y - A.y)
+
+cdef inline double c_is_counterclockwise(CPoint2D* A, CPoint2D* B, CPoint2D* C):
+    """
+    Positive if triangle ABC is oriented counterclockwise, negative else.
+
+    See: http://geomalgorithms.com/a01-_area.html
+    """
+    return c_is_left(A, B, C)
+
+def is_left(Point2D A, Point2D B, Point2D P, comparer=math.isclose):
+    """
+    Test if a point P is left|on|right of an infinite line (AB).
+    """
+
+    res = c_is_left(A.cpoint2d, B.cpoint2d, P.cpoint2d)
+
+    if comparer(res, 0.):
+        raise ValueError("Point P in on line (AB)")
+
+    return res > 0.
+
+def is_counterclockwise(Point2D A, Point2D B, Point2D C, comparer=math.isclose):
+
+    res = c_is_counterclockwise(A.cpoint2d, B.cpoint2d, C.cpoint2d)
+    
+    if comparer(res, 0.):
+        raise ValueError("Triangle is degenerated (A, B and C are aligned)")
+
+    return res > 0.
 
 cdef class Point2D:
 
