@@ -53,17 +53,20 @@ cdef class Vector:
         self.cvector.z = z
 
     def dot(Vector self, Vector other):
+        """Compute dot prodcution between two vectors"""
         cdef:
             Vector result = Vector.__new__(Vector)
         return dot_product(self.cvector, other.cvector)
 
     def __mul__(Vector self, Vector other):
+        """Compute cross prodcution between two vectors"""
         cdef:
             Vector result = Vector.__new__(Vector)
         cross_product(result.cvector, self.cvector, other.cvector)
         return result
 
     def __sub__(Vector self, Vector other):
+        """Subtract two vectors"""
         cdef:
             Vector result = Vector.__new__(Vector)
         subtract_vector(result.cvector, self.cvector, other.cvector)
