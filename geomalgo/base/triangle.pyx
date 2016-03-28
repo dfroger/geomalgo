@@ -35,15 +35,15 @@ cdef void compute_symetric_point(CPoint* S, CTriangle* triangle, CPoint* P):
     cdef:
         CVector n
         CVector u
-        double norm, distance
+        double norm2, distance
 
     compute_triangle_normal(&n, triangle)
-    norm = dot_product(&n, &n)
+    norm2 = dot_product(&n, &n)
 
     subtract_points(&u, P, triangle.A)
     distance = dot_product(&u,&n)
 
-    point_plus_vector(S, P, -2. * distance / norm, &n)
+    point_plus_vector(S, P, -2. * distance / norm2, &n)
 
 cdef class Triangle:
 
