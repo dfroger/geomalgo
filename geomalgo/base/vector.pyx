@@ -1,4 +1,5 @@
 from libc.stdlib cimport malloc, free
+from libc.math cimport sqrt
 
 cdef CVector* new_vector():
     return <CVector*> malloc(sizeof(CVector))
@@ -20,6 +21,11 @@ cdef void subtract_vector(CVector *c, CVector *b, CVector *a):
 cdef double dot_product(CVector *a, CVector *b):
     return a.x*b.x + a.y*b.y + a.z*b.z
 
+cdef double compute_norm(CVector *a):
+    return sqrt( a.x*a.x \
+               + a.y*a.y \
+               + a.z*a.z )
+
 cdef class Vector:
 
     property x:
@@ -39,6 +45,11 @@ cdef class Vector:
             return self.cvector.z
         def __set__(self, double z):
             self.cvector.z = z
+            
+    property norm:
+        """Compute (involving sqrt) and return norm of the vector"""
+        def __get__(self):
+            return compute_norm(self.cvector)
 
     def __cinit__(self):
         self.cvector = new_vector()

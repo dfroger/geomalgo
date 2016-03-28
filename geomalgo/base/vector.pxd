@@ -13,6 +13,8 @@ cdef void subtract_vector(CVector *c, CVector *b, CVector *a)
 
 cdef double dot_product(CVector *a, CVector *b)
 
+cdef double compute_norm(CVector *a)
+
 cdef class Vector:
     cdef:
         CVector* cvector

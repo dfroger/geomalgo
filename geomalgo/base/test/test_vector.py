@@ -10,6 +10,13 @@ class TestVector(unittest.TestCase):
         x = A.dot(B)
         self.assertEqual(x, 7)
 
+    def test_norm(self):
+        A = Vector(1, 0, 0)
+        self.assertEqual(A.norm, 1.)
+
+        A = Vector(1, 2, 3)
+        self.assertAlmostEqual(A.norm, 3.7416573867739413)
+
     def test_cross_product(self):
         A = Vector(1,2,3)
         B = Vector(4,6,5)
