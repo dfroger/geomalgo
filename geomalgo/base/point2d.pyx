@@ -29,6 +29,9 @@ cdef inline double c_is_counterclockwise(CPoint2D* A, CPoint2D* B, CPoint2D* C):
     """
     return c_is_left(A, B, C)
 
+cdef double c_signed_triangle2d_area(CPoint2D* A, CPoint2D* B, CPoint2D* C):
+    return 0.5 * c_is_left(A, B, C)
+
 def is_left(Point2D A, Point2D B, Point2D P, comparer=math.isclose):
     """
     Test if a point P is left|on|right of an infinite line (AB).
@@ -49,6 +52,9 @@ def is_counterclockwise(Point2D A, Point2D B, Point2D C, comparer=math.isclose):
         raise ValueError("Triangle is degenerated (A, B and C are aligned)")
 
     return res > 0.
+
+def signed_triangle2d_area(Point2D A, Point2D B, Point2D C):
+    return c_signed_triangle2d_area(A.cpoint2d, B.cpoint2d, C.cpoint2d)
 
 cdef class Point2D:
 

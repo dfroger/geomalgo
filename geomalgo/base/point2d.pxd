@@ -10,6 +10,8 @@ cdef inline double c_is_left(CPoint2D* A, CPoint2D* B, CPoint2D* P)
 
 cdef double c_is_counterclockwise(CPoint2D* A, CPoint2D* B, CPoint2D* C)
 
+cdef double c_signed_triangle2d_area(CPoint2D* A, CPoint2D* B, CPoint2D* C)
+
 cdef class Point2D:
     cdef:
         CPoint2D* cpoint2d
