@@ -18,6 +18,14 @@ class TestTriangle(unittest.TestCase):
         triangle.B = Point(-1, -2, -3)
         self.assertEqual(triangle.B.y, -2)
 
+    def test_area(self):
+        A = Point(0,0,2)
+        B = Point(0,1,2)
+        C = Point(1,0,2)
+
+        triangle = Triangle(A,B,C)
+        self.assertEqual(triangle.area, 0.5)
+
     def test_symetric_point(self):
         A = Point(0,0,0)
         B = Point(0,1,0)

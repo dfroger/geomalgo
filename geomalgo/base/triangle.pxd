@@ -9,6 +9,8 @@ cdef CTriangle* new_triangle()
 
 cdef void del_triangle(CTriangle* ctriangle)
 
+cdef double compute_area(CTriangle* triangle)
+
 cdef void compute_symetric_point(CPoint* S, CTriangle* triangle, CPoint* P)
 
 cdef class Triangle:
