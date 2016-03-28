@@ -7,7 +7,7 @@ cdef struct CTriangle:
     
 cdef CTriangle* new_triangle()
 
-cdef void del_triangle(CTriangle* ctriangle)
+cdef void del_triangle(CTriangle* triangle)
 
 cdef double compute_area(CTriangle* triangle)
 

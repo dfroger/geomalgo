@@ -81,9 +81,9 @@ cdef class Triangle:
     def symetric_point(Triangle self, Point P):
         cdef:
             Point S = Point.__new__(Point)
-            CTriangle triangle
-        triangle.A = self.A.cpoint
-        triangle.B = self.B.cpoint
-        triangle.C = self.C.cpoint
-        compute_symetric_point(S.cpoint, &triangle, P.cpoint)
+            CTriangle ctriangle
+        ctriangle.A = self.A.cpoint
+        ctriangle.B = self.B.cpoint
+        ctriangle.C = self.C.cpoint
+        compute_symetric_point(S.cpoint, &ctriangle, P.cpoint)
         return S
