@@ -3,7 +3,7 @@ from setuptools import setup, Extension
 
 from Cython.Build import cythonize
 
-__version__ = '0.1.0'
+__version__ = '0.0.2'
 
 #=============================================================================
 # List all extensions of all packages to build.
