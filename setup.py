@@ -3,7 +3,7 @@ from setuptools import setup, Extension
 
 from Cython.Build import cythonize
 
-from geomalgo import __version__
+__version__ = '0.1.0'
 
 #=============================================================================
 # List all extensions of all packages to build.
