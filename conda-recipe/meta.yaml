@@ -1,0 +1,29 @@
+package:
+  name: geomalgo
+  version: 0.0.2
+
+source:
+    fn: geomalgo-0.0.2.tar.gz
+    url: https://github.com/dfroger/geomalgo/archive/0.0.2.tar.gz
+    md5: bded4bb2cdbcbf6d618b42660c68aed5
+
+build:
+  number: 0
+  binary_relocation: true
+
+requirements:
+  build:
+    - python
+    - cython
+  run:
+    - python
+    - cython
+
+test:
+    imports:
+        - geomalgo
+
+about:
+  home: https://github.com/dfroger/geomalgo
+  license: BSD
+  summary: Cython implementation of http://geomalgorithms.com
