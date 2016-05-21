@@ -21,6 +21,7 @@ if is_linux:
       include = ['/data/miniconda3/envs/fky/include/python3.5m'],
       libpath = ['/data/miniconda3/envs/fky/lib'],
       libs = ['python3.5m', 'pthread', 'dl', 'util', 'rt', 'm'],
+      pic = 'True',
     )
 else:
     pyd_suffix = '.pyd'
@@ -47,4 +48,6 @@ for fn in cpp_files.outputs:
       sources = [fn],
       frameworks = [python_fw],
     ),
+    pic = True,
+    additional_flags = ['-shared'],
   )
