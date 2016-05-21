@@ -1,5 +1,8 @@
 # craftr_module(geomalgo)
 
+import platform
+is_linux = platform.system() == 'Linux'
+
 from craftr import path, options, Framework
 from craftr.ext.compiler.cython import cythonc
 from craftr.ext.platform import cxx, ld
@@ -11,11 +14,20 @@ cpp_files = cythonc.compile(
 )
 
 # should be determined based on the OS
-pyd_suffix = '.pyd'
-python_fw = Framework(
-  include = ['F:/Python34/include'],
-  libpath = ['F:/Python34/libs']
-)
+if is_linux:
+    pyd_suffix = '.so'
+    # should be found with python3.5-config
+    python_fw = Framework(
+      include = ['/data/miniconda3/envs/fky/include/python3.5m'],
+      libpath = ['/data/miniconda3/envs/fky/lib'],
+      libs = ['python3.5m', 'pthread', 'dl', 'util', 'rt', 'm'],
+    )
+else:
+    pyd_suffix = '.pyd'
+    python_fw = Framework(
+      include = ['F:/Python34/include'],
+      libpath = ['F:/Python34/libs']
+    )
 
 # path to the output directory of the C/C++ files from Cython
 cython_outdir = cpp_files.meta['cython_outdir']
