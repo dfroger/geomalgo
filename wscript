@@ -6,6 +6,19 @@ from waflib import Logs
 top = os.path.realpath('.')
 out = os.path.realpath('./build')
 
+import distutils.sysconfig
+import platform
+from waflib import TaskGen
+@TaskGen.feature('pyext')
+@TaskGen.after('apply_link', 'propagate_uselib_vars')
+def remove_flag_stack(self):
+    """Fix for https://github.com/waf-project/waf/issues/1745"""
+    if platform.system() == 'Darwin':
+        flags = self.env.LINKFLAGS
+        self.env.LINKFLAGS = [x for x in flags if not x.startswith('-Wl,-stack_size,')]
+        libpath = distutils.sysconfig.get_config_var('LIBDIR')
+        self.env.LINKFLAGS.insert(0, '-L'+libpath)
+
 def options(opt):
     opt.load('use_config')
     opt.load('compiler_c')
