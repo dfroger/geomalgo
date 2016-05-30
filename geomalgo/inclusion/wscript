@@ -2,13 +2,7 @@ import os
 
 def build(bld):
     cython_sources = [
-        'onedim.pyx',
-        'point.pyx',
-        'point2d.pyx',
-        'polygon2d.pyx',
-        'segment.pyx',
-        'triangle.pyx',
-        'vector.pyx',
+        'winding.pyx',
     ]
 
     for src in cython_sources:
