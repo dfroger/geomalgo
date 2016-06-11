@@ -37,7 +37,7 @@ cdef class Polygon2D:
         self.cpolygon2d.x = &self._x[0]
         self.cpolygon2d.y = &self._y[0]
 
-    def point_is_inside(self, Point2D P):
+    def includes_point(self, Point2D P):
         winding_number = polygon2d_winding_point2d(self.cpolygon2d, 
                                                    P.cpoint2d)
         return winding_number != 0

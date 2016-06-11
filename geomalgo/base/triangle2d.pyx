@@ -2,6 +2,7 @@ from libc.stdlib cimport malloc, free
 
 from .polygon2d cimport CPolygon2D
 from ..inclusion cimport polygon2d_winding_point2d
+from .point2d cimport c_is_left
 
 cdef CTriangle2D* new_triangle2d():
     return <CTriangle2D*> malloc(sizeof(CTriangle2D))
@@ -11,27 +12,35 @@ cdef void del_triangle2d(CTriangle2D* ctri2d):
         free(ctri2d)
 
 cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P):
+    """
+    inclusion.winding.polygon2d_winding_point2d specialized for triangle,
+    just for optimisation.
+    """
     cdef:
-        int winding
-        CPolygon2D cpolygon2d
-        double x[3]
-        double y[3]
+        int winding_number = 0
 
-    x[0] = ctri2d.A.x
-    y[0] = ctri2d.A.y
+    # [AB]
+    if ctri2d.A.y <= P.y:
+        if ctri2d.B.y > P.y and c_is_left(ctri2d.A, ctri2d.B, P) > 0:
+            winding_number +=  1
+    elif ctri2d.B.y <= P.y and c_is_left(ctri2d.A, ctri2d.B, P) < 0:
+        winding_number -=  1
 
-    x[1] = ctri2d.B.x
-    y[1] = ctri2d.B.y
+    # [BC]
+    if ctri2d.B.y <= P.y:
+        if ctri2d.C.y > P.y and c_is_left(ctri2d.B, ctri2d.C, P) > 0:
+            winding_number +=  1
+    elif ctri2d.C.y <= P.y and c_is_left(ctri2d.B, ctri2d.C, P) < 0:
+        winding_number -=  1
 
-    x[2] = ctri2d.C.x
-    y[2] = ctri2d.C.y
+    # [CA]
+    if ctri2d.C.y <= P.y:
+        if ctri2d.A.y  > P.y and c_is_left(ctri2d.C, ctri2d.A, P) > 0:
+            winding_number +=  1
+    elif ctri2d.A.y <= P.y and c_is_left(ctri2d.C, ctri2d.A, P) < 0:
+        winding_number -=  1
 
-    cpolygon2d.x = x
-    cpolygon2d.y = y
-    cpolygon2d.points_number = 3
-
-    winding = polygon2d_winding_point2d(&cpolygon2d, P)
-    return winding != 0
+    return winding_number != 0
 
 cdef class Triangle2D:
             
