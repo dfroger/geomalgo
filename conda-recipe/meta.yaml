@@ -1,11 +1,10 @@
 package:
   name: geomalgo
-  version: 0.0.2
+  version: 0.0.3
 
 source:
-    fn: geomalgo-0.0.2.tar.gz
-    url: https://github.com/dfroger/geomalgo/archive/0.0.2.tar.gz
-    md5: bded4bb2cdbcbf6d618b42660c68aed5
+    fn: geomalgo-0.0.3.tar.gz
+    url: https://github.com/dfroger/geomalgo/archive/0.0.3.tar.gz
 
 build:
   number: 0
