@@ -8,6 +8,7 @@ def build(bld):
         'polygon2d.pyx',
         'segment.pyx',
         'triangle.pyx',
+        'triangle2d.pyx',
         'vector.pyx',
     ]
 
