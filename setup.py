@@ -43,7 +43,13 @@ inclusion_ext = list_package_extensions(
     filenames = ['winding.pyx'],
 )
 
-extensions = base_ext + intersection_ext + inclusion_ext
+# triangulation package.
+triangulation_ext = list_package_extensions(
+    package_paths = ['geomalgo', 'triangulation'],
+    filenames = ['winding.pyx'],
+)
+
+extensions = base_ext + intersection_ext + inclusion_ext + triangulation_ext
 
 #=============================================================================
 # Main function.

@@ -11,6 +11,37 @@ cdef void del_triangle2d(CTriangle2D* ctri2d):
     if ctri2d is not NULL:
         free(ctri2d)
 
+cdef void triangle2d_from_triangulation2d(CTriangle2D* T, 
+                                          CTriangulation2D* TG,
+                                          int triangle_index):
+    """
+    Set 2D triangle point coordinates from its index in a triangulation
+
+    Notes:
+    ------
+
+    Triangle points must be allocated before calling this function.
+    """
+    cdef:
+        int ia, ib, ic
+
+    # Get points A, B and C indexes.
+    ia = TG.trivtx[3*triangle_index    ]
+    ib = TG.trivtx[3*triangle_index + 1]
+    ic = TG.trivtx[3*triangle_index + 2]
+
+    # Set triangle point A coordinates
+    T.A.x = TG.x[ia]
+    T.A.y = TG.y[ia]
+
+    # Set triangle point B coordinates
+    T.B.x = TG.x[ib]
+    T.B.y = TG.y[ib]
+
+    # Set triangle point C coordinates
+    T.C.x = TG.x[ic]
+    T.C.y = TG.y[ic]
+
 cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P):
     """
     inclusion.winding.polygon2d_winding_point2d specialized for triangle,

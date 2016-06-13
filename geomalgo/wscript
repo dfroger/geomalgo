@@ -2,6 +2,7 @@ def build(bld):
     bld.recurse('base')
     bld.recurse('inclusion')
     bld.recurse('intersection')
+    bld.recurse('triangulation')
 
 def test(ctx):
     import unittest
