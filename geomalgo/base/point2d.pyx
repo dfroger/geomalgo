@@ -79,3 +79,9 @@ cdef class Point2D:
     def __init__(self, x, y):
         self.cpoint2d.x = x
         self.cpoint2d.y = y
+
+cdef class Point2DWithIndex:
+
+    def __init__(self, x, y, index):
+        Point2D.__init__(self, x, y)
+        self.index = index
