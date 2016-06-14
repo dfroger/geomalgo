@@ -1,19 +1,21 @@
 from libc.math cimport fabs
 
-from ..base.point cimport Point, CPoint, new_point, del_point, \
-                          subtract_points, point_plus_vector
-from ..base.vector cimport CVector, cross_product, dot_product
-from ..base.segment cimport Segment, CSegment, new_segment, del_segment
-from ..base.triangle cimport Triangle, CTriangle, new_triangle, del_triangle
+from ..base3d.point3d cimport Point3D, CPoint3D, new_point3d, del_point3d, \
+                          subtract_points3d, point3d_plus_vector3d
+from ..base3d.vector3d cimport CVector3D, cross_product3d, dot_product3d
+from ..base3d.segment3d cimport Segment3D, CSegment3D, new_segment3d, \
+                              del_segment3d
+from ..base3d.triangle3d cimport Triangle3D, CTriangle3D, new_triangle3d, \
+                               del_triangle3d
 
-def intersec3d_triangle_segment(Triangle triangle, Segment segment):
+def intersec3d_triangle_segment(Triangle3D triangle, Segment3D segment):
     """
     Find intersection of 3D triangle and a segment 
     """
     cdef:
-        CTriangle* tri = new_triangle()
-        CSegment* seg = new_segment()
-        CPoint* I = new_point()
+        CTriangle3D* tri = new_triangle3d()
+        CSegment3D* seg = new_segment3d()
+        CPoint3D* I = new_point3d()
 
     tri.A = triangle.A.cpoint
     tri.B = triangle.B.cpoint
@@ -24,29 +26,30 @@ def intersec3d_triangle_segment(Triangle triangle, Segment segment):
 
     res = c_intersec3d_triangle_segment(I, tri, seg)
     
-    del_triangle(tri)
-    del_segment(seg)
+    del_triangle3d(tri)
+    del_segment3d(seg)
 
     if res == -1:
-        del_point(I)
+        del_point3d(I)
         raise ValueError('Triangle is degenerated (a segment or point)')
 
     elif res == 0:
-        del_point(I)
+        del_point3d(I)
         raise ValueError('There is no intersection')
 
     elif res == 2:
-        del_point(I)
+        del_point3d(I)
         raise ValueError('Triangle and segment are in the same plane')
 
     cdef:
-        Point intersection = Point.__new__(Point)
+        Point3D intersection = Point3D.__new__(Point3D)
 
     intersection.cpoint = I
 
     return intersection
 
-cdef int c_intersec3d_triangle_segment(CPoint* I, CTriangle* tri, CSegment* seg):
+cdef int c_intersec3d_triangle_segment(CPoint3D* I, CTriangle3D* tri,
+                                       CSegment3D* seg):
     """
     Find intersection of 3D triangle and a segment 
 
@@ -61,7 +64,7 @@ cdef int c_intersec3d_triangle_segment(CPoint* I, CTriangle* tri, CSegment* seg)
     http://geomalgorithms.com/a06-_intersect-2.html#intersect3D_RayTriangle%28%29
     """
     cdef:
-        CVector u, v, n, direction, w0, w
+        CVector3D u, v, n, direction, w0, w
         double r, a, b
         double  uu, uv, vv, wu, wv, D
         double s,t
@@ -69,24 +72,24 @@ cdef int c_intersec3d_triangle_segment(CPoint* I, CTriangle* tri, CSegment* seg)
         double SMALL_NUM = 0.00000001
 
     # Get triangle edge vectors
-    subtract_points(&u, tri.B, tri.A)
-    subtract_points(&v, tri.C, tri.A)
+    subtract_points3d(&u, tri.B, tri.A)
+    subtract_points3d(&v, tri.C, tri.A)
 
     # Get triangle plane normal.
-    cross_product(&n, &u, &v)
+    cross_product3d(&n, &u, &v)
 
     # Check for degenerated triangle.
     if n.x==0 and n.y==0 and n.z==0:
         return -1
     
-    # Segment direction vector.
-    subtract_points(&direction, seg.B, seg.A)
+    # Segment3D direction vector.
+    subtract_points3d(&direction, seg.B, seg.A)
 
     #
-    subtract_points(&w0, seg.A, tri.A)
+    subtract_points3d(&w0, seg.A, tri.A)
 
-    a = - dot_product(&n, &w0)
-    b = dot_product(&n, &direction)
+    a = - dot_product3d(&n, &w0)
+    b = dot_product3d(&n, &direction)
 
     # Check if segment is parallel to triangle plane.
     if fabs(b) < SMALL_NUM:
@@ -104,15 +107,15 @@ cdef int c_intersec3d_triangle_segment(CPoint* I, CTriangle* tri, CSegment* seg)
         return 0
 
     # Intersection of segment and plane.
-    point_plus_vector(I, seg.A, r, &direction)
+    point3d_plus_vector3d(I, seg.A, r, &direction)
 
     # is I inside tri?
-    uu = dot_product(&u,&u)
-    uv = dot_product(&u,&v)
-    vv = dot_product(&v,&v)
-    subtract_points(&w, I, tri.A)
-    wu = dot_product(&w,&u)
-    wv = dot_product(&w,&v)
+    uu = dot_product3d(&u,&u)
+    uv = dot_product3d(&u,&v)
+    vv = dot_product3d(&v,&v)
+    subtract_points3d(&w, I, tri.A)
+    wu = dot_product3d(&w,&u)
+    wv = dot_product3d(&w,&v)
     D = uv*uv - uu*vv
 
     # Get and test parametric coords.

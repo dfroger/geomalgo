@@ -2,7 +2,10 @@ import os
 
 def build(bld):
     cython_sources = [
-        'triangulation2d.pyx',
+        'point3d.pyx',
+        'segment3d.pyx',
+        'triangle3d.pyx',
+        'vector3d.pyx',
     ]
 
     for src in cython_sources:

@@ -1,4 +1,4 @@
-cpdef inline double symetric_1d(double center, double x):
+cpdef inline double symetric1d(double center, double x):
     """
     +------+------+
     x    center   symetric

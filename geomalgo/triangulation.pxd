@@ -1,1 +1,1 @@
-from .triangulation.triangulation cimport CTriangulation2D
+from .triangulation.triangulation2d cimport CTriangulation2D

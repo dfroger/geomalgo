@@ -1,4 +1,4 @@
-from ..base cimport CPoint2D, CPolygon2D, c_is_left, new_point2d
+from ..base2d cimport CPoint2D, CPolygon2D, c_is_left, new_point2d
 
 cdef int polygon2d_winding_point2d(CPolygon2D* PG, CPoint2D* P):
     """
