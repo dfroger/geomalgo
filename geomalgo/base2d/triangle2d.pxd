@@ -21,3 +21,4 @@ cdef class Triangle2D:
         Point2D A
         Point2D B
         Point2D C
+        int index

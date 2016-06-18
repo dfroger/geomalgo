@@ -10,6 +10,13 @@ class TestPoint(unittest.TestCase):
         A.x = 10
         self.assertEqual(A.x, 10)
 
+    def test_index(self):
+        A = Point3D(1,2,3)
+        self.assertEqual(A.index, 0)
+        
+        B = Point3D(1,2,3, index=8)
+        self.assertEqual(B.index, 8)
+
     def test_vector_from_point_sub_point(self):
         A = Point3D(1,2,3)
         B = Point3D(6,5,4)

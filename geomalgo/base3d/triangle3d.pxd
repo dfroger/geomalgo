@@ -19,3 +19,4 @@ cdef class Triangle3D:
         Point3D A
         Point3D B
         Point3D C
+        int index

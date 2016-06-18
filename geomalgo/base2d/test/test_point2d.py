@@ -12,6 +12,13 @@ class TestPoint2D(unittest.TestCase):
         A.x = 10
         self.assertEqual(A.x, 10)
 
+    def test_index(self):
+        A = Point2D(1,2)
+        self.assertEqual(A.index, 0)
+        
+        B = Point2D(1,2, index=8)
+        self.assertEqual(B.index, 8)
+
 class TestIsLeft(unittest.TestCase):
 
     def test_is_left(self):

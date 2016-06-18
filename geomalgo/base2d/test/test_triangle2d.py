@@ -17,7 +17,7 @@ class TestTriangle2D(unittest.TestCase):
         B = Point2D(1,0)
         C = Point2D(0,1)
 
-        triangle = Triangle2D(A, B, C)
+        triangle = Triangle2D(A, B, C, index=4)
 
 if __name__ == '__main__':
     unittest.main()

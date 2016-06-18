@@ -76,12 +76,7 @@ cdef class Point2D:
     def __dealloc__(self):
         del_point2d(self.cpoint2d)
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, index=0):
         self.cpoint2d.x = x
         self.cpoint2d.y = y
-
-cdef class Point2DWithIndex:
-
-    def __init__(self, x, y, index):
-        Point2D.__init__(self, x, y)
         self.index = index

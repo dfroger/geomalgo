@@ -74,10 +74,11 @@ cdef class Triangle3D:
             T.C = self.C.cpoint
             return compute_area3d(&T)
 
-    def __init__(self, Point3D A, Point3D B, Point3D C):
+    def __init__(self, Point3D A, Point3D B, Point3D C, index=0):
         self.A = A
         self.B = B
         self.C = C
+        self.index = index
 
     def symetric_point(Triangle3D self, Point3D P):
         cdef:

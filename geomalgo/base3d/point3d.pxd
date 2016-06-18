@@ -16,5 +16,7 @@ cdef void point3d_plus_vector3d(CPoint3D* result, CPoint3D* start,
                                 double factor, CVector3D* vector)
 
 cdef class Point3D:
+    cdef public:
+        int index
     cdef:
         CPoint3D* cpoint

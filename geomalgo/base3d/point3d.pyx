@@ -45,10 +45,11 @@ cdef class Point3D:
     def __dealloc__(self):
         del_point3d(self.cpoint)
 
-    def __init__(self, x, y, z):
+    def __init__(self, x, y, z, index=0):
         self.cpoint.x = x
         self.cpoint.y = y
         self.cpoint.z = z
+        self.index = index
 
     def __sub__(Point3D self, Point3D other):
         cdef:
