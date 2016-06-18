@@ -4,8 +4,6 @@ package:
 
 source:
     path: ..
-    #fn: geomalgo-0.0.3.tar.gz
-    #url: https://github.com/dfroger/geomalgo/archive/0.0.3.tar.gz
 
 build:
   number: 0
@@ -22,8 +20,10 @@ requirements:
     - numpy
 
 test:
-    imports:
-        - geomalgo
+    requires:
+        - nose
+    commands:
+        - cd $SRC_DIR ; nosetests
 
 about:
   home: https://github.com/dfroger/geomalgo
