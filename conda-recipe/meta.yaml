@@ -23,7 +23,7 @@ test:
     requires:
         - nose
     commands:
-        - cd $SRC_DIR ; nosetests
+        - cd $SRC_DIR/test ; nosetests
 
 about:
   home: https://github.com/dfroger/geomalgo
