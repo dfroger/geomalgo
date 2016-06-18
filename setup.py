@@ -1,59 +1,33 @@
-import os
+from pathlib import Path
 from setuptools import setup, Extension
 
 from Cython.Build import cythonize
 
 __version__ = '0.0.3'
 
-#=============================================================================
-# List all extensions of all packages to build.
-#=============================================================================
+def module_name(fp):
+    """
+    Return a module name from its file path.
 
+    >>> from pathlib import Path
+    >>> filepath = Path('geomalgo', 'base2d', 'point2d.pyx')
+    >>> module_name(filepath)
+    geomalgo.base2d.point2d
+    """
+    return '.'.join([*fp.parent.parts, fp.stem])
 
-def list_package_extensions(package_paths, filenames):
-    """Create a Extension object of all .pyx file in a package"""
-    extensions = []
-    for filename in filenames:
-        filepath = os.path.join(*package_paths, filename)
-        module = os.path.splitext(filename)[0]
-        module_path = package_paths + [module,]
-        ext = Extension(
-            '.'.join(module_path),
-            sources = [filepath, ],
-        )
-        extensions.append(ext)
-    return extensions
+def list_sources():
+    """
+    Iterates on pair (module filepath, module name).
 
-# base package.
-base_ext = list_package_extensions(
-    package_paths = ['geomalgo', 'base'],
-    filenames = ['onedim.pyx', 'point.pyx', 'point2d.pyx', 'polygon2d.pyx',
-                 'segment.pyx', 'triangle.pyx', 'triangle2d.pyx', 'vector.pyx', ]
-)
+    One pair is for example: 
+        (geomalgo/base2d/point2d.pyx, geomalgo.base2d.point2d)
+    """
+    for fp in Path('.').glob('geomalgo/**/*.pyx'):
+        yield str(fp), module_name(fp)
 
-# intersection package.
-intersection_ext = list_package_extensions(
-    package_paths = ['geomalgo', 'intersection'],
-    filenames = ['intersection.pyx'],
-)
-
-# inclusion package.
-inclusion_ext = list_package_extensions(
-    package_paths = ['geomalgo', 'inclusion'],
-    filenames = ['winding.pyx'],
-)
-
-# triangulation package.
-triangulation_ext = list_package_extensions(
-    package_paths = ['geomalgo', 'triangulation'],
-    filenames = ['winding.pyx'],
-)
-
-extensions = base_ext + intersection_ext + inclusion_ext + triangulation_ext
-
-#=============================================================================
-# Main function.
-#=============================================================================
+extensions = [ Extension(modname, sources=[fp,])
+               for fp, modname in list_sources() ]
 
 setup(
     name = 'geomalgo',
@@ -65,8 +39,12 @@ setup(
     author_email = 'david.froger@mailoo.org',
     packages = [
         'geomalgo',
-        'geomalgo.base',
+        'geomalgo.base1d',
+        'geomalgo.base2d',
+        'geomalgo.base3d',
+        'geomalgo.inclusion',
         'geomalgo.intersection',
+        'geomalgo.triangulation',
     ],
     ext_modules = cythonize(
         extensions,

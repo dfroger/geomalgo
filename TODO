@@ -1,2 +1,6 @@
-http://geomalgorithms.com/a01-_area.html
-orientation2D_Polygon()
+3 configs:
+    - debug
+    - release
+    - profile
+
+Travis for GNU/Linux and OSX
