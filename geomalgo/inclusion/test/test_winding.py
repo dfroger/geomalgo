@@ -28,7 +28,7 @@ class TestSquareWinding(unittest.TestCase):
         P = Point2D(1.5, 0.5)
         self.assertFalse(self.polygon2d.includes_point(P))
 
-class TestTriangleWindingBase:
+class TriangleWindingBase:
 
     """
     Base class for Polygon2D and Triange2D.
@@ -69,12 +69,12 @@ class TestTriangleWindingBase:
         self.assert_outside(1., 1.)
 
 @unittest.skip
-class TestTriangle2DWinding(TestTriangleWindingBase, unittest.TestCase):
+class TestTriangle2DWinding(TriangleWindingBase, unittest.TestCase):
 
     def build(self, A, B, C):
         self.obj = Triangle2D(A, B, C)
 
-class TestPolygon2DWinding(TestTriangleWindingBase, unittest.TestCase):
+class TestPolygon2DWinding(TriangleWindingBase, unittest.TestCase):
 
     def build(self, A, B, C):
         self.obj = Polygon2D.from_points2d([A,B,C])
