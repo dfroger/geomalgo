@@ -3,3 +3,16 @@
 
 - Add Polyong2D with point inclusion test
 - Add Triangle2D with point inclusion test
+
+0.0.4 (2016-06-18)
+==================
+
+- Add CTriangulation2D
+- Add Optional index to Point2D, Point3D, Triangle2D and Triangle3D
+
+Dev:
+
+- Replace Waf with Craftr
+- Reorganize directories for 1D, 2D and 3D objects
+- Add test in conda recipe
+- Add Travis script
