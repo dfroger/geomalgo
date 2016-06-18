@@ -2,7 +2,7 @@ import os
 
 def build(bld):
     cython_sources = [
-        'intersection3d.pyx',
+        'winding2d.pyx',
     ]
 
     for src in cython_sources:

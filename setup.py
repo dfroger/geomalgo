@@ -3,7 +3,7 @@ from setuptools import setup, Extension
 
 from Cython.Build import cythonize
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 #=============================================================================
 # List all extensions of all packages to build.
@@ -27,8 +27,8 @@ def list_package_extensions(package_paths, filenames):
 # base package.
 base_ext = list_package_extensions(
     package_paths = ['geomalgo', 'base'],
-    filenames = ['onedim.pyx', 'point.pyx', 'point2d.pyx', 'segment.pyx',
-                 'triangle.pyx', 'vector.pyx', ]
+    filenames = ['onedim.pyx', 'point.pyx', 'point2d.pyx', 'polygon2d.pyx',
+                 'segment.pyx', 'triangle.pyx', 'triangle2d.pyx', 'vector.pyx', ]
 )
 
 # intersection package.
@@ -37,7 +37,19 @@ intersection_ext = list_package_extensions(
     filenames = ['intersection.pyx'],
 )
 
-extensions = base_ext + intersection_ext
+# inclusion package.
+inclusion_ext = list_package_extensions(
+    package_paths = ['geomalgo', 'inclusion'],
+    filenames = ['winding.pyx'],
+)
+
+# triangulation package.
+triangulation_ext = list_package_extensions(
+    package_paths = ['geomalgo', 'triangulation'],
+    filenames = ['winding.pyx'],
+)
+
+extensions = base_ext + intersection_ext + inclusion_ext + triangulation_ext
 
 #=============================================================================
 # Main function.
@@ -65,5 +77,6 @@ setup(
             'initializedcheck': False,
             'language_level': 3,
         },
-    )
+    ),
+    requires = ['numpy'],
 )
