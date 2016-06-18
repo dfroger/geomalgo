@@ -4,15 +4,24 @@ Cython implementation of http://geomalgorithms.com
 
 ## Development
 
-Install dependencies: 
+Install Python 3.5, Cython, and nose in a Conda environment: 
 
-    conda create -n geomalgo python=3.5 cython
-    conda install -n geomalgo -c inria-pro-sed waf
+    conda create -n geomalgo python=3.5 cython nose
     source activate geomalgo
 
-Configure, build and test:
+Install `Ninja` build system: https://ninja-build.org
 
-    waf configure
-    waf build # or just: waf
-    python linkso.py # one-time step. will be integrated in wscript latter.
-    waf test
+Install `Craftr` from Git repository:
+
+    git clone https://github.com/craftr-build/craftr
+    cd craftr
+    source activate geomalgo
+    pip install -e .
+
+TODO: Package Ninja and Craftr with Conda.
+
+Build:
+    craftr
+
+Test:
+    nosetests
