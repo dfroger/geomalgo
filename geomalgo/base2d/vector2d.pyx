@@ -4,7 +4,7 @@ from libc.math cimport sqrt
 cdef CVector2D* new_vector2d():
     return <CVector2D*> malloc(sizeof(CVector2D))
 
-cdef void del_vector(CVector2D* V):
+cdef void del_vector2d(CVector2D* V):
     if V is not NULL:
         free(V)
 
