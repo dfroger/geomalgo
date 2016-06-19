@@ -1,5 +1,7 @@
 from libc.math cimport sqrt
 
+from .vector2d cimport CVector2D, Vector2D
+
 cdef struct CPoint2D:
     double x
     double y
@@ -7,6 +9,12 @@ cdef struct CPoint2D:
 cdef CPoint2D* new_point2d()
 
 cdef void del_point2d(CPoint2D* cpoint2d)
+
+cdef void subtract_points2d(CVector2D * u, const CPoint2D * B,
+                            const CPoint2D * A)
+
+cdef void point2d_plus_vector2d(CPoint2D* result, CPoint2D* start,
+                                double factor, CVector2D* vector)
 
 cdef inline double c_is_left(CPoint2D* A, CPoint2D* B, CPoint2D* P):
     """

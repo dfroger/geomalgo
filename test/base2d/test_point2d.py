@@ -26,6 +26,13 @@ class TestPoint2D(unittest.TestCase):
         expected_dist = sqrt(2.)
         self.assertAlmostEqual(dist, expected_dist)
 
+    def test_vector_from_point_sub_point(self):
+        A = Point2D(1,2)
+        B = Point2D(4,3)
+        V = B - A
+        self.assertEqual(V.x, 3)
+        self.assertEqual(V.y, 1)
+
 class TestIsLeft(unittest.TestCase):
 
     def test_is_left(self):
