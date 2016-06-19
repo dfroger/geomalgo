@@ -37,6 +37,17 @@ def signed_triangle2d_area(Point2D A, Point2D B, Point2D C):
     return c_signed_triangle2d_area(A.cpoint2d, B.cpoint2d, C.cpoint2d)
 
 cdef class Point2D:
+    """
+    A point in 2D space
+
+    Parameters
+    ----------
+    x: float
+        First coordinate
+    
+    y: float
+        Second coordinate
+    """
 
     property x:
         def __get__(self):
@@ -60,3 +71,6 @@ cdef class Point2D:
         self.cpoint2d.x = x
         self.cpoint2d.y = y
         self.index = index
+
+    def distance(Point2D self, Point2D other):
+        return c_point2d_distance(self.cpoint2d, other.cpoint2d)

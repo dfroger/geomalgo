@@ -3,9 +3,9 @@ from libc.stdlib cimport malloc, free
 cdef CPoint3D* new_point3d():
     return <CPoint3D*> malloc(sizeof(CPoint3D))
 
-cdef void del_point3d(CPoint3D* cpoint):
-    if cpoint is not NULL:
-        free(cpoint)
+cdef void del_point3d(CPoint3D* cpoint3d):
+    if cpoint3d is not NULL:
+        free(cpoint3d)
 
 cdef void subtract_points3d(CVector3D * u, const CPoint3D * B,
                             const CPoint3D * A):
@@ -23,36 +23,39 @@ cdef class Point3D:
 
     property x:
         def __get__(self):
-            return self.cpoint.x
+            return self.cpoint3d.x
         def __set__(self, double x):
-            self.cpoint.x = x
+            self.cpoint3d.x = x
         
     property y:
         def __get__(self):
-            return self.cpoint.y
+            return self.cpoint3d.y
         def __set__(self, double y):
-            self.cpoint.y = y
+            self.cpoint3d.y = y
         
     property z:
         def __get__(self):
-            return self.cpoint.z
+            return self.cpoint3d.z
         def __set__(self, double z):
-            self.cpoint.z = z
+            self.cpoint3d.z = z
 
     def __cinit__(self):
-        self.cpoint = new_point3d()
+        self.cpoint3d = new_point3d()
 
     def __dealloc__(self):
-        del_point3d(self.cpoint)
+        del_point3d(self.cpoint3d)
 
     def __init__(self, x, y, z, index=0):
-        self.cpoint.x = x
-        self.cpoint.y = y
-        self.cpoint.z = z
+        self.cpoint3d.x = x
+        self.cpoint3d.y = y
+        self.cpoint3d.z = z
         self.index = index
 
     def __sub__(Point3D self, Point3D other):
         cdef:
             Vector3D vector = Vector3D.__new__(Vector3D)
-        subtract_points3d(vector.cvector3d, self.cpoint, other.cpoint)
+        subtract_points3d(vector.cvector3d, self.cpoint3d, other.cpoint3d)
         return vector
+
+    def distance(Point3D self, Point3D other):
+        return c_point3d_distance(self.cpoint3d, other.cpoint3d)

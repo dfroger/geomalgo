@@ -1,8 +1,8 @@
 import unittest
+from math import sqrt
 
 from geomalgo import Point2D, is_left, is_counterclockwise, \
                      signed_triangle2d_area
-
 
 class TestPoint2D(unittest.TestCase):
 
@@ -18,6 +18,13 @@ class TestPoint2D(unittest.TestCase):
         
         B = Point2D(1,2, index=8)
         self.assertEqual(B.index, 8)
+
+    def test_distance(self):
+        A = Point2D(2,1)
+        B = Point2D(3,2)
+        dist = A.distance(B)
+        expected_dist = sqrt(2.)
+        self.assertAlmostEqual(dist, expected_dist)
 
 class TestIsLeft(unittest.TestCase):
 

@@ -1,4 +1,5 @@
 import unittest
+from math import sqrt
 
 from geomalgo import Point3D
 
@@ -16,6 +17,13 @@ class TestPoint(unittest.TestCase):
         
         B = Point3D(1,2,3, index=8)
         self.assertEqual(B.index, 8)
+
+    def test_distance(self):
+        A = Point3D(3,2,1)
+        B = Point3D(4,3,2)
+        dist = A.distance(B)
+        expected_dist = sqrt(3.)
+        self.assertAlmostEqual(dist, expected_dist)
 
     def test_vector_from_point_sub_point(self):
         A = Point3D(1,2,3)

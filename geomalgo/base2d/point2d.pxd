@@ -1,3 +1,5 @@
+from libc.math cimport sqrt
+
 cdef struct CPoint2D:
     double x
     double y
@@ -25,6 +27,9 @@ cdef inline double c_is_counterclockwise(CPoint2D* A, CPoint2D* B, CPoint2D* C):
     See: http://geomalgorithms.com/a01-_area.html
     """
     return c_is_left(A, B, C)
+
+cdef inline double c_point2d_distance(CPoint2D* A, CPoint2D* B):
+    return sqrt((B.x-A.x)**2 + (B.y-A.y)**2)
 
 cdef double c_signed_triangle2d_area(CPoint2D* A, CPoint2D* B, CPoint2D* C)
 
