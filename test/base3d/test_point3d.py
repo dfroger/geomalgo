@@ -33,5 +33,11 @@ class TestPoint(unittest.TestCase):
         self.assertEqual(V.y, 3)
         self.assertEqual(V.z, 1)
 
+    def test_str(self):
+        A = Point3D(3, 2, 1)
+        expected_string = "Point3D(3.0, 2.0, 1.0)"
+        string = str(A)
+        self.assertEqual(string, expected_string)
+
 if __name__ == '__main__':
     unittest.main()

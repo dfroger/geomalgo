@@ -82,6 +82,9 @@ cdef class Point2D:
         self.cpoint2d.y = y
         self.index = index
 
+    def __str__(self):
+        return 'Point2D({self.x}, {self.y})'.format(self=self)
+
     def __sub__(Point2D self, Point2D other):
         cdef:
             Vector2D vector = Vector2D.__new__(Vector2D)

@@ -33,6 +33,12 @@ class TestPoint2D(unittest.TestCase):
         self.assertEqual(V.x, 3)
         self.assertEqual(V.y, 1)
 
+    def test_str(self):
+        A = Point2D(2,1)
+        expected_string = "Point2D(2.0, 1.0)"
+        string = str(A)
+        self.assertEqual(string, expected_string)
+
 class TestIsLeft(unittest.TestCase):
 
     def test_is_left(self):

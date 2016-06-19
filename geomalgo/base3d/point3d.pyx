@@ -51,6 +51,9 @@ cdef class Point3D:
         self.cpoint3d.z = z
         self.index = index
 
+    def __str__(self):
+        return 'Point3D({self.x}, {self.y}, {self.z})'.format(self=self)
+
     def __sub__(Point3D self, Point3D other):
         cdef:
             Vector3D vector = Vector3D.__new__(Vector3D)
