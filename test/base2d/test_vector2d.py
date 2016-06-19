@@ -25,5 +25,11 @@ class TestVector(unittest.TestCase):
         self.assertEqual(V.x, 3)
         self.assertEqual(V.y, 4)
 
+    def test_cross_product(self):
+        A = Vector2D(1,-2)
+        B = Vector2D(3,4)
+        x = A * B
+        self.assertEqual(x, 10)
+
 if __name__ == '__main__':
     unittest.main()

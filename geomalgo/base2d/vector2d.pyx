@@ -54,6 +54,10 @@ cdef class Vector2D:
             Vector2D result = Vector2D.__new__(Vector2D)
         return dot_product2d(self.cvector2d, other.cvector2d)
 
+    def __mul__(Vector2D self, Vector2D other):
+        """Compute cross product between two vectors"""
+        return cross_product2d(self.cvector2d, other.cvector2d)
+
     def __sub__(Vector2D self, Vector2D other):
         """Subtract two vectors"""
         cdef:
