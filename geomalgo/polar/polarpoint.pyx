@@ -1,4 +1,4 @@
-from ..base2d import Point2D
+from ..base2d.point2d cimport Point2D
 
 cdef class PolarPoint:
 

@@ -1,7 +1,0 @@
-from ..base3d.point3d cimport CPoint3D
-from ..base3d.segment3d cimport CSegment3D
-from ..base3d.triangle3d cimport CTriangle3D
-
-cdef int c_intersection_triangle3d_segment3d(CPoint3D* I, CTriangle3D* tri,
-                                             CSegment3D* seg)
-

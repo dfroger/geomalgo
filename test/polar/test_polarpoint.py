@@ -8,8 +8,8 @@ class TestPolarPoint(unittest.TestCase):
     def test_to_cartesian(self):
         P = PolarPoint(r=2., theta=0.)
         A = P.to_cartesian()
-        self.assertEqual(A.x, 2.)
-        self.assertEqual(A.y, 0.)
+        self.assertAlmostEqual(A.x, 2.)
+        self.assertAlmostEqual(A.y, 0.)
 
         P = PolarPoint(r=2., theta=pi/2)
         A = P.to_cartesian()

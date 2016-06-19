@@ -17,12 +17,12 @@ def intersec3d_triangle_segment(Triangle3D triangle, Segment3D segment):
         CSegment3D* seg = new_segment3d()
         CPoint3D* I = new_point3d()
 
-    tri.A = triangle.A.cpoint
-    tri.B = triangle.B.cpoint
-    tri.C = triangle.C.cpoint
+    tri.A = triangle.A.cpoint3d
+    tri.B = triangle.B.cpoint3d
+    tri.C = triangle.C.cpoint3d
 
-    seg.A = segment.A.cpoint
-    seg.B = segment.B.cpoint
+    seg.A = segment.A.cpoint3d
+    seg.B = segment.B.cpoint3d
 
     res = c_intersec3d_triangle_segment(I, tri, seg)
     
@@ -44,7 +44,7 @@ def intersec3d_triangle_segment(Triangle3D triangle, Segment3D segment):
     cdef:
         Point3D intersection = Point3D.__new__(Point3D)
 
-    intersection.cpoint = I
+    intersection.cpoint3d = I
 
     return intersection
 

@@ -1,6 +1,6 @@
 from libc.math cimport sin, cos
 
 cdef class PolarPoint:
-    cdef:
+    cdef public:
         double r
         double theta

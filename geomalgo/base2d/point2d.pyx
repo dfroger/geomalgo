@@ -1,6 +1,9 @@
 import math
 
 from libc.stdlib cimport malloc, free
+from libc.math cimport sqrt, atan2
+
+from ..polar cimport PolarPoint
 
 cdef CPoint2D* new_point2d():
     return <CPoint2D*> malloc(sizeof(CPoint2D))
@@ -93,3 +96,11 @@ cdef class Point2D:
 
     def distance(Point2D self, Point2D other):
         return c_point2d_distance(self.cpoint2d, other.cpoint2d)
+
+    def to_polar(self):
+        cdef:
+            double r
+            double theta
+        r = sqrt(self.x**2 + self.y**2)
+        theta = atan2(self.y, self.x);
+        return PolarPoint(r, theta)

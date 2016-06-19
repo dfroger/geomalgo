@@ -1,5 +1,5 @@
 import unittest
-from math import sqrt
+from math import sqrt, pi
 
 from geomalgo import Point2D, is_left, is_counterclockwise, \
                      signed_triangle2d_area
@@ -38,6 +38,17 @@ class TestPoint2D(unittest.TestCase):
         expected_string = "Point2D(2.0, 1.0)"
         string = str(A)
         self.assertEqual(string, expected_string)
+
+    def test_to_polar(self):
+        A = Point2D(2, 0)
+        P = A.to_polar()
+        self.assertAlmostEqual(P.r, 2)
+        self.assertAlmostEqual(P.theta, 0)
+
+        A = Point2D(0, 2)
+        P = A.to_polar()
+        self.assertAlmostEqual(P.r, 2.)
+        self.assertAlmostEqual(P.theta, pi/2)
 
 class TestIsLeft(unittest.TestCase):
 

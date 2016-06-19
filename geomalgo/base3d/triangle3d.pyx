@@ -69,9 +69,9 @@ cdef class Triangle3D:
         def __get__(self):
             cdef:
                 CTriangle3D T
-            T.A = self.A.cpoint
-            T.B = self.B.cpoint
-            T.C = self.C.cpoint
+            T.A = self.A.cpoint3d
+            T.B = self.B.cpoint3d
+            T.C = self.C.cpoint3d
             return compute_area3d(&T)
 
     def __init__(self, Point3D A, Point3D B, Point3D C, index=0):
@@ -84,8 +84,8 @@ cdef class Triangle3D:
         cdef:
             Point3D S = Point3D.__new__(Point3D)
             CTriangle3D T
-        T.A = self.A.cpoint
-        T.B = self.B.cpoint
-        T.C = self.C.cpoint
-        compute_symetric_point3d(S.cpoint, &T, P.cpoint)
+        T.A = self.A.cpoint3d
+        T.B = self.B.cpoint3d
+        T.C = self.C.cpoint3d
+        compute_symetric_point3d(S.cpoint3d, &T, P.cpoint3d)
         return S
