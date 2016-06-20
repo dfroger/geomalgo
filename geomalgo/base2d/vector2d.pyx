@@ -1,5 +1,4 @@
 from libc.stdlib cimport malloc, free
-from libc.math cimport sqrt
 
 cdef CVector2D* new_vector2d():
     return <CVector2D*> malloc(sizeof(CVector2D))
@@ -7,16 +6,6 @@ cdef CVector2D* new_vector2d():
 cdef void del_vector2d(CVector2D* V):
     if V is not NULL:
         free(V)
-
-cdef void subtract_vector2d(CVector2D *c, CVector2D *b, CVector2D *a):
-    c.x = b.x - a.x
-    c.y = b.y - a.y
-
-cdef double dot_product2d(CVector2D *a, CVector2D *b):
-    return a.x*b.x + a.y*b.y
-
-cdef double compute_norm2d(CVector2D *a):
-    return sqrt(a.x*a.x + a.y*a.y)
 
 cdef class Vector2D:
 
