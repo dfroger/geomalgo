@@ -34,6 +34,23 @@ class TestPlane(unittest.TestCase):
         self.assertEqual(plane.point.x, 0.5)
         self.assertEqual(plane.normal.z, 1)
 
+    def test_point_projection(self):
 
+        A = Point3D(0, 0, 0)
+        B = Point3D(1, 0, 0)
+        C = Point3D(0, 1, 0)
+
+        P = Point3D(0.5, 0.5, 0)
+        M = Point3D(0.5, 0.5, 1)
+
+        normal = M - P
+
+        plane = Plane(point=P, normal=normal)
+
+        projection = plane.project_point(M)
+        self.assertAlmostEqual(projection.x, P.x)
+        self.assertAlmostEqual(projection.y, P.y)
+        self.assertAlmostEqual(projection.z, P.z)
+        
 if __name__ == '__main__':
     unittest.main()
