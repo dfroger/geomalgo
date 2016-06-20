@@ -1,5 +1,9 @@
 from libc.stdlib cimport malloc, free
 
+from .vector3d cimport dot_product3d
+from .point3d cimport point3d_plus_vector3d, subtract_points3d
+
+
 cdef CPlane* new_plane():
     return <CPlane*> malloc(sizeof(CPlane))
 
@@ -7,11 +11,22 @@ cdef void del_plane(CPlane* plane):
     if plane is not NULL:
         free(plane)
 
-cdef void point_projection_to_plane(CPoint3D* point, CPlane* plane,
+cdef void point_projection_to_plane(CPoint3D* P, CPlane* plane,
                                     CPoint3D* projection):
-    projection.x = 0.5
-    projection.y = 0.5
-    projection.z = 0.
+    """
+    From http://geomalgorithms.com/a04-_planes.html
+    """
+    cdef:
+        double sb, sn, sd
+        CVector3D u
+
+    subtract_points3d(&u, P, plane.point)
+
+    sn = - dot_product3d(plane.normal, &u)
+    sd =   dot_product3d(plane.normal, plane.normal)
+    sb = sn / sd
+
+    point3d_plus_vector3d(projection, P, sb, plane.normal)
 
 cdef class Plane:
 
