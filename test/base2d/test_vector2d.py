@@ -31,5 +31,13 @@ class TestVector(unittest.TestCase):
         x = A * B
         self.assertEqual(x, 10)
 
+    def test_normalize(self):
+        A = Vector2D(3, 4)
+        A.normalize()
+        self.assertAlmostEqual(A.x, 0.6)
+        self.assertAlmostEqual(A.y, 0.8)
+        self.assertAlmostEqual(A.norm, 1.)
+        
+
 if __name__ == '__main__':
     unittest.main()

@@ -25,6 +25,13 @@ cdef inline double dot_product3d(CVector3D *a, CVector3D *b):
 cdef inline double compute_norm3d(CVector3D *a):
     return sqrt( a.x*a.x + a.y*a.y + a.z*a.z )
 
+cdef inline void normalize_vector3d(CVector3D *a):
+    cdef:
+        double norm = compute_norm3d(a)
+    a.x /= norm
+    a.y /= norm
+    a.z /= norm
+
 cdef class Vector3D:
     cdef:
         CVector3D* cvector3d

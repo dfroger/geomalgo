@@ -21,6 +21,12 @@ cdef inline double dot_product2d(CVector2D *a, CVector2D *b):
 cdef inline double compute_norm2d(CVector2D *a):
     return sqrt(a.x*a.x + a.y*a.y)
 
+cdef inline void normalize_vector2d(CVector2D *a):
+    cdef:
+        double norm = compute_norm2d(a)
+    a.x /= norm
+    a.y /= norm
+
 cdef class Vector2D:
     cdef:
         CVector2D* cvector2d

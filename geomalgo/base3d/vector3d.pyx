@@ -50,6 +50,9 @@ cdef class Vector3D:
             Vector3D result = Vector3D.__new__(Vector3D)
         return dot_product3d(self.cvector3d, other.cvector3d)
 
+    def normalize(self):
+        normalize_vector3d(self.cvector3d)
+
     def __mul__(Vector3D self, Vector3D other):
         """Compute cross prodcution between two vectors"""
         cdef:
