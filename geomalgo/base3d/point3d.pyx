@@ -1,4 +1,7 @@
 from libc.stdlib cimport malloc, free
+from libc.math cimport sqrt, atan2
+
+from ..cylindrical.cylindrical_point cimport CylindricalPoint
 
 cdef CPoint3D* new_point3d():
     return <CPoint3D*> malloc(sizeof(CPoint3D))
@@ -62,3 +65,11 @@ cdef class Point3D:
 
     def distance(Point3D self, Point3D other):
         return c_point3d_distance(self.cpoint3d, other.cpoint3d)
+
+    def to_cylindrical(self):
+        cdef:
+            double r
+            double theta
+        r = sqrt(self.x**2 + self.y**2)
+        theta = atan2(self.y, self.x);
+        return CylindricalPoint(r, theta, self.z)

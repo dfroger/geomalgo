@@ -1,5 +1,5 @@
 import unittest
-from math import sqrt
+from math import sqrt, pi
 
 from geomalgo import Point3D
 
@@ -38,6 +38,19 @@ class TestPoint(unittest.TestCase):
         expected_string = "Point3D(3.0, 2.0, 1.0)"
         string = str(A)
         self.assertEqual(string, expected_string)
+
+    def test_to_cylindrical(self):
+        A = Point3D(2, 0, 0.5)
+        P = A.to_cylindrical()
+        self.assertAlmostEqual(P.r, 2)
+        self.assertAlmostEqual(P.theta, 0)
+        self.assertEqual(P.z, 0.5)
+
+        A = Point3D(0, 2, 0.5)
+        P = A.to_cylindrical()
+        self.assertAlmostEqual(P.r, 2.)
+        self.assertAlmostEqual(P.theta, pi/2)
+        self.assertEqual(P.z, 0.5)
 
 if __name__ == '__main__':
     unittest.main()
