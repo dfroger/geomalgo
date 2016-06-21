@@ -42,8 +42,10 @@ setup(
         'geomalgo.base1d',
         'geomalgo.base2d',
         'geomalgo.base3d',
+        'geomalgo.cylindrical',
         'geomalgo.inclusion',
         'geomalgo.intersection',
+        'geomalgo.polar',
         'geomalgo.triangulation',
     ],
     ext_modules = cythonize(
