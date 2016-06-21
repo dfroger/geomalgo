@@ -17,5 +17,58 @@ class TestTriangle(unittest.TestCase):
         segment.B = Point2D(-1, -2)
         self.assertEqual(segment.B.y, -2)
 
+    def test_horizontal_segment_includes_point(self):
+        """
+
+        O      A      I      B      P
+        +------+------+------+------+
+        -0.5   0      0.5    1      1.5
+        """
+
+        A = Point2D(0, 0)
+        B = Point2D(1, 0)
+        segment = Segment2D(A,B)
+
+        O = Point2D(-0.5, 0)
+        I = Point2D( 0.5, 0)
+        P = Point2D( 1.5, 0)
+
+        self.assertTrue( segment.includes_point(I) )
+
+        self.assertTrue( segment.includes_point(A) )
+        self.assertTrue( segment.includes_point(B) )
+
+        self.assertFalse( segment.includes_point(O) )
+        self.assertFalse( segment.includes_point(P) )
+
+    def test_vertical_segment_includes_point(self):
+        """
+         1.5  + P
+              |
+         1    + B
+              |
+         0.5  + I
+              |
+         0    + A
+              |
+        -0.5  + 0
+        """
+
+        A = Point2D(0, 0)
+        B = Point2D(0, 1)
+        segment = Segment2D(A,B)
+
+        O = Point2D(0, -0.5)
+        I = Point2D(0,  0.5)
+        P = Point2D(0,  1.5)
+
+        self.assertTrue( segment.includes_point(I) )
+
+        self.assertTrue( segment.includes_point(A) )
+        self.assertTrue( segment.includes_point(B) )
+
+        self.assertFalse( segment.includes_point(O) )
+        self.assertFalse( segment.includes_point(P) )
+
 if __name__ == '__main__':
     unittest.main()
