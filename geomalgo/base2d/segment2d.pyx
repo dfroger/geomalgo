@@ -10,6 +10,11 @@ cdef void del_segment2d(CSegment2D* csegment2d):
     if csegment2d is not NULL:
         free(csegment2d)
 
+cdef segment2d_at_parametric_coord(CSegment2D seg, CParametricCoord1D alpha,
+                                   CPoint2D* result):
+    result.x = (1-alpha)*seg.A.x + alpha*seg.B.x
+    result.y = (1-alpha)*seg.A.y + alpha*seg.B.y
+
 cdef class Segment2D:
 
     def __init__(self, Point2D A, Point2D B):
@@ -19,6 +24,15 @@ cdef class Segment2D:
     def __str__(self):
         return "Segment2D(({self.A.x},{self.A.y}),({self.B.x},{self.B.y}))" \
                .format(self=self)
+
+    def at_parametric_coord(Segment2D self, double alpha):
+        cdef:
+            CSegment2D S
+            Point2D result = Point2D.__new__(Point2D)
+        S.A = self.A.cpoint2d
+        S.B = self.B.cpoint2d
+        segment2d_at_parametric_coord(S, alpha, result.cpoint2d)
+        return result
 
     def includes_point(Segment2D self, Point2D P):
         cdef:
