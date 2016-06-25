@@ -17,7 +17,9 @@ class TestSegment2D(unittest.TestCase):
         segment.B = Point2D(-1, -2)
         self.assertEqual(segment.B.y, -2)
 
-    def test_horizontal_segment_includes_point(self):
+class TestIncludesPoint(unittest.TestCase):
+
+    def test_horizontal_segment(self):
         """
 
         O      A      I      B      P
@@ -41,7 +43,7 @@ class TestSegment2D(unittest.TestCase):
         self.assertFalse( segment.includes_point(O) )
         self.assertFalse( segment.includes_point(P) )
 
-    def test_vertical_segment_includes_point(self):
+    def test_vertical_segment(self):
         """
          1.5  + P
               |

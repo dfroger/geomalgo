@@ -1,6 +1,6 @@
 from libc.stdlib cimport malloc, free
 
-from .parametric_segment2d cimport segment2d_at_parametric_coord
+from .point2d cimport subtract_points2d
 from ..inclusion.segment2d_point2d cimport segment2d_includes_point2d
 from ..intersection.segment2d_segment2d cimport intersect_segment2d_segment2d
 
@@ -11,6 +11,16 @@ cdef void del_segment2d(CSegment2D* csegment2d):
     if csegment2d is not NULL:
         free(csegment2d)
 
+cdef segment2d_to_parametric(CParametricSegment2D* PS, CSegment2D* S):
+    PS.A = S.A
+    subtract_points2d(PS.AB, S.B, S.A)
+
+cdef segment2d_at_parametric_coord(CSegment2D* seg, CParametricCoord1D alpha,
+                                   CPoint2D* result):
+    result.x = (1-alpha)*seg.A.x + alpha*seg.B.x
+    result.y = (1-alpha)*seg.A.y + alpha*seg.B.y
+
+
 cdef class Segment2D:
 
     property A:
@@ -18,24 +28,37 @@ cdef class Segment2D:
             return self.A
         def __set__(self, Point2D A):
             self.A = A
+            # C points to Python.
             self.csegment2d.A = A.cpoint2d
+            self.cparametric_segment2d.A = A.cpoint2d
 
     property B:
         def __get__(self):
             return self.B
         def __set__(self, Point2D B):
             self.B = B
+            # C points to Python.
             self.csegment2d.B = B.cpoint2d
 
     def __init__(self, Point2D A, Point2D B):
         self.A = A
         self.B = B
+        self.AB = Vector2D.__new__(Vector2D)
+
+        # C points to Python.
         self.csegment2d.A = A.cpoint2d
         self.csegment2d.B = B.cpoint2d
+        self.cparametric_segment2d.A = A.cpoint2d
+        self.cparametric_segment2d.AB = self.AB.cvector2d 
+        self.recompute()
 
     def __str__(self):
         return "Segment2D(({self.A.x},{self.A.y}),({self.B.x},{self.B.y}))" \
                .format(self=self)
+
+    def recompute(Segment2D self):
+        """Must be called manually if any point coordinate changed"""
+        segment2d_to_parametric(&self.cparametric_segment2d, &self.csegment2d)
 
     def at_parametric_coord(Segment2D self, double alpha):
         cdef:
