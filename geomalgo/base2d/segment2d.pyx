@@ -13,9 +13,25 @@ cdef void del_segment2d(CSegment2D* csegment2d):
 
 cdef class Segment2D:
 
+    property A:
+        def __get__(self):
+            return self.A
+        def __set__(self, Point2D A):
+            self.A = A
+            self.csegment2d.A = A.cpoint2d
+
+    property B:
+        def __get__(self):
+            return self.B
+        def __set__(self, Point2D B):
+            self.B = B
+            self.csegment2d.B = B.cpoint2d
+
     def __init__(self, Point2D A, Point2D B):
         self.A = A
         self.B = B
+        self.csegment2d.A = A.cpoint2d
+        self.csegment2d.B = B.cpoint2d
 
     def __str__(self):
         return "Segment2D(({self.A.x},{self.A.y}),({self.B.x},{self.B.y}))" \
@@ -23,34 +39,21 @@ cdef class Segment2D:
 
     def at_parametric_coord(Segment2D self, double alpha):
         cdef:
-            CSegment2D S
             Point2D result = Point2D.__new__(Point2D)
-        S.A = self.A.cpoint2d
-        S.B = self.B.cpoint2d
-        segment2d_at_parametric_coord(S, alpha, result.cpoint2d)
+        segment2d_at_parametric_coord(&self.csegment2d, alpha, result.cpoint2d)
         return result
 
     def includes_point(Segment2D self, Point2D P):
-        cdef:
-            CSegment2D S
-        S.A = self.A.cpoint2d
-        S.B = self.B.cpoint2d
-
-        return segment2d_includes_point2d(&S, P.cpoint2d) == 1
+        return segment2d_includes_point2d(&self.csegment2d, P.cpoint2d) == 1
 
     def intersect_segment(Segment2D self, Segment2D other, epsilon=1.E-08):
         cdef:
-            CSegment2D S1, S2
+            int res
             Point2D I0 = Point2D.__new__(Point2D)
             Point2D I1 = Point2D.__new__(Point2D)
 
-        S1.A = self.A.cpoint2d
-        S1.B = self.B.cpoint2d
-
-        S2.A = other.A.cpoint2d
-        S2.B = other.B.cpoint2d
-
-        res = intersect_segment2d_segment2d(&S1, &S2, 
+        res = intersect_segment2d_segment2d(&self.csegment2d,
+                                            &other.csegment2d, 
                                             I0.cpoint2d, I1.cpoint2d,
                                             epsilon=epsilon)
 

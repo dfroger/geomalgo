@@ -11,6 +11,7 @@ cdef void del_segment2d(CSegment2D* csegment2d)
 
 cdef class Segment2D:
 
-    cdef public:
+    cdef:
         Point2D A
         Point2D B
+        CSegment2D csegment2d
