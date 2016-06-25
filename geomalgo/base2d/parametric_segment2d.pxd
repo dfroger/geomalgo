@@ -11,5 +11,5 @@ cdef CParametricSegment2D* new_parametric_segment2d()
 
 cdef void del_parametric_segment2d(CParametricSegment2D* S)
 
-cdef segment2d_at_parametric_coord(CSegment2D seg, CParametricCoord1D alpha,
+cdef segment2d_at_parametric_coord(CSegment2D* seg, CParametricCoord1D alpha,
                                    CPoint2D* result)
