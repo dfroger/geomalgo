@@ -10,12 +10,12 @@ cdef int intersect_segment2d_segment2d(CSegment2D* S1, CSegment2D* S2,
 
     http://geomalgorithms.com/a05-_intersect-1.html
 
-   Input:  two finite segments S1 and S2
-   Output: *I0 = intersect point (when it exists)
-           *I1 =  endpoint of intersect segment [I0,I1] (when it exists)
-   Return: 0=disjoint (no intersect)
-           1=intersect  in unique point I0
-           2=overlap  in segment from I0 to I1
+    Input:  two finite segments S1 and S2
+    Output: *I0 = intersect point (when it exists)
+            *I1 =  endpoint of intersect segment [I0,I1] (when it exists)
+    Return: 0=disjoint (no intersect)
+            1=intersect  in unique point I0
+            2=overlap  in segment from I0 to I1
     """
     cdef:
         CVector2D u, v, w, w2
