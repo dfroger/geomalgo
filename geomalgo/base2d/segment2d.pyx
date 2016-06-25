@@ -1,6 +1,7 @@
 from libc.stdlib cimport malloc, free
 
 from .point2d cimport subtract_points2d
+from .parametric_segment2d cimport parametric_segment2d_at
 from ..inclusion.segment2d_point2d cimport segment2d_includes_point2d
 from ..intersection.segment2d_segment2d cimport intersect_segment2d_segment2d
 
@@ -14,12 +15,6 @@ cdef void del_segment2d(CSegment2D* csegment2d):
 cdef segment2d_to_parametric(CParametricSegment2D* PS, CSegment2D* S):
     PS.A = S.A
     subtract_points2d(PS.AB, S.B, S.A)
-
-cdef segment2d_at_parametric_coord(CSegment2D* seg, CParametricCoord1D alpha,
-                                   CPoint2D* result):
-    result.x = (1-alpha)*seg.A.x + alpha*seg.B.x
-    result.y = (1-alpha)*seg.A.y + alpha*seg.B.y
-
 
 cdef class Segment2D:
 
@@ -60,10 +55,10 @@ cdef class Segment2D:
         """Must be called manually if any point coordinate changed"""
         segment2d_to_parametric(&self.cparametric_segment2d, &self.csegment2d)
 
-    def at_parametric_coord(Segment2D self, double alpha):
+    def at_parametric_coord(Segment2D self, double coord):
         cdef:
             Point2D result = Point2D.__new__(Point2D)
-        segment2d_at_parametric_coord(&self.csegment2d, alpha, result.cpoint2d)
+        parametric_segment2d_at(result.cpoint2d, self.cparametric_segment2d, coord)
         return result
 
     def includes_point(Segment2D self, Point2D P):
