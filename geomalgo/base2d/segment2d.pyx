@@ -1,5 +1,6 @@
 from libc.stdlib cimport malloc, free
 
+from .parametric_segment2d cimport segment2d_at_parametric_coord
 from ..inclusion.segment2d_point2d cimport segment2d_includes_point2d
 from ..intersection.segment2d_segment2d cimport intersect_segment2d_segment2d
 
@@ -9,11 +10,6 @@ cdef CSegment2D* new_segment2d():
 cdef void del_segment2d(CSegment2D* csegment2d):
     if csegment2d is not NULL:
         free(csegment2d)
-
-cdef segment2d_at_parametric_coord(CSegment2D seg, CParametricCoord1D alpha,
-                                   CPoint2D* result):
-    result.x = (1-alpha)*seg.A.x + alpha*seg.B.x
-    result.y = (1-alpha)*seg.A.y + alpha*seg.B.y
 
 cdef class Segment2D:
 

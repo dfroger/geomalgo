@@ -9,9 +9,6 @@ cdef CSegment2D* new_segment2d()
 
 cdef void del_segment2d(CSegment2D* csegment2d)
 
-cdef segment2d_at_parametric_coord(CSegment2D seg, CParametricCoord1D alpha,
-                                   CPoint2D* result)
-
 cdef class Segment2D:
 
     cdef public:
