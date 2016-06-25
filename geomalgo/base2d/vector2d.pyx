@@ -57,6 +57,13 @@ cdef class Vector2D:
         subtract_vector2d(result.cvector2d, self.cvector2d, other.cvector2d)
         return result
 
+    def __add__(Vector2D self, Vector2D other):
+        """Subtract two vectors"""
+        cdef:
+            Vector2D result = Vector2D.__new__(Vector2D)
+        add_vector2d(result.cvector2d, self.cvector2d, other.cvector2d)
+        return result
+
     def __str__(self):
         return "<Vector2D({},{}>".format(self.cvector2d.x,
                                              self.cvector2d.y)
