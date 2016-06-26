@@ -3,7 +3,7 @@ from ..base2d.vector2d cimport CVector2D, cross_product2d, dot_product2d
 from ..inclusion.segment2d_point2d cimport segment2d_includes_point2d
 
 cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
-                                       CSegment2D* segment1, 
+                                       CSegment2D* segment1,
                                        CPoint2D* I0, CPoint2D* I1,
                                        double epsilon=1.E-08):
     """
@@ -53,16 +53,16 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
         PQ2 = dot_product2d(&PQ,&PQ)
         RS2 = dot_product2d(&RS,&RS)
 
-        if PQ2==0 and RS2==0:             
+        if PQ2==0 and RS2==0:
             # Both segments are points.
-            if P !=  R:        
+            if P !=  R:
                 # They are distinct points
                 return 0
             # they are the same point
-            I0 = P            
+            I0 = P
             return 1
 
-        if PQ2 == 0: 
+        if PQ2 == 0:
             # segment0 is a single point
             if segment2d_includes_point2d(segment1, P) == 0:
                 # But is not in segment1.
