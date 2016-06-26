@@ -62,7 +62,7 @@ cdef class Segment2D:
         return result
 
     def includes_point(Segment2D self, Point2D P):
-        return segment2d_includes_point2d(&self.csegment2d, P.cpoint2d) == 1
+        return segment2d_includes_point2d(&self.csegment2d, P.cpoint2d)
 
     def intersect_segment(Segment2D self, Segment2D other, epsilon=1.E-08):
         cdef:

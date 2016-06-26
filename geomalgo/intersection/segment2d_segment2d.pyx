@@ -65,7 +65,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
 
         if PQ2 == 0:
             # segment0 is a single point
-            if segment2d_includes_point2d(segment1, P) == 0:
+            if not segment2d_includes_point2d(segment1, P):
                 # But is not in segment1.
                 return 0
             I0 = P
@@ -73,7 +73,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
 
         if RS2 == 0:
             # segment1 a single point
-            if  segment2d_includes_point2d(segment0, R) == 0:
+            if  not segment2d_includes_point2d(segment0, R):
                 # But is not in segment0.
                 return 0
             I0 = R

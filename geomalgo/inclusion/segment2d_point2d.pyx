@@ -1,4 +1,4 @@
-cdef int segment2d_includes_point2d(CSegment2D* S, CPoint2D* P):
+cdef bint segment2d_includes_point2d(CSegment2D* S, CPoint2D* P):
     """
     Determine if a point is inside a segment
 
@@ -14,22 +14,22 @@ cdef int segment2d_includes_point2d(CSegment2D* S, CPoint2D* P):
     Returns
     -------
 
-    int
-        1 if P is inside S, 0 = if P is not inside S
+    bint
+        True if P is inside S, False if P is not inside S
     """
     if S.A.x != S.B.x:
         # S is not  vertical.
         if S.A.x <= P.x <= S.B.x:
-            return 1
+            return True
         if S.A.x >= P.x >= S.B.x:
-            return 1
+            return True
 
     else:
         # S is vertical, so test y coordinate.
         if S.A.y <= P.y <= S.B.y:
-            return 1
+            return True
         if S.A.y >= P.y >= S.B.y:
-            return 1
+            return True
 
-    return 0
+    return False
 
