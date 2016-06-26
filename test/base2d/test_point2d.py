@@ -164,5 +164,20 @@ class TestSignedTriangle2dArea(unittest.TestCase):
         C = Point2D(2,0)
         self.assertAlmostEqual(signed_triangle2d_area(A,B,C), 0.)
 
+class TestEquality(unittest.TestCase):
+
+    def test_equal(self):
+        A = Point2D(2, 1)
+        B = Point2D(2, 1)
+        self.assertEqual(A, B)
+
+    def test_not_equal(self):
+        A = Point2D(1, 1)
+        B = Point2D(2, 1)
+        C = Point2D(1, 2)
+        self.assertNotEqual(A, B)
+        self.assertNotEqual(A, C)
+
+
 if __name__ == '__main__':
     unittest.main()

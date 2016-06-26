@@ -41,6 +41,9 @@ cdef inline double c_point2d_distance(CPoint2D* A, CPoint2D* B):
 
 cdef double c_signed_triangle2d_area(CPoint2D* A, CPoint2D* B, CPoint2D* C)
 
+cdef inline bint point2d_equal(CPoint2D* A, CPoint2D* B):
+    return A.x == B.x and A.y == B.y
+
 cdef class Point2D:
     cdef public:
         int index

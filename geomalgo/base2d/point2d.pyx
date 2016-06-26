@@ -94,6 +94,14 @@ cdef class Point2D:
         subtract_points2d(vector.cvector2d, self.cpoint2d, other.cpoint2d)
         return vector
 
+    def __richcmp__(Point2D self, Point2D other, int op):
+        if op == 2: # ==
+            return point2d_equal(self.cpoint2d, other.cpoint2d)
+        elif op == 3: # !=
+            return not point2d_equal(self.cpoint2d, other.cpoint2d)
+        else:
+            assert False
+
     def distance(Point2D self, Point2D other):
         return c_point2d_distance(self.cpoint2d, other.cpoint2d)
 
