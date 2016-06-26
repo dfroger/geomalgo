@@ -34,7 +34,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
         CPoint2D* S = segment1.B
 
         CVector2D PQ, RS, RP, RQ
-        double D, du, dv, t0, t1, sI, tI
+        double D, PQ2, RS2, t0, t1, sI, tI
 
     subtract_points2d(&PQ, Q, P)
     subtract_points2d(&RS, S, R)
@@ -50,10 +50,10 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
 
         # they are collinear or degenerate
         # check if they are degenerate  points
-        du = dot_product2d(&PQ,&PQ)
-        dv = dot_product2d(&RS,&RS)
+        PQ2 = dot_product2d(&PQ,&PQ)
+        RS2 = dot_product2d(&RS,&RS)
 
-        if du==0 and dv==0:             
+        if PQ2==0 and RS2==0:             
             # Both segments are points.
             if P !=  R:        
                 # They are distinct points
@@ -62,7 +62,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
             I0 = P            
             return 1
 
-        if du == 0: 
+        if PQ2 == 0: 
             # segment0 is a single point
             if segment2d_includes_point2d(segment1, P) == 0:
                 # But is not in segment1.
@@ -70,7 +70,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
             I0 = P
             return 1
 
-        if dv == 0:
+        if RS2 == 0:
             # segment1 a single point
             if  segment2d_includes_point2d(segment0, R) == 0:
                 # But is not in segment0.
