@@ -1,4 +1,5 @@
-from ..base2d.point2d cimport subtract_points2d, point2d_plus_vector2d
+from ..base2d.point2d cimport (subtract_points2d, point2d_plus_vector2d,
+                               point2d_equal)
 from ..base2d.vector2d cimport CVector2D, cross_product2d, dot_product2d
 from ..inclusion.segment2d_point2d cimport segment2d_includes_point2d
 
@@ -55,7 +56,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
 
         if PQ2==0 and RS2==0:
             # Both segments are points.
-            if P !=  R:
+            if not point2d_equal(P, R):
                 # They are distinct points
                 return 0
             # they are the same point
