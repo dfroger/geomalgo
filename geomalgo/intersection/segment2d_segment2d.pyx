@@ -2,7 +2,8 @@ from ..base2d.point2d cimport subtract_points2d, point2d_plus_vector2d
 from ..base2d.vector2d cimport CVector2D, cross_product2d, dot_product2d
 from ..inclusion.segment2d_point2d cimport segment2d_includes_point2d
 
-cdef int intersect_segment2d_segment2d(CSegment2D* S0, CSegment2D* S1, 
+cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
+                                       CSegment2D* segment1, 
                                        CPoint2D* I0, CPoint2D* I1,
                                        double epsilon=1.E-08):
     """
@@ -10,68 +11,82 @@ cdef int intersect_segment2d_segment2d(CSegment2D* S0, CSegment2D* S1,
 
     http://geomalgorithms.com/a05-_intersect-1.html
 
-    Input:  two finite segments S1 and S2
+    Input:  two finite segments segment0 and segment1
     Output: *I0 = intersect point (when it exists)
             *I1 =  endpoint of intersect segment [I0,I1] (when it exists)
     Return: 0=disjoint (no intersect)
             1=intersect  in unique point I0
             2=overlap  in segment from I0 to I1
+
+           S
+           |
+           |
+           |
+        P--I-------Q
+           |
+           R
     """
     cdef:
-        CVector2D u, v, w, w2
+        # Extract points.
+        CPoint2D* P = segment0.A
+        CPoint2D* Q = segment0.B
+        CPoint2D* R = segment1.A
+        CPoint2D* S = segment1.B
+
+        CVector2D PQ, RS, RP, RQ
         double D, du, dv, t0, t1, sI, tI
 
-    subtract_points2d(&u, S0.B, S0.A)
-    subtract_points2d(&v, S1.B, S1.A)
-    subtract_points2d(&w, S0.A, S1.A)
-    D = cross_product2d(&u, &v)
+    subtract_points2d(&PQ, Q, P)
+    subtract_points2d(&RS, S, R)
+    subtract_points2d(&RP, P, R)
+    D = cross_product2d(&PQ, &RS)
 
     # Test if they are parallel (includes either being a point)
-    # S0 and S1 are parallel
+    # segment0 and segment1 are parallel
     if abs(D) < epsilon:
-        if cross_product2d(&u,&w) != 0 or cross_product2d(&v,&w) != 0:
+        if cross_product2d(&PQ,&RP) != 0 or cross_product2d(&RS,&RP) != 0:
             ## They are NOT collinear.
             return 0
 
         # they are collinear or degenerate
         # check if they are degenerate  points
-        du = dot_product2d(&u,&u)
-        dv = dot_product2d(&v,&v)
+        du = dot_product2d(&PQ,&PQ)
+        dv = dot_product2d(&RS,&RS)
 
         if du==0 and dv==0:             
             # Both segments are points.
-            if S0.A !=  S1.A:        
+            if P !=  R:        
                 # They are distinct points
                 return 0
             # they are the same point
-            I0 = S0.A            
+            I0 = P            
             return 1
 
         if du == 0: 
-            # S0 is a single point
-            if segment2d_includes_point2d(S1, S0.A) == 0:
-                # But is not in S1.
+            # segment0 is a single point
+            if segment2d_includes_point2d(segment1, P) == 0:
+                # But is not in segment1.
                 return 0
-            I0 = S0.A
+            I0 = P
             return 1
 
         if dv == 0:
-            # S1 a single point
-            if  segment2d_includes_point2d(S0, S1.A) == 0:
-                # But is not in S0.
+            # segment1 a single point
+            if  segment2d_includes_point2d(segment0, R) == 0:
+                # But is not in segment0.
                 return 0
-            I0 = S1.A
+            I0 = R
             return 1
 
         # They are collinear segments - get  overlap (or not).
-        # Endpoints of S0 in eqn for S1.
-        subtract_points2d(&w2, S0.B, S1.A)
-        if v.x != 0:
-             t0 = w.x / v.x
-             t1 = w2.x / v.x
+        # Endpoints of segment0 in eqn for segment1.
+        subtract_points2d(&RQ, Q, R)
+        if RS.x != 0:
+             t0 = RP.x / RS.x
+             t1 = RQ.x / RS.x
         else:
-             t0 = w.y / v.y
-             t1 = w2.y / v.y
+             t0 = RP.y / RS.y
+             t1 = RQ.y / RS.y
 
         # Must have t0 smaller than t1
         if t0 > t1:
@@ -87,26 +102,26 @@ cdef int intersect_segment2d_segment2d(CSegment2D* S0, CSegment2D* S1,
 
         if t0 == t1:
             # Intersect is a point.
-            point2d_plus_vector2d(I0, S1.A, t0, &v)
+            point2d_plus_vector2d(I0, R, t0, &RS)
 
         # They overlap in a valid subsegment.
-        point2d_plus_vector2d(I0, S1.A, t0, &v)
-        point2d_plus_vector2d(I1, S1.A, t1, &v)
+        point2d_plus_vector2d(I0, R, t0, &RS)
+        point2d_plus_vector2d(I1, R, t1, &RS)
         return 2
 
     # The segments are skew and may intersect in a point.
-    # Get the intersect parameter for S0.
-    sI = cross_product2d(&v, &w) / D
+    # Get the intersect parameter for segment0.
+    sI = cross_product2d(&RS, &RP) / D
     if sI < 0 or sI > 1:
-        # No intersect with S0.
+        # No intersect with segment0.
         return 0
 
-    # Get the intersect parameter for S1.
-    tI = cross_product2d(&u, &w) / D
+    # Get the intersect parameter for segment1.
+    tI = cross_product2d(&PQ, &RP) / D
     if tI < 0 or tI > 1:
-        # No intersect with S1.
+        # No intersect with segment1.
         return 0
 
-    # Compute S0 intersect point
-    point2d_plus_vector2d(I0, S0.A, sI, &u)
+    # Compute segment0 intersect point
+    point2d_plus_vector2d(I0, P, sI, &PQ)
     return 1
