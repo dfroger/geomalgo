@@ -59,4 +59,5 @@ setup(
         },
     ),
     requires = ['numpy'],
+    tests_require = ['nose', 'coverage'],
 )
