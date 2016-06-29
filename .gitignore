@@ -2,3 +2,4 @@ build/
 *.so
 .lock-waf*
 __pycache__
+craftrc.py

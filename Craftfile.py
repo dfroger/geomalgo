@@ -4,10 +4,33 @@ from craftr import path, options, error, Framework
 from craftr.ext.compiler.cython import cythonc
 from craftr.ext import platform, python
 
+def cython_flags():
+    
+    def add_flag(name, default):
+        value = options.get_bool(name, default)
+        flags.append('-X {}={}'.format(name, value))
+
+    flags = []
+
+    add_flag('boundscheck', False)
+    add_flag('cdivision', True)
+    add_flag('wraparound', False)
+    add_flag('initializedcheck', False)
+    add_flag('profile', False)
+
+    return flags
+
+defines = []
+if options.get_bool('profile'):
+    defines.append('CYTHON_TRACE_NOGIL=1')
+
+cython_flags()
+
 c_files = cythonc.compile(
   py_sources = path.glob('geomalgo/**/*.pyx'),
   python_version = 3,
   cpp = False,
+  additional_flags = cython_flags()
 )
 
 pybin = options.get('PYTHON', 'python')
@@ -27,10 +50,12 @@ for fn in c_files.outputs:
   platform.ld.link(
     output = outfile,
     output_type = 'dll',
-    keep_suffix = True,  # don't let link() replace the suffix with one appropriate for the OS (eg. dll on Windows)
+    keep_suffix = True, # don't let link() replace the suffix with one
+                        # appropriate for the OS (eg. dll on Windows)
     inputs = platform.cc.compile(
       sources = [fn],
       frameworks = [python_fw],
       pic = True,
+      defines = defines
     ),
   )
