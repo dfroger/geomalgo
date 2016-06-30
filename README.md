@@ -25,3 +25,7 @@ Build:
 
 Test:
     nosetests
+
+Test coverage:
+    nosetests --with-coverage --cover-package=geomalgo
+    coverage html

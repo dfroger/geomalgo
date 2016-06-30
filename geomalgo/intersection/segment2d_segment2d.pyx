@@ -60,7 +60,8 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
                 # They are distinct points
                 return 0
             # they are the same point
-            I0 = P
+            I0.x = P.x
+            I0.y = P.y
             return 1
 
         if PQ2 == 0:
@@ -68,7 +69,8 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
             if not segment2d_includes_point2d(segment1, P):
                 # But is not in segment1.
                 return 0
-            I0 = P
+            I0.x = P.x
+            I0.y = P.y
             return 1
 
         if RS2 == 0:
@@ -76,7 +78,8 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
             if  not segment2d_includes_point2d(segment0, R):
                 # But is not in segment0.
                 return 0
-            I0 = R
+            I0.x = R.x
+            I0.y = R.y
             return 1
 
         # They are collinear segments - get  overlap (or not).
@@ -104,6 +107,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
         if t0 == t1:
             # Intersect is a point.
             point2d_plus_vector2d(I0, R, t0, &RS)
+            return 1
 
         # They overlap in a valid subsegment.
         point2d_plus_vector2d(I0, R, t0, &RS)
