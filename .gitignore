@@ -3,3 +3,8 @@ build/
 .lock-waf*
 __pycache__
 craftrc.py
+
+# Windows
+*.pyd
+*.exp
+*.lib
