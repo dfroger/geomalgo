@@ -20,7 +20,7 @@ def list_sources():
     """
     Iterates on pair (module filepath, module name).
 
-    One pair is for example: 
+    One pair is for example:
         (geomalgo/base2d/point2d.pyx, geomalgo.base2d.point2d)
     """
     for fp in Path('.').glob('geomalgo/**/*.pyx'):

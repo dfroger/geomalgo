@@ -4,9 +4,9 @@ Cython implementation of http://geomalgorithms.com
 
 ## Development
 
-Install Python 3.5, Cython, and nose in a Conda environment: 
+Install Python 3.5, Cython, and nose in a Conda environment:
 
-    conda create -n geomalgo python=3.5 cython nose coverage
+    conda create -n geomalgo python=3.5 cython numpy nose coverage
     source activate geomalgo
 
 Install `Ninja` build system: https://ninja-build.org
