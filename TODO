@@ -1,3 +1,5 @@
+Package Ninja and Craftr with Conda.
+
 code coverage
   - http://docs.cython.org/src/tutorial/profiling_tutorial.html#enabling-coverage-analysis
   - https://coverage.readthedocs.io
