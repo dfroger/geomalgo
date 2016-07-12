@@ -5,8 +5,4 @@ code coverage
   - https://coverage.readthedocs.io
   - http://nose.readthedocs.io/en/latest/plugins/cover.html
 
-Travis for GNU/Linux and OSX
-
-merge CTriangle2D and CParametricTriangle2D
-
 segment intersection returns parametric coords

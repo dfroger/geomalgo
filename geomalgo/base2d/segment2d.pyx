@@ -1,8 +1,7 @@
 from libc.stdlib cimport malloc, free
 
 from ..base1d.parametric_coord1d cimport CParametricCoord1D
-from .point2d cimport subtract_points2d
-from .parametric_segment2d cimport parametric_segment2d_at
+from .point2d cimport subtract_points2d, CPoint2D, point2d_plus_vector2d
 from ..inclusion.segment2d_point2d cimport segment2d_includes_point2d
 from ..intersection.segment2d_segment2d cimport intersect_segment2d_segment2d
 
@@ -13,9 +12,57 @@ cdef void del_segment2d(CSegment2D* csegment2d):
     if csegment2d is not NULL:
         free(csegment2d)
 
-cdef segment2d_to_parametric(CParametricSegment2D* PS, CSegment2D* S):
-    PS.A = S.A
-    subtract_points2d(PS.AB, S.B, S.A)
+cdef CSegment2D* create_segment2d(CPoint2D* A, CPoint2D* B):
+    cdef:
+        CSegment2D* seg = new_segment2d()
+    seg.A = A
+    seg.B = B
+    subtract_points2d(seg.AB, seg.B, seg.A)
+    return seg
+
+cdef segment2d_at(CPoint2D* result, CSegment2D S,
+                  CParametricCoord1D coord):
+    """
+    A     P
+    +-----+-----> AB
+
+    P = A + coord*AB
+
+    Note
+    ----
+    
+    This can be derived from 1D interpolation formuale:
+
+        a   x       b
+        +---+-------+
+
+        alpha = (x-a) / (b-a)
+
+        fx = (1-alpha)*fa + alpha*fb
+           = fa + alpha*(fb-fa)
+
+    So:
+        px = xa + alpha*(xb-xa)
+        py = ya + alpha*(yb-ya)
+
+    However, we keep simple and use 'point2d_plus_vector2d' function instead
+    of generic inteporlation functions.
+    """
+    point2d_plus_vector2d(result, S.A, coord, S.AB)
+
+cdef CParametricCoord1D segment2d_where(CSegment2D* seg, CPoint2D* P):
+    """
+    Compute coordinate of Point p in segment AB
+
+    Assume point in on segment
+
+    A----P-------B
+    """
+
+    if seg.AB.x != 0.:
+        return (P.x - seg.A.x) / seg.AB.x
+    else:
+        return (P.y - seg.A.y) / seg.AB.y
 
 cdef class Segment2D:
 
@@ -26,7 +73,6 @@ cdef class Segment2D:
             self.A = A
             # C points to Python.
             self.csegment2d.A = A.cpoint2d
-            self.cparametric_segment2d.A = A.cpoint2d
 
     property B:
         def __get__(self):
@@ -44,8 +90,7 @@ cdef class Segment2D:
         # C points to Python.
         self.csegment2d.A = A.cpoint2d
         self.csegment2d.B = B.cpoint2d
-        self.cparametric_segment2d.A = A.cpoint2d
-        self.cparametric_segment2d.AB = self.AB.cvector2d 
+        self.csegment2d.AB = self.AB.cvector2d 
         self.recompute()
 
     def __str__(self):
@@ -54,13 +99,17 @@ cdef class Segment2D:
 
     def recompute(Segment2D self):
         """Must be called manually if any point coordinate changed"""
-        segment2d_to_parametric(&self.cparametric_segment2d, &self.csegment2d)
+        subtract_points2d(self.csegment2d.AB,
+                          self.csegment2d.B, self.csegment2d.A)
 
-    def at_parametric_coord(Segment2D self, double coord):
+    def at(Segment2D self, double coord):
         cdef:
             Point2D result = Point2D.__new__(Point2D)
-        parametric_segment2d_at(result.cpoint2d, self.cparametric_segment2d, coord)
+        segment2d_at(result.cpoint2d, self.csegment2d, coord)
         return result
+
+    def where(Segment2D self, Point2D P):
+        return segment2d_where(&self.csegment2d, P.cpoint2d)
 
     def includes_point(Segment2D self, Point2D P):
         return segment2d_includes_point2d(&self.csegment2d, P.cpoint2d)
