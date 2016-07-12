@@ -1,5 +1,6 @@
 from libc.stdlib cimport malloc, free
 
+from ..base1d.parametric_coord1d cimport CParametricCoord1D
 from .point2d cimport subtract_points2d
 from .parametric_segment2d cimport parametric_segment2d_at
 from ..inclusion.segment2d_point2d cimport segment2d_includes_point2d
@@ -69,10 +70,12 @@ cdef class Segment2D:
             int res
             Point2D I0 = Point2D.__new__(Point2D)
             Point2D I1 = Point2D.__new__(Point2D)
+            CParametricCoord1D coords[4]
 
         res = intersect_segment2d_segment2d(&self.csegment2d,
                                             &other.csegment2d, 
                                             I0.cpoint2d, I1.cpoint2d,
+                                            coords,
                                             epsilon=epsilon)
 
         if res == 0:
