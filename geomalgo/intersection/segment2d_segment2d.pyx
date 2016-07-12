@@ -1,6 +1,7 @@
 from ..base2d.point2d cimport (subtract_points2d, point2d_plus_vector2d,
                                point2d_equal)
 from ..base2d.vector2d cimport CVector2D, cross_product2d, dot_product2d
+from ..base2d.segment2d cimport segment2d_where
 from ..inclusion.segment2d_point2d cimport segment2d_includes_point2d
 
 cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
@@ -40,6 +41,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
         CPoint2D* Q = segment0.B
         CPoint2D* R = segment1.A
         CPoint2D* S = segment1.B
+        CSegment2D tmpseg
 
         CVector2D PQ, RS, RP, RQ
         double D, PQ2, RS2, t0, t1, sI, tI
@@ -77,6 +79,8 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
             # R S
             I0.x = P.x
             I0.y = P.y
+            coords[0] = 0.
+            coords[1] = 0.
             return 1
 
         if PQ2 == 0:
@@ -90,6 +94,10 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
             # R--+--S 
             I0.x = P.x
             I0.y = P.y
+            coords[0] = 0.
+            tmpseg.A = R
+            tmpseg.AB = &RS
+            coords[1] = segment2d_where(&tmpseg, I0)
             return 1
 
         if RS2 == 0:
@@ -103,6 +111,10 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
             # P--+--Q
             I0.x = R.x
             I0.y = R.y
+            tmpseg.A = P
+            tmpseg.AB = &PQ
+            coords[0] = segment2d_where(&tmpseg, I0)
+            coords[1] = 0.
             return 1
 
         # They are collinear segments - get  overlap (or not).
@@ -130,10 +142,13 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
 
         if t0 == t1:
             # Intersect is a point.
-            point2d_plus_vector2d(I0, R, t0, &RS)
             #       Q R
             #  P-----+-----S
-            # TODO
+            point2d_plus_vector2d(I0, R, t0, &RS)
+            coords[1] = t0
+            tmpseg.A = P
+            tmpseg.AB = &PQ
+            coords[0] = segment2d_where(&tmpseg, I0)
             return 1
 
         # They overlap in a valid subsegment.
@@ -141,6 +156,12 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
         point2d_plus_vector2d(I1, R, t1, &RS)
         #  P-----+-----Q-----+
         #        R           S
+        coords[1] = t0
+        coords[3] = t1
+        tmpseg.A = P
+        tmpseg.AB = &PQ
+        coords[0] = segment2d_where(&tmpseg, I0)
+        coords[2] = segment2d_where(&tmpseg, I1)
         return 2
 
     # The segments are skew and may intersect in a point.
@@ -172,6 +193,8 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
 
     # Compute segment0 intersect point
     point2d_plus_vector2d(I0, P, sI, &PQ)
+    coords[0] = sI
+    coords[1] = tI
     #       S
     #       |
     # P-----I--Q
