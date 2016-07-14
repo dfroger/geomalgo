@@ -1,5 +1,4 @@
 from .point2d cimport CPoint2D, CVector2D, Point2D, Vector2D
-from ..base1d.parametric_coord1d cimport CParametricCoord1D 
 
 cdef struct CSegment2D:
     CPoint2D* A
@@ -12,10 +11,9 @@ cdef void del_segment2d(CSegment2D* csegment2d)
 
 cdef CSegment2D* create_segment2d(CPoint2D* A, CPoint2D* B)
 
-cdef segment2d_at(CPoint2D* result, CSegment2D S,
-                  CParametricCoord1D coord)
+cdef segment2d_at(CPoint2D* result, CSegment2D S, double coord)
 
-cdef CParametricCoord1D segment2d_where(CSegment2D* AB, CPoint2D* P)
+cdef double segment2d_where(CSegment2D* AB, CPoint2D* P)
 
 cdef class Segment2D:
 

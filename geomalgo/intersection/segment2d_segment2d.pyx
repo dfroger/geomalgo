@@ -7,7 +7,7 @@ from ..inclusion.segment2d_point2d cimport segment2d_includes_point2d
 cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
                                        CSegment2D* segment1,
                                        CPoint2D* I0, CPoint2D* I1,
-                                       CParametricCoord1D coords[4],
+                                       double coords[4],
                                        double epsilon=1.E-08):
     """
     Find the 2D intersection of 2 finite segments

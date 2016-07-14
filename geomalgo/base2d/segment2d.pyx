@@ -1,6 +1,5 @@
 from libc.stdlib cimport malloc, free
 
-from ..base1d.parametric_coord1d cimport CParametricCoord1D
 from .point2d cimport subtract_points2d, CPoint2D, point2d_plus_vector2d
 from ..inclusion.segment2d_point2d cimport segment2d_includes_point2d
 from ..intersection.segment2d_segment2d cimport intersect_segment2d_segment2d
@@ -20,8 +19,7 @@ cdef CSegment2D* create_segment2d(CPoint2D* A, CPoint2D* B):
     subtract_points2d(seg.AB, seg.B, seg.A)
     return seg
 
-cdef segment2d_at(CPoint2D* result, CSegment2D S,
-                  CParametricCoord1D coord):
+cdef segment2d_at(CPoint2D* result, CSegment2D S, double coord):
     """
     A     P
     +-----+-----> AB
@@ -50,7 +48,7 @@ cdef segment2d_at(CPoint2D* result, CSegment2D S,
     """
     point2d_plus_vector2d(result, S.A, coord, S.AB)
 
-cdef CParametricCoord1D segment2d_where(CSegment2D* seg, CPoint2D* P):
+cdef double segment2d_where(CSegment2D* seg, CPoint2D* P):
     """
     Compute coordinate of Point p in segment AB
 
@@ -119,7 +117,7 @@ cdef class Segment2D:
             int res
             Point2D I0 = Point2D.__new__(Point2D)
             Point2D I1 = Point2D.__new__(Point2D)
-            CParametricCoord1D coords[4]
+            double coords[4]
 
         res = intersect_segment2d_segment2d(&self.csegment2d,
                                             &other.csegment2d, 

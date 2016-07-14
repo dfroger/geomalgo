@@ -1,1 +1,0 @@
-ctypedef double CParametricCoord1D
