@@ -112,24 +112,31 @@ cdef class Segment2D:
     def includes_point(Segment2D self, Point2D P):
         return segment2d_includes_point2d(&self.csegment2d, P.cpoint2d)
 
-    def intersect_segment(Segment2D self, Segment2D other, epsilon=1.E-08):
+    def intersect_segment(Segment2D self, Segment2D other, epsilon=1.E-08,
+                          return_coords=False):
         cdef:
-            int res
+            int n
             Point2D I0 = Point2D.__new__(Point2D)
             Point2D I1 = Point2D.__new__(Point2D)
             double coords[4]
 
-        res = intersect_segment2d_segment2d(&self.csegment2d,
-                                            &other.csegment2d, 
-                                            I0.cpoint2d, I1.cpoint2d,
-                                            coords,
-                                            epsilon=epsilon)
+        n = intersect_segment2d_segment2d(&self.csegment2d,
+                                          &other.csegment2d, 
+                                          I0.cpoint2d, I1.cpoint2d,
+                                          coords,
+                                          epsilon=epsilon)
 
-        if res == 0:
-            return None
-
-        elif res == 1:
-            return I0
-
-        elif res == 2:
-            return Segment2D(I0, I1)
+        if return_coords:
+            if n == 0:
+                return None, None, ()
+            elif n == 1:
+                return I0, None, (coords[0], coords[1])
+            elif n == 2:
+                return I0, I1, (coords[0], coords[1], coords[2], coords[3])
+        else:
+            if n == 0:
+                return None, None
+            elif n == 1:
+                return I0, None
+            elif n == 2:
+                return I0, I1

@@ -59,6 +59,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
             # P--------Q
             #        
             # R--------S
+            # CASE00
             return 0
 
         # they are collinear or degenerate
@@ -72,11 +73,13 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
                 # They are distinct points
                 # P Q     R S
                 #  +       +
+                # CASE01
                 return 0
             # they are the same point
             # P Q
             #  +
             # R S
+            # CASE02
             I0.x = P.x
             I0.y = P.y
             coords[0] = 0.
@@ -89,9 +92,11 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
                 # But is not in segment1.
                 # P Q          
                 #  +   R-----S 
+                # CASE03
                 return 0
             #   P Q          
             # R--+--S 
+            # CASE04
             I0.x = P.x
             I0.y = P.y
             coords[0] = 0.
@@ -106,9 +111,11 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
                 # But is not in segment0.
                 # R S          
                 #  +   P-----Q
+                # CASE05
                 return 0
             #   R S          
             # P--+--Q
+            # CASE06
             I0.x = R.x
             I0.y = R.y
             tmpseg.A = P
@@ -135,6 +142,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
         if t0 > 1 or t1 < 0:
             # No overlap
             #  P-----Q     R-----S
+            # CASE07
             return 0
 
         t0 = max(0, t0)
@@ -144,6 +152,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
             # Intersect is a point.
             #       Q R
             #  P-----+-----S
+            # CASE08
             point2d_plus_vector2d(I0, R, t0, &RS)
             coords[1] = t0
             tmpseg.A = P
@@ -156,6 +165,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
         point2d_plus_vector2d(I1, R, t1, &RS)
         #  P-----+-----Q-----+
         #        R           S
+        # CASE09
         coords[1] = t0
         coords[3] = t1
         tmpseg.A = P
@@ -176,6 +186,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
         #              |
         #              |
         #              R
+        # CASE10
         return 0
 
     # Get the intersect parameter for segment1.
@@ -189,6 +200,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
         #              |
         #              |
         #              P
+        # CASE11
         return 0
 
     # Compute segment0 intersect point
@@ -202,4 +214,5 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
     #       |
     #       |
     #       R
+    # CASE12
     return 1
