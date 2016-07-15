@@ -16,3 +16,13 @@ Dev:
 - Reorganize directories for 1D, 2D and 3D objects
 - Add test in conda recipe
 - Add Travis script
+
+0.0.5 (2016-07-15)
+==================
+
+- Add Vector2D
+- Add PolarPoint
+- Add Plane
+- Add CylindricalPoint
+- Add Segment2D
+- Add segment2d intersection
