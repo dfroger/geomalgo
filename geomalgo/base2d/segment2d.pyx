@@ -63,6 +63,10 @@ cdef double segment2d_where(CSegment2D* seg, CPoint2D* P):
     else:
         return (P.y - seg.A.y) / seg.AB.y
 
+cdef void segment2d_middle(CPoint2D* M, CSegment2D* seg):
+    M.x = 0.5*(seg.A.x + seg.B.x)
+    M.y = 0.5*(seg.A.y + seg.B.y)
+
 cdef class Segment2D:
 
     property A:
@@ -142,3 +146,9 @@ cdef class Segment2D:
                 return I0, None
             elif n == 2:
                 return I0, I1
+
+    def compute_middle(self):
+        cdef:
+            Point2D M = Point2D.__new__(Point2D)
+        segment2d_middle(M.cpoint2d, &self.csegment2d)
+        return M

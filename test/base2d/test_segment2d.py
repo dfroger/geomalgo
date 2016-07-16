@@ -15,10 +15,13 @@ class TestSegment2D(unittest.TestCase):
         segment = Segment2D(A,B)
         self.assertEqual(segment.B.y, 4)
 
-        # Properties are up-to-date.
         self.assertEqual(segment.AB.x, 2)
         self.assertEqual(segment.AB.y, 2)
         self.assertAlmostEqual(segment.length, 2*sqrt(2))
+
+        M = segment.compute_middle()
+        self.assertAlmostEqual(M.x, 2)
+        self.assertAlmostEqual(M.y, 3)
 
         # ======================
         # Modify B.y
@@ -26,16 +29,14 @@ class TestSegment2D(unittest.TestCase):
         segment.B.y = 5
         self.assertEqual(segment.B.y, 5)
 
-        # Properties are not up-to-date.
-        self.assertEqual(segment.AB.x, 2)
-        self.assertEqual(segment.AB.y, 2)
-        self.assertAlmostEqual(segment.length, 2*sqrt(2))
-
-        # Update properties.
         segment.recompute()
         self.assertEqual(segment.AB.x, 2)
         self.assertEqual(segment.AB.y, 3)
         self.assertAlmostEqual(segment.length, sqrt(13))
+
+        M = segment.compute_middle()
+        self.assertAlmostEqual(M.x, 2)
+        self.assertAlmostEqual(M.y, 3.5)
 
         # ======================
         # Modify B
@@ -43,16 +44,14 @@ class TestSegment2D(unittest.TestCase):
         segment.B = Point2D(-1, -2)
         self.assertEqual(segment.B.y, -2)
 
-        # Properties are not up-to-date.
-        self.assertEqual(segment.AB.x, 2)
-        self.assertEqual(segment.AB.y, 3)
-        self.assertAlmostEqual(segment.length, sqrt(13))
-
-        # Update properties.
         segment.recompute()
         self.assertEqual(segment.AB.x, -2)
         self.assertEqual(segment.AB.y, -4)
         self.assertAlmostEqual(segment.length, 2*sqrt(5))
+
+        M = segment.compute_middle()
+        self.assertAlmostEqual(M.x, 0)
+        self.assertAlmostEqual(M.y, 0)
 
 class TestIncludesPoint(unittest.TestCase):
 

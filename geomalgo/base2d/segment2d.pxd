@@ -15,6 +15,8 @@ cdef segment2d_at(CPoint2D* result, CSegment2D S, double coord)
 
 cdef double segment2d_where(CSegment2D* AB, CPoint2D* P)
 
+cdef void segment2d_middle(CPoint2D* M, CSegment2D* seg)
+
 cdef class Segment2D:
 
     cdef readonly:
