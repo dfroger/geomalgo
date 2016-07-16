@@ -1,4 +1,5 @@
 import unittest
+from math import sqrt
 
 from geomalgo import Point2D, Segment2D
 
@@ -14,9 +15,10 @@ class TestSegment2D(unittest.TestCase):
         segment = Segment2D(A,B)
         self.assertEqual(segment.B.y, 4)
 
-        # AB is computed.
+        # Properties are up-to-date.
         self.assertEqual(segment.AB.x, 2)
         self.assertEqual(segment.AB.y, 2)
+        self.assertAlmostEqual(segment.length, 2*sqrt(2))
 
         # ======================
         # Modify B.y
@@ -24,14 +26,16 @@ class TestSegment2D(unittest.TestCase):
         segment.B.y = 5
         self.assertEqual(segment.B.y, 5)
 
-        # AB is not updated.
+        # Properties are not up-to-date.
         self.assertEqual(segment.AB.x, 2)
         self.assertEqual(segment.AB.y, 2)
+        self.assertAlmostEqual(segment.length, 2*sqrt(2))
 
-        # Recompute AB.
+        # Update properties.
         segment.recompute()
         self.assertEqual(segment.AB.x, 2)
         self.assertEqual(segment.AB.y, 3)
+        self.assertAlmostEqual(segment.length, sqrt(13))
 
         # ======================
         # Modify B
@@ -39,14 +43,16 @@ class TestSegment2D(unittest.TestCase):
         segment.B = Point2D(-1, -2)
         self.assertEqual(segment.B.y, -2)
 
-        # AB is not updated.
+        # Properties are not up-to-date.
         self.assertEqual(segment.AB.x, 2)
         self.assertEqual(segment.AB.y, 3)
+        self.assertAlmostEqual(segment.length, sqrt(13))
 
-        # Recompute AB.
+        # Update properties.
         segment.recompute()
         self.assertEqual(segment.AB.x, -2)
         self.assertEqual(segment.AB.y, -4)
+        self.assertAlmostEqual(segment.length, 2*sqrt(5))
 
 class TestIncludesPoint(unittest.TestCase):
 

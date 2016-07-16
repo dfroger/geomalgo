@@ -19,6 +19,7 @@ cdef class Segment2D:
 
     cdef readonly:
         Vector2D AB
+        double length
 
     cdef:
         Point2D A

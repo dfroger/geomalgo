@@ -1,6 +1,7 @@
 from libc.stdlib cimport malloc, free
 
 from .point2d cimport subtract_points2d, CPoint2D, point2d_plus_vector2d
+from .vector2d cimport compute_norm2d
 from ..inclusion.segment2d_point2d cimport segment2d_includes_point2d
 from ..intersection.segment2d_segment2d cimport intersect_segment2d_segment2d
 
@@ -99,6 +100,7 @@ cdef class Segment2D:
         """Must be called manually if any point coordinate changed"""
         subtract_points2d(self.csegment2d.AB,
                           self.csegment2d.B, self.csegment2d.A)
+        self.length = compute_norm2d(self.csegment2d.AB)
 
     def at(Segment2D self, double coord):
         cdef:
