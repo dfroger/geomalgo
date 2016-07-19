@@ -74,7 +74,7 @@ cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P):
     return winding_number != 0
 
 cdef class Triangle2D:
-            
+
     def __init__(self, Point2D A, Point2D B, Point2D C, index=0):
         self.A = A
         self.B = B
