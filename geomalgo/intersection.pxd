@@ -1,0 +1,1 @@
+from .intersection.segment2d_segment2d cimport intersect_segment2d_segment2d

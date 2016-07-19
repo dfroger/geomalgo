@@ -1,11 +1,9 @@
 from geomalgo cimport Point2D
 
-cdef class Vertice(Point2D):
-    cdef public:
-        double alpha
+cdef class Cell(Triangle2D):
 
-    def __init__(self, x, y, alpha):
-        Point2D.__init__(self, x, y)
+    def __init__(self, Point2D A, Point2D B, Point2D C, alpha):
+        Triangle2D.__init__(self, A, B, C)
         self.alpha = alpha
 
     def meth(self):
@@ -13,4 +11,3 @@ cdef class Vertice(Point2D):
 
     cdef double cmeth(self):
         return self.alpha
-

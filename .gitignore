@@ -4,6 +4,10 @@ build/
 __pycache__
 craftrc.py
 
+# cython --annotate
+*.c
+*.html
+
 # Windows
 *.pyd
 *.exp
