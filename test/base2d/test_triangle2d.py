@@ -81,5 +81,20 @@ class TestArea(unittest.TestCase):
         self.assertAlmostEqual(triangle.signed_area, 0.)
         self.assertAlmostEqual(triangle.area, 0.)
 
+class TestCenter(unittest.TestCase):
+
+    def test_normal(self):
+
+        A = Point2D(0,0)
+        B = Point2D(3,0)
+        C = Point2D(0,6)
+
+        triangle = Triangle2D(A, B, C)
+
+        C = triangle.center
+
+        self.assertAlmostEqual(C.x, 1.)
+        self.assertAlmostEqual(C.y, 2.)
+
 if __name__ == '__main__':
     unittest.main()

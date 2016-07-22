@@ -19,6 +19,10 @@ cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P)
 cdef inline double triangle2d_signed_area(CTriangle2D* T):
     return 0.5 * c_is_left(T.A, T.B, T.C)
 
+cdef inline void triangle2d_center(CTriangle2D* T, CPoint2D* C):
+    C.x = (T.A.x + T.B.x + T.C.x) / 3.
+    C.y = (T.A.y + T.B.y + T.C.y) / 3.
+
 cdef class Triangle2D:
     cdef public:
         int index

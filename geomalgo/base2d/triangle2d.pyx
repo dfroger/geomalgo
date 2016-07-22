@@ -103,6 +103,13 @@ cdef class Triangle2D:
         def __get__(self):
             return fabs(self.signed_area)
 
+    property center:
+        def __get__(self):
+            cdef:
+                Point2D C = Point2D.__new__(Point2D)
+            triangle2d_center(&self.ctri2d, C.cpoint2d)
+            return C
+
     def __init__(self, Point2D A, Point2D B, Point2D C, index=0):
         self.A = A
         self.B = B
