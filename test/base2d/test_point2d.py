@@ -1,8 +1,7 @@
 import unittest
 from math import sqrt, pi
 
-from geomalgo import Point2D, is_left, is_counterclockwise, \
-                     signed_triangle2d_area
+from geomalgo import Point2D, is_left, is_counterclockwise
 
 class TestPoint2D(unittest.TestCase):
 
@@ -124,45 +123,6 @@ class TestIsCounterclockwise(unittest.TestCase):
         msg = "Triangle is degenerated \(A, B and C are aligned\)"
         with self.assertRaisesRegex(ValueError, msg):
             is_counterclockwise(A,B,P)
-
-class TestSignedTriangle2dArea(unittest.TestCase):
-    
-    def test_counterclockwise(self):
-        """
-        C
-        + 
-        |  \
-        |     \
-        +--------+
-        A        B
-        """
-        A = Point2D(0,0)
-        B = Point2D(1,0)
-        C = Point2D(0,1)
-        self.assertAlmostEqual(signed_triangle2d_area(A,B,C), 0.5)
-    
-    def test_clockwise(self):
-        """
-        B
-        + 
-        |  \
-        |     \
-        +--------+
-        A        C
-        """
-        A = Point2D(0,0)
-        B = Point2D(0,1)
-        C = Point2D(1,0)
-        self.assertAlmostEqual(signed_triangle2d_area(A,B,C), -0.5)
-
-    def test_on_line(self):
-        """
-        A----B----P
-        """
-        A = Point2D(0,0)
-        B = Point2D(1,0)
-        C = Point2D(2,0)
-        self.assertAlmostEqual(signed_triangle2d_area(A,B,C), 0.)
 
 class TestEquality(unittest.TestCase):
 

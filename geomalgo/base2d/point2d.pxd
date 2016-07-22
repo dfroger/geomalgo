@@ -39,8 +39,6 @@ cdef inline double c_is_counterclockwise(CPoint2D* A, CPoint2D* B, CPoint2D* C):
 cdef inline double c_point2d_distance(CPoint2D* A, CPoint2D* B):
     return sqrt((B.x-A.x)**2 + (B.y-A.y)**2)
 
-cdef double c_signed_triangle2d_area(CPoint2D* A, CPoint2D* B, CPoint2D* C)
-
 cdef inline bint point2d_equal(CPoint2D* A, CPoint2D* B):
     return A.x == B.x and A.y == B.y
 

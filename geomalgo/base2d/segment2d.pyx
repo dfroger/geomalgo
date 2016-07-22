@@ -94,6 +94,7 @@ cdef class Segment2D:
         self.csegment2d.A = A.cpoint2d
         self.csegment2d.B = B.cpoint2d
         self.csegment2d.AB = self.AB.cvector2d 
+
         self.recompute()
 
     def __str__(self):

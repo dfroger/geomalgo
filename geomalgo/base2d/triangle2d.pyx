@@ -1,8 +1,8 @@
 from libc.stdlib cimport malloc, free
+from libc.math cimport fabs
 
 from .polygon2d cimport CPolygon2D
 from ..inclusion cimport polygon2d_winding_point2d
-from .point2d cimport c_is_left
 
 cdef CTriangle2D* new_triangle2d():
     return <CTriangle2D*> malloc(sizeof(CTriangle2D))
@@ -109,6 +109,13 @@ cdef class Triangle2D:
         self.ctri2d.A = A.cpoint2d
         self.ctri2d.B = B.cpoint2d
         self.ctri2d.C = C.cpoint2d 
+
+        self.recompute()
+
+    def recompute(Triangle2D self):
+        """Must be called manually if any point coordinate changed"""
+        self.signed_area = triangle2d_signed_area(&self.ctri2d)
+        self.area = fabs(self.signed_area)
 
     def includes_point(Triangle2D self, Point2D point):
         return triangle2d_includes_point2d(&self.ctri2d, point.cpoint2d)

@@ -1,4 +1,4 @@
-from .point2d cimport CPoint2D, Point2D
+from .point2d cimport CPoint2D, Point2D, c_is_left
 from ..triangulation cimport CTriangulation2D
 
 cdef struct CTriangle2D:
@@ -16,9 +16,14 @@ cdef void triangle2d_from_triangulation2d(CTriangle2D* ctriangle2d,
 
 cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P)
 
+cdef inline double triangle2d_signed_area(CTriangle2D* T):
+    return 0.5 * c_is_left(T.A, T.B, T.C)
+
 cdef class Triangle2D:
     cdef public:
         int index
+        double signed_area
+        double area
 
     cdef:
         Point2D A
