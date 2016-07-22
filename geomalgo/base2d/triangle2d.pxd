@@ -23,7 +23,6 @@ cdef class Triangle2D:
     cdef public:
         int index
         double signed_area
-        double area
 
     cdef:
         Point2D A

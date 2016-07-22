@@ -99,6 +99,10 @@ cdef class Triangle2D:
             # C points to Python.
             self.ctri2d.C = C.cpoint2d
 
+    property area:
+        def __get__(self):
+            return fabs(self.signed_area)
+
     def __init__(self, Point2D A, Point2D B, Point2D C, index=0):
         self.A = A
         self.B = B
@@ -115,7 +119,6 @@ cdef class Triangle2D:
     def recompute(Triangle2D self):
         """Must be called manually if any point coordinate changed"""
         self.signed_area = triangle2d_signed_area(&self.ctri2d)
-        self.area = fabs(self.signed_area)
 
     def includes_point(Triangle2D self, Point2D point):
         return triangle2d_includes_point2d(&self.ctri2d, point.cpoint2d)
