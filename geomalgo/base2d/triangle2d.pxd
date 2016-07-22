@@ -18,7 +18,10 @@ cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P)
 
 cdef class Triangle2D:
     cdef public:
+        int index
+
+    cdef:
         Point2D A
         Point2D B
         Point2D C
-        int index
+        CTriangle2D ctri2d

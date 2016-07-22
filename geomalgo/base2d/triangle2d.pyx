@@ -74,6 +74,30 @@ cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P):
     return winding_number != 0
 
 cdef class Triangle2D:
+
+    property A:
+        def __get__(self):
+            return self.A
+        def __set__(self, Point2D A):
+            self.A = A
+            # C points to Python.
+            self.ctri2d.A = A.cpoint2d
+
+    property B:
+        def __get__(self):
+            return self.B
+        def __set__(self, Point2D B):
+            self.B = B
+            # C points to Python.
+            self.ctri2d.B = B.cpoint2d
+
+    property C:
+        def __get__(self):
+            return self.C
+        def __set__(self, Point2D C):
+            self.C = C
+            # C points to Python.
+            self.ctri2d.C = C.cpoint2d
             
     def __init__(self, Point2D A, Point2D B, Point2D C, index=0):
         self.A = A
@@ -81,11 +105,10 @@ cdef class Triangle2D:
         self.C = C
         self.index = index
 
-    def includes_point(Triangle2D self, Point2D point):
-        cdef:
-            CTriangle2D ctri2d
-        ctri2d.A = self.A.cpoint2d
-        ctri2d.B = self.B.cpoint2d
-        ctri2d.C = self.C.cpoint2d
+        # C points to Python.
+        self.ctri2d.A = A.cpoint2d
+        self.ctri2d.B = B.cpoint2d
+        self.ctri2d.C = C.cpoint2d 
 
-        return triangle2d_includes_point2d(&ctri2d, point.cpoint2d)
+    def includes_point(Triangle2D self, Point2D point):
+        return triangle2d_includes_point2d(&self.ctri2d, point.cpoint2d)
