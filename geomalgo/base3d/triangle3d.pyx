@@ -1,8 +1,8 @@
 from libc.stdlib cimport malloc, free
 
 from .point3d cimport subtract_points3d, point3d_plus_vector3d
-from .vector3d cimport CVector3D, dot_product3d, cross_product3d, \
-                       compute_norm3d
+from .vector3d cimport (CVector3D, dot_product3d, cross_product3d,
+                        compute_norm3d)
 
 cdef CTriangle3D* new_triangle3d():
     return <CTriangle3D*> malloc(sizeof(CTriangle3D))

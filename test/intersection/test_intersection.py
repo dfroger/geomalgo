@@ -1,7 +1,8 @@
 import unittest
 
-from geomalgo import Point3D, Triangle3D, Segment3D, \
-                     intersec3d_triangle_segment
+from geomalgo import (
+    Point3D, Triangle3D, Segment3D, intersec3d_triangle_segment
+)
 
 class TestIntersection(unittest.TestCase):
 

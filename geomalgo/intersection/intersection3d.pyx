@@ -1,12 +1,16 @@
 from libc.math cimport fabs
 
-from ..base3d.point3d cimport Point3D, CPoint3D, new_point3d, del_point3d, \
-                          subtract_points3d, point3d_plus_vector3d
+from ..base3d.point3d cimport (
+    Point3D, CPoint3D, new_point3d, del_point3d, subtract_points3d,
+    point3d_plus_vector3d
+)
 from ..base3d.vector3d cimport CVector3D, cross_product3d, dot_product3d
-from ..base3d.segment3d cimport Segment3D, CSegment3D, new_segment3d, \
-                              del_segment3d
-from ..base3d.triangle3d cimport Triangle3D, CTriangle3D, new_triangle3d, \
-                               del_triangle3d
+from ..base3d.segment3d cimport (
+    Segment3D, CSegment3D, new_segment3d, del_segment3d
+)
+from ..base3d.triangle3d cimport (
+    Triangle3D, CTriangle3D, new_triangle3d, del_triangle3d
+)
 
 def intersec3d_triangle_segment(Triangle3D triangle, Segment3D segment):
     """
