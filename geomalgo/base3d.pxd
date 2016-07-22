@@ -10,7 +10,7 @@ from .base3d.triangle3d cimport (
     Triangle3D, CTriangle3D, new_triangle3d, del_triangle3d, compute_area3d,
     compute_symetric_point3d
 )
-      
+
 from .base3d.vector3d cimport (
     CVector3D, new_vector3d, del_vector3d, cross_product3d, subtract_vector3d,
     dot_product3d, compute_norm3d

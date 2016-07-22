@@ -31,11 +31,11 @@ class TestTriangle2D(unittest.TestCase):
         self.assertAlmostEqual(triangle.area, 0.5)
 
 class TestArea(unittest.TestCase):
-    
+
     def test_counterclockwise(self):
         """
         C
-        + 
+        +
         |  \
         |     \
         +--------+
@@ -49,11 +49,11 @@ class TestArea(unittest.TestCase):
 
         self.assertAlmostEqual(triangle.signed_area, 0.5)
         self.assertAlmostEqual(triangle.area, 0.5)
-    
+
     def test_clockwise(self):
         """
         B
-        + 
+        +
         |  \
         |     \
         +--------+

@@ -81,6 +81,6 @@ class TestPlane(unittest.TestCase):
         self.assertAlmostEqual(projection.x, P.x)
         self.assertAlmostEqual(projection.y, P.y)
         self.assertAlmostEqual(projection.z, P.z)
-        
+
 if __name__ == '__main__':
     unittest.main()

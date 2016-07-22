@@ -2,7 +2,7 @@ cdef struct CPolygon2D:
     double* x
     double* y
     size_t points_number
-   
+
 cdef CPolygon2D* new_polygon2d()
 
 cdef void del_polygon2d(CPolygon2D* cpolygon2d)

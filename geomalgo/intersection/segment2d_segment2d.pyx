@@ -57,7 +57,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
         if cross_product2d(&PQ,&RP) != 0 or cross_product2d(&RS,&RP) != 0:
             ## They are NOT collinear.
             # P--------Q
-            #        
+            #
             # R--------S
             # CASE00
             return 0
@@ -90,12 +90,12 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
             # segment0 is a single point
             if not segment2d_includes_point2d(segment1, P):
                 # But is not in segment1.
-                # P Q          
-                #  +   R-----S 
+                # P Q
+                #  +   R-----S
                 # CASE03
                 return 0
-            #   P Q          
-            # R--+--S 
+            #   P Q
+            # R--+--S
             # CASE04
             I0.x = P.x
             I0.y = P.y
@@ -109,11 +109,11 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
             # segment1 a single point
             if  not segment2d_includes_point2d(segment0, R):
                 # But is not in segment0.
-                # R S          
+                # R S
                 #  +   P-----Q
                 # CASE05
                 return 0
-            #   R S          
+            #   R S
             # P--+--Q
             # CASE06
             I0.x = R.x

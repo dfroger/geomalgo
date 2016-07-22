@@ -29,13 +29,13 @@ cdef class Point3D:
             return self.cpoint3d.x
         def __set__(self, double x):
             self.cpoint3d.x = x
-        
+
     property y:
         def __get__(self):
             return self.cpoint3d.y
         def __set__(self, double y):
             self.cpoint3d.y = y
-        
+
     property z:
         def __get__(self):
             return self.cpoint3d.z

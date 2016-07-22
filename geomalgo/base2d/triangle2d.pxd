@@ -5,12 +5,12 @@ cdef struct CTriangle2D:
     CPoint2D* A
     CPoint2D* B
     CPoint2D* C
-    
+
 cdef CTriangle2D* new_triangle2d()
 
 cdef void del_triangle2d(CTriangle2D* ctri2d)
 
-cdef void triangle2d_from_triangulation2d(CTriangle2D* ctriangle2d, 
+cdef void triangle2d_from_triangulation2d(CTriangle2D* ctriangle2d,
                                           CTriangulation2D* ctriangulation2d,
                                           int triangle_index)
 

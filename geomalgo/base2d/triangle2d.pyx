@@ -11,7 +11,7 @@ cdef void del_triangle2d(CTriangle2D* ctri2d):
     if ctri2d is not NULL:
         free(ctri2d)
 
-cdef void triangle2d_from_triangulation2d(CTriangle2D* T, 
+cdef void triangle2d_from_triangulation2d(CTriangle2D* T,
                                           CTriangulation2D* TG,
                                           int triangle_index):
     """
@@ -98,7 +98,7 @@ cdef class Triangle2D:
             self.C = C
             # C points to Python.
             self.ctri2d.C = C.cpoint2d
-            
+
     def __init__(self, Point2D A, Point2D B, Point2D C, index=0):
         self.A = A
         self.B = B
@@ -108,7 +108,7 @@ cdef class Triangle2D:
         # C points to Python.
         self.ctri2d.A = A.cpoint2d
         self.ctri2d.B = B.cpoint2d
-        self.ctri2d.C = C.cpoint2d 
+        self.ctri2d.C = C.cpoint2d
 
         self.recompute()
 

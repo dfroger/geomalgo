@@ -38,10 +38,10 @@ cdef class Polygon2D:
         self.cpolygon2d.y = &self._y[0]
 
     def includes_point(self, Point2D P):
-        winding_number = polygon2d_winding_point2d(self.cpolygon2d, 
+        winding_number = polygon2d_winding_point2d(self.cpolygon2d,
                                                    P.cpoint2d)
         return winding_number != 0
-        
+
     @staticmethod
     def from_points2d(points2d):
         x = [P.x for P in points2d]

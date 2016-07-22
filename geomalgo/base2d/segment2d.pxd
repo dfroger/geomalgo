@@ -4,7 +4,7 @@ cdef struct CSegment2D:
     CPoint2D* A
     CPoint2D* B
     CVector2D* AB
-    
+
 cdef CSegment2D* new_segment2d()
 
 cdef void del_segment2d(CSegment2D* csegment2d)

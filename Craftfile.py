@@ -3,7 +3,7 @@
 from craftr import *
 from craftr.ext.compiler import cython
 
-def cython_flags():    
+def cython_flags():
     flags = []
     def add_flag(name, default):
         value = options.get_bool(name, default)

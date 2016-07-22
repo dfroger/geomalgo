@@ -14,13 +14,13 @@ cdef class Vector2D:
             return self.cvector2d.x
         def __set__(self, double x):
             self.cvector2d.x = x
-        
+
     property y:
         def __get__(self):
             return self.cvector2d.y
         def __set__(self, double y):
             self.cvector2d.y = y
-            
+
     property norm:
         """Compute (involving sqrt) and return norm of the vector"""
         def __get__(self):

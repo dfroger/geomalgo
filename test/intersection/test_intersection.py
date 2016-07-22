@@ -8,11 +8,11 @@ class TestIntersection(unittest.TestCase):
 
     def test_intersection_in_triangle(self):
         """
-        C      T       y ^    
+        C      T       y ^
         |  - /           | z
         |   I   -        |/
         A--/--------B    +-----> x
-          S   
+          S
         """
 
         A = Point3D(0, 0, 0)
@@ -23,7 +23,7 @@ class TestIntersection(unittest.TestCase):
         S = Point3D(0.25, 0.25, -1)
         T = Point3D(0.25, 0.25,  1)
         segment = Segment3D(S,T)
-    
+
         I = intersec3d_triangle_segment(triangle, segment)
 
         self.assertEqual(I.x, 0.25)
@@ -39,7 +39,7 @@ class TestIntersection(unittest.TestCase):
         S = Point3D(1., 1., -1)
         T = Point3D(1., 1.,  1)
         segment = Segment3D(S,T)
-    
+
         with self.assertRaisesRegex(ValueError, 'There is no intersection'):
             intersec3d_triangle_segment(triangle, segment)
 
@@ -52,7 +52,7 @@ class TestIntersection(unittest.TestCase):
         S = Point3D(0.25, 0.25, -1)
         T = Point3D(0.25, 0.25, -0.5)
         segment = Segment3D(S,T)
-    
+
         with self.assertRaisesRegex(ValueError, 'There is no intersection'):
             intersec3d_triangle_segment(triangle, segment)
 
@@ -65,7 +65,7 @@ class TestIntersection(unittest.TestCase):
         S = Point3D(0.25, 0.25, -1)
         T = Point3D(0.25, 0.25,  1)
         segment = Segment3D(S,T)
-    
+
         msg = 'Triangle is degenerated \(a segment or point\)'
         with self.assertRaisesRegex(ValueError, msg):
             intersec3d_triangle_segment(triangle, segment)
@@ -79,7 +79,7 @@ class TestIntersection(unittest.TestCase):
         S = Point3D(0.25, 0.25, -1)
         T = Point3D(0.25, 0.25,  1)
         segment = Segment3D(S,T)
-    
+
         msg = 'Triangle is degenerated \(a segment or point\)'
         with self.assertRaisesRegex(ValueError, msg):
             intersec3d_triangle_segment(triangle, segment)
@@ -93,7 +93,7 @@ class TestIntersection(unittest.TestCase):
         S = Point3D(0., 0.5, 0)
         T = Point3D(0.5, 0., 0)
         segment = Segment3D(S,T)
-    
+
         msg = 'Triangle and segment are in the same plane'
         with self.assertRaisesRegex(ValueError, msg):
             intersec3d_triangle_segment(triangle, segment)
@@ -107,7 +107,7 @@ class TestIntersection(unittest.TestCase):
         S = Point3D(0., 0.5, 1)
         T = Point3D(0.5, 0., 1)
         segment = Segment3D(S,T)
-    
+
         with self.assertRaisesRegex(ValueError, 'There is no intersection'):
             intersec3d_triangle_segment(triangle, segment)
 

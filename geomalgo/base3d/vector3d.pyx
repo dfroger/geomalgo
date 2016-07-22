@@ -14,19 +14,19 @@ cdef class Vector3D:
             return self.cvector3d.x
         def __set__(self, double x):
             self.cvector3d.x = x
-        
+
     property y:
         def __get__(self):
             return self.cvector3d.y
         def __set__(self, double y):
             self.cvector3d.y = y
-        
+
     property z:
         def __get__(self):
             return self.cvector3d.z
         def __set__(self, double z):
             self.cvector3d.z = z
-            
+
     property norm:
         """Compute (involving sqrt) and return norm of the vector"""
         def __get__(self):

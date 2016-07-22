@@ -3,7 +3,7 @@ from .point3d cimport CPoint3D, Point3D, CVector3D, Vector3D
 cdef struct CPlane:
     CPoint3D* point
     CVector3D* normal
-    
+
 cdef CPlane* new_plane()
 
 cdef void del_plane(CPlane* plane)

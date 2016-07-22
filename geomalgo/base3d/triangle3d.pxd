@@ -4,7 +4,7 @@ cdef struct CTriangle3D:
     CPoint3D* A
     CPoint3D* B
     CPoint3D* C
-    
+
 cdef CTriangle3D* new_triangle3d()
 
 cdef void del_triangle3d(CTriangle3D* T)

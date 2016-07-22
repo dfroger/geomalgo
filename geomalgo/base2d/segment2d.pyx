@@ -29,7 +29,7 @@ cdef segment2d_at(CPoint2D* result, CSegment2D S, double coord):
 
     Note
     ----
-    
+
     This can be derived from 1D interpolation formuale:
 
         a   x       b
@@ -93,7 +93,7 @@ cdef class Segment2D:
         # C points to Python.
         self.csegment2d.A = A.cpoint2d
         self.csegment2d.B = B.cpoint2d
-        self.csegment2d.AB = self.AB.cvector2d 
+        self.csegment2d.AB = self.AB.cvector2d
 
         self.recompute()
 
@@ -128,7 +128,7 @@ cdef class Segment2D:
             double coords[4]
 
         n = intersect_segment2d_segment2d(&self.csegment2d,
-                                          &other.csegment2d, 
+                                          &other.csegment2d,
                                           I0.cpoint2d, I1.cpoint2d,
                                           coords,
                                           epsilon=epsilon)

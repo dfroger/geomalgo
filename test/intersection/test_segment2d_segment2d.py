@@ -35,13 +35,13 @@ class TestSegment(unittest.TestCase):
 
     def test_parallel(self):
         """
-        4         
-                  
+        4
+
         3  P--------Q
-                  
+
         1  R--------S
-                  
-        0         
+
+        0
            0  1  2  3
 
         """
@@ -62,13 +62,13 @@ class TestSegment(unittest.TestCase):
 
     def test_equal(self):
         """
-        4         
-                  
+        4
+
         3  P--------Q
-           R        S      
-        1            
-                  
-        0         
+           R        S
+        1
+
+        0
            0  1  2  3
         """
 
@@ -94,9 +94,9 @@ class TestSegment(unittest.TestCase):
 
     def test_colinear_no_overlap(self):
         """
-                  
+
         3  P-----Q     R-----S
-                                    
+
            0     1     2     3
         """
 
@@ -118,7 +118,7 @@ class TestSegment(unittest.TestCase):
         """
                 Q R
         3  P-----+-----S
-                                    
+
            0     1     2
         """
 
@@ -142,7 +142,7 @@ class TestSegment(unittest.TestCase):
     def test_colinear_overlap_segment(self):
         """
         3  P-----+-----Q-----+
-                 R           S      
+                 R           S
            0   1   2   3
         """
 
@@ -203,7 +203,7 @@ class TestSegment(unittest.TestCase):
 
     def test_extremity(self):
         """
-        4         
+        4
                     S
         3  P--------Q
                     |
@@ -277,8 +277,8 @@ class TestSegment(unittest.TestCase):
 
     def test_collinear_point_not_in_segment(self):
         """
-             P Q          
-           1  +   R-----S 
+             P Q
+           1  +   R-----S
               1   2     3
         """
 
@@ -306,8 +306,8 @@ class TestSegment(unittest.TestCase):
 
     def test_collinear_point_in_segment(self):
         """
-               P Q          
-           1 R--+--S 
+               P Q
+           1 R--+--S
              1  2  3
         """
 

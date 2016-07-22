@@ -25,7 +25,7 @@ cdef int polygon2d_winding_point2d(CPolygon2D* PG, CPoint2D* P):
         else:
             # Downward crossing.
             if B.y  <= P.y:
-                 if c_is_left(&A, &B, P) < 0: 
+                 if c_is_left(&A, &B, P) < 0:
                      # Have  a valid down intersect.
                     winding_number -= 1
     return winding_number

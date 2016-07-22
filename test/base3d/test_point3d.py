@@ -14,7 +14,7 @@ class TestPoint(unittest.TestCase):
     def test_index(self):
         A = Point3D(1,2,3)
         self.assertEqual(A.index, 0)
-        
+
         B = Point3D(1,2,3, index=8)
         self.assertEqual(B.index, 8)
 

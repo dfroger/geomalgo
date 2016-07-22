@@ -7,7 +7,7 @@ class TestSquareWinding(unittest.TestCase):
     """
     1  D-------C
        |       |
-       |       |     
+       |       |
        |       |
     0  A-------B
        0        1
@@ -57,7 +57,7 @@ class TriangleWindingBase:
     def assert_inside(self, x, y):
         P = Point2D(x,y)
         self.assertTrue( self.obj.includes_point(P) )
-        
+
     def assert_outside(self, x, y):
         P = Point2D(x,y)
         self.assertFalse( self.obj.includes_point(P) )

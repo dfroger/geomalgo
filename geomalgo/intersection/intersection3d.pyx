@@ -14,7 +14,7 @@ from ..base3d.triangle3d cimport (
 
 def intersec3d_triangle_segment(Triangle3D triangle, Segment3D segment):
     """
-    Find intersection of 3D triangle and a segment 
+    Find intersection of 3D triangle and a segment
     """
     cdef:
         CTriangle3D* tri = new_triangle3d()
@@ -29,7 +29,7 @@ def intersec3d_triangle_segment(Triangle3D triangle, Segment3D segment):
     seg.B = segment.B.cpoint3d
 
     res = c_intersec3d_triangle_segment(I, tri, seg)
-    
+
     del_triangle3d(tri)
     del_segment3d(seg)
 
@@ -55,7 +55,7 @@ def intersec3d_triangle_segment(Triangle3D triangle, Segment3D segment):
 cdef int c_intersec3d_triangle_segment(CPoint3D* I, CTriangle3D* tri,
                                        CSegment3D* seg):
     """
-    Find intersection of 3D triangle and a segment 
+    Find intersection of 3D triangle and a segment
 
     Return value:
         * -1 = triangle is degenerated (a segment or point)
@@ -63,7 +63,7 @@ cdef int c_intersec3d_triangle_segment(CPoint3D* I, CTriangle3D* tri,
         *  1 = intersect in unique point
         *  2 = are in the same plane
 
-    Implementation of 
+    Implementation of
     http://geomalgorithms.com/a06-_intersect-2.html
     http://geomalgorithms.com/a06-_intersect-2.html#intersect3D_RayTriangle%28%29
     """
@@ -85,7 +85,7 @@ cdef int c_intersec3d_triangle_segment(CPoint3D* I, CTriangle3D* tri,
     # Check for degenerated triangle.
     if n.x==0 and n.y==0 and n.z==0:
         return -1
-    
+
     # Segment3D direction vector.
     subtract_points3d(&direction, seg.B, seg.A)
 

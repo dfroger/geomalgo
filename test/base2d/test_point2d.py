@@ -14,7 +14,7 @@ class TestPoint2D(unittest.TestCase):
     def test_index(self):
         A = Point2D(1,2)
         self.assertEqual(A.index, 0)
-        
+
         B = Point2D(1,2, index=8)
         self.assertEqual(B.index, 8)
 
@@ -84,11 +84,11 @@ class TestIsLeft(unittest.TestCase):
             is_left(A,B,P)
 
 class TestIsCounterclockwise(unittest.TestCase):
-    
+
     def test_counterclockwise(self):
         """
         C
-        + 
+        +
         |  \
         |     \
         +--------+
@@ -98,11 +98,11 @@ class TestIsCounterclockwise(unittest.TestCase):
         B = Point2D(1,0)
         C = Point2D(0,1)
         self.assertTrue(is_counterclockwise(A,B,C))
-    
+
     def test_clockwise(self):
         """
         B
-        + 
+        +
         |  \
         |     \
         +--------+

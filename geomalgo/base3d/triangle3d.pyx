@@ -63,7 +63,7 @@ cdef void compute_symetric_point3d(CPoint3D* S, CTriangle3D* T, CPoint3D* P):
     point3d_plus_vector3d(S, P, -2. * distance / norm2, &n)
 
 cdef class Triangle3D:
-            
+
     property area:
         """Compute and return area of the vector"""
         def __get__(self):

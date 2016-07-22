@@ -44,7 +44,7 @@ class TestVector(unittest.TestCase):
         self.assertAlmostEqual(A.x, 0.6)
         self.assertAlmostEqual(A.y, 0.8)
         self.assertAlmostEqual(A.norm, 1.)
-        
+
 
 if __name__ == '__main__':
     unittest.main()
