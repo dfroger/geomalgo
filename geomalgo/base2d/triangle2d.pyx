@@ -73,6 +73,27 @@ cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P):
 
     return winding_number != 0
 
+cdef void triangle2d_gradx_grady_det(CTriangle2D* tri, double area,
+                                     double gradx[3], double grady[3],
+                                     double det[3]):
+    cdef:
+        double xa = tri.A.x, ya = tri.A.y
+        double xb = tri.B.x, yb = tri.B.y
+        double xc = tri.C.x, yc = tri.C.y
+        double alpha = 0.5 / area
+
+    gradx[0] = (yb - yc) * alpha
+    gradx[1] = (yc - ya) * alpha
+    gradx[2] = (ya - yb) * alpha
+
+    grady[0] = (xc - xb) * alpha
+    grady[1] = (xa - xc) * alpha
+    grady[2] = (xb - xa) * alpha
+
+    det[0] = (xb*yc - xc*yb) * alpha
+    det[1] = (xc*ya - xa*yc) * alpha
+    det[2] = (xa*yb - xb*ya) * alpha
+
 cdef class Triangle2D:
 
     property A:
@@ -143,5 +164,18 @@ cdef class Triangle2D:
         """Must be called manually if any point coordinate changed"""
         self.signed_area = triangle2d_signed_area(&self.ctri2d)
 
+        triangle2d_gradx_grady_det(&self.ctri2d, self.area,
+                                   self.gradx, self.grady, self.det)
+
     def includes_point(Triangle2D self, Point2D point):
         return triangle2d_includes_point2d(&self.ctri2d, point.cpoint2d)
+
+    def interpolate(Triangle2D self, double[:] data, Point2D P):
+        cdef:
+            double f0, f1, f2
+
+        f0 = self.det[0] + P.x*self.gradx[0] + P.y*self.grady[0]
+        f1 = self.det[1] + P.x*self.gradx[1] + P.y*self.grady[1]
+        f2 = self.det[2] + P.x*self.gradx[2] + P.y*self.grady[2]
+
+        return f0*data[0] + f1*data[1] + f2*data[2]

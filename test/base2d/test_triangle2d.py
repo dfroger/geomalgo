@@ -1,5 +1,7 @@
 import unittest
 
+import numpy as np
+
 from geomalgo import Point2D, Triangle2D
 
 class TestTriangle2D(unittest.TestCase):
@@ -107,6 +109,44 @@ class TestCenter(unittest.TestCase):
 
         self.assertAlmostEqual(C.x, 1.)
         self.assertAlmostEqual(C.y, 2.)
+
+class TestInterpolate(unittest.TestCase):
+
+    def f(self, x, y):
+        return 3*x - 4*y + 1
+
+    def check_interpolate_at(self, x, y):
+        P = Point2D(x, y)
+        actual = self.triangle.interpolate(self.data, P)
+        expected = self.f(x, y)
+        self.assertAlmostEqual(actual, expected)
+
+    def test_normal(self):
+        """
+          C
+        1 +
+          |  \
+          |     \
+        0 +--------+
+          A        B
+          0        1
+        """
+
+        A = Point2D(0, 0)
+        B = Point2D(1, 0)
+        C = Point2D(0, 1)
+        self.triangle = Triangle2D(A, B, C)
+
+        x = np.array( [A.x, B.x, C.x] )
+        y = np.array( [A.y, B.y, C.y] )
+        self.data = self.f(x, y)
+
+        self.check_interpolate_at(A.x, A.y)
+        self.check_interpolate_at(B.x, B.y)
+        self.check_interpolate_at(C.x, C.y)
+        self.check_interpolate_at(0.25, 0.25)
+        self.check_interpolate_at(0.1, 0.2)
+        self.check_interpolate_at(0.2, 0.1)
 
 if __name__ == '__main__':
     unittest.main()
