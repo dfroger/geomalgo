@@ -26,9 +26,9 @@ cdef void triangle2d_from_triangulation2d(CTriangle2D* T,
         int ia, ib, ic
 
     # Get points A, B and C indexes.
-    ia = TG.trivtx[3*triangle_index    ]
-    ib = TG.trivtx[3*triangle_index + 1]
-    ic = TG.trivtx[3*triangle_index + 2]
+    ia = TG.trivtx[triangle_index,0]
+    ib = TG.trivtx[triangle_index,1]
+    ic = TG.trivtx[triangle_index,2]
 
     # Set triangle point A coordinates
     T.A.x = TG.x[ia]
