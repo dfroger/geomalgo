@@ -30,6 +30,17 @@ class TestTriangle2D(unittest.TestCase):
         triangle.recompute()
         self.assertAlmostEqual(triangle.area, 0.5)
 
+    def test_degenerated(self):
+        """
+        A----B----P
+        """
+        A = Point2D(0,0)
+        B = Point2D(1,0)
+        C = Point2D(2,0)
+
+        with self.assertRaisesRegex(ValueError, "Triangle is degenerated"):
+            triangle = Triangle2D(A, B, C)
+
 class TestAreaAndCounterclockwise(unittest.TestCase):
 
     def test_counterclockwise(self):
@@ -81,19 +92,6 @@ class TestAreaAndCounterclockwise(unittest.TestCase):
         self.assertAlmostEqual(triangle.signed_area, 0.5)
         self.assertAlmostEqual(triangle.area, 0.5)
         self.assertTrue(triangle.counterclockwise)
-
-    def test_on_line(self):
-        """
-        A----B----P
-        """
-        A = Point2D(0,0)
-        B = Point2D(1,0)
-        C = Point2D(2,0)
-
-        triangle = Triangle2D(A, B, C)
-
-        self.assertAlmostEqual(triangle.signed_area, 0.)
-        self.assertAlmostEqual(triangle.area, 0.)
 
 class TestCenter(unittest.TestCase):
 

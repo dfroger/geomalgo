@@ -126,16 +126,18 @@ cdef class Triangle2D:
         self.ctri2d.B = B.cpoint2d
         self.ctri2d.C = C.cpoint2d
 
-        self.recompute()
+        self.signed_area = triangle2d_signed_area(&self.ctri2d)
+        if self.signed_area == 0.:
+            raise ValueError("Triangle is degenerated")
 
-        if force_counterclockwise and not self.counterclockwise:
+        if force_counterclockwise and self.signed_area < 0.:
             # Swap points B and C.
             self.B = C
             self.C = B
             self.ctri2d.B = C.cpoint2d
             self.ctri2d.C = B.cpoint2d
 
-            self.recompute()
+        self.recompute()
 
     def recompute(Triangle2D self):
         """Must be called manually if any point coordinate changed"""
