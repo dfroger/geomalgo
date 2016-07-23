@@ -51,6 +51,12 @@ class TestAreaAndCounterclockwise(unittest.TestCase):
         self.assertAlmostEqual(triangle.area, 0.5)
         self.assertTrue(triangle.counterclockwise)
 
+        triangle = Triangle2D(A, B, C, force_counterclockwise=True)
+
+        self.assertAlmostEqual(triangle.signed_area, 0.5)
+        self.assertAlmostEqual(triangle.area, 0.5)
+        self.assertTrue(triangle.counterclockwise)
+
     def test_clockwise(self):
         """
         B
@@ -69,6 +75,12 @@ class TestAreaAndCounterclockwise(unittest.TestCase):
         self.assertAlmostEqual(triangle.signed_area, -0.5)
         self.assertAlmostEqual(triangle.area, 0.5)
         self.assertFalse(triangle.counterclockwise)
+
+        triangle = Triangle2D(A, B, C, force_counterclockwise=True)
+
+        self.assertAlmostEqual(triangle.signed_area, 0.5)
+        self.assertAlmostEqual(triangle.area, 0.5)
+        self.assertTrue(triangle.counterclockwise)
 
     def test_on_line(self):
         """

@@ -114,7 +114,8 @@ cdef class Triangle2D:
         def __get__(self):
             return self.signed_area > 0.
 
-    def __init__(self, Point2D A, Point2D B, Point2D C, index=0):
+    def __init__(self, Point2D A, Point2D B, Point2D C, index=0,
+                 force_counterclockwise=False):
         self.A = A
         self.B = B
         self.C = C
@@ -126,6 +127,15 @@ cdef class Triangle2D:
         self.ctri2d.C = C.cpoint2d
 
         self.recompute()
+
+        if force_counterclockwise and not self.counterclockwise:
+            # Swap points B and C.
+            self.B = C
+            self.C = B
+            self.ctri2d.B = C.cpoint2d
+            self.ctri2d.C = B.cpoint2d
+
+            self.recompute()
 
     def recompute(Triangle2D self):
         """Must be called manually if any point coordinate changed"""
