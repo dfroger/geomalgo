@@ -1,5 +1,5 @@
 from .base2d.point2d cimport (
-    CPoint2D, new_point2d, del_point2d, c_is_left, c_is_counterclockwise
+    CPoint2D, new_point2d, del_point2d, c_is_left
 )
 
 from .base2d.polygon2d cimport (

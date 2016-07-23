@@ -34,15 +34,6 @@ def is_left(Point2D A, Point2D B, Point2D P, comparer=math.isclose):
 
     return res > 0.
 
-def is_counterclockwise(Point2D A, Point2D B, Point2D C, comparer=math.isclose):
-
-    res = c_is_counterclockwise(A.cpoint2d, B.cpoint2d, C.cpoint2d)
-
-    if comparer(res, 0.):
-        raise ValueError("Triangle is degenerated (A, B and C are aligned)")
-
-    return res > 0.
-
 cdef class Point2D:
     """
     A point in 2D space

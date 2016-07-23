@@ -30,7 +30,7 @@ class TestTriangle2D(unittest.TestCase):
         triangle.recompute()
         self.assertAlmostEqual(triangle.area, 0.5)
 
-class TestArea(unittest.TestCase):
+class TestAreaAndCounterclockwise(unittest.TestCase):
 
     def test_counterclockwise(self):
         """
@@ -49,6 +49,7 @@ class TestArea(unittest.TestCase):
 
         self.assertAlmostEqual(triangle.signed_area, 0.5)
         self.assertAlmostEqual(triangle.area, 0.5)
+        self.assertTrue(triangle.counterclockwise)
 
     def test_clockwise(self):
         """
@@ -67,6 +68,7 @@ class TestArea(unittest.TestCase):
 
         self.assertAlmostEqual(triangle.signed_area, -0.5)
         self.assertAlmostEqual(triangle.area, 0.5)
+        self.assertFalse(triangle.counterclockwise)
 
     def test_on_line(self):
         """

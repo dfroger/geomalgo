@@ -1,7 +1,7 @@
 import unittest
 from math import sqrt, pi
 
-from geomalgo import Point2D, is_left, is_counterclockwise
+from geomalgo import Point2D, is_left
 
 class TestPoint2D(unittest.TestCase):
 
@@ -83,46 +83,6 @@ class TestIsLeft(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Point P in on line \(AB\)"):
             is_left(A,B,P)
 
-class TestIsCounterclockwise(unittest.TestCase):
-
-    def test_counterclockwise(self):
-        """
-        C
-        +
-        |  \
-        |     \
-        +--------+
-        A        B
-        """
-        A = Point2D(0,0)
-        B = Point2D(1,0)
-        C = Point2D(0,1)
-        self.assertTrue(is_counterclockwise(A,B,C))
-
-    def test_clockwise(self):
-        """
-        B
-        +
-        |  \
-        |     \
-        +--------+
-        A        C
-        """
-        A = Point2D(0,0)
-        B = Point2D(0,1)
-        C = Point2D(1,0)
-        self.assertFalse(is_counterclockwise(A,B,C))
-
-    def test_on_line(self):
-        """
-        A----B----P
-        """
-        A = Point2D(0,0)
-        B = Point2D(1,0)
-        P = Point2D(2,0)
-        msg = "Triangle is degenerated \(A, B and C are aligned\)"
-        with self.assertRaisesRegex(ValueError, msg):
-            is_counterclockwise(A,B,P)
 
 class TestEquality(unittest.TestCase):
 

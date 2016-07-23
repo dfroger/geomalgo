@@ -23,6 +23,19 @@ cdef inline void triangle2d_center(CTriangle2D* T, CPoint2D* C):
     C.x = (T.A.x + T.B.x + T.C.x) / 3.
     C.y = (T.A.y + T.B.y + T.C.y) / 3.
 
+cdef inline double triangle2d_counterclockwise(CTriangle2D* T):
+    """
+    Returns
+    -------
+
+    Positive if triangle ABC is oriented counterclockwise.
+    Negative if triangle ABC is oriented clockwise.
+    Zero if triangle ABC is degenerated.
+
+    See: http://geomalgorithms.com/a01-_area.html
+    """
+    return triangle2d_signed_area(T)
+
 cdef class Triangle2D:
     cdef public:
         int index

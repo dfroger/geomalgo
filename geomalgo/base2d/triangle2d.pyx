@@ -110,6 +110,10 @@ cdef class Triangle2D:
             triangle2d_center(&self.ctri2d, C.cpoint2d)
             return C
 
+    property counterclockwise:
+        def __get__(self):
+            return self.signed_area > 0.
+
     def __init__(self, Point2D A, Point2D B, Point2D C, index=0):
         self.A = A
         self.B = B

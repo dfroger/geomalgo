@@ -28,14 +28,6 @@ cdef inline double c_is_left(CPoint2D* A, CPoint2D* B, CPoint2D* P):
     return (B.x - A.x) * (P.y - A.y) \
          - (P.x - A.x) * (B.y - A.y)
 
-cdef inline double c_is_counterclockwise(CPoint2D* A, CPoint2D* B, CPoint2D* C):
-    """
-    Positive if triangle ABC is oriented counterclockwise, negative else.
-
-    See: http://geomalgorithms.com/a01-_area.html
-    """
-    return c_is_left(A, B, C)
-
 cdef inline double c_point2d_distance(CPoint2D* A, CPoint2D* B):
     return sqrt((B.x-A.x)**2 + (B.y-A.y)**2)
 
