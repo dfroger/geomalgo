@@ -53,39 +53,40 @@ cdef Edge* edge_new(int V1, int T0):
 
 cdef CEdgeToTriangles* edge_to_triangles_new(int NV):
     cdef:
-        CEdgeToTriangles* edge_to_triangles
+        CEdgeToTriangles* edge2tri
         int size, i
     # Allocate and initialize main CEdgeToTriangles structure.
-    edge_to_triangles =  <CEdgeToTriangles*> malloc(sizeof(CEdgeToTriangles))
+    edge2tri =  <CEdgeToTriangles*> malloc(sizeof(CEdgeToTriangles))
     size = NV - 1
-    edge_to_triangles.size = size
-    edge_to_triangles.edges_number = 0
+    edge2tri.size = size
+    edge2tri.NE = 0
+    edge2tri.NI = 0
     # Allocate array of linked list of `Edge*`.
-    edge_to_triangles.edges = <Edge**> malloc(sizeof(Edge*)*size)
+    edge2tri.edges = <Edge**> malloc(sizeof(Edge*)*size)
     # Each linked list is just one Edge* with value NULL.
     for i in range(size):
-        edge_to_triangles.edges[i] = NULL
-    return edge_to_triangles
+        edge2tri.edges[i] = NULL
+    return edge2tri
 
 
-cdef void edge_to_triangle_del(CEdgeToTriangles* edge_to_triangles):
+cdef void edge_to_triangle_del(CEdgeToTriangles* edge2tri):
     cdef:
         int V0
         Edge* tmp
     # First, free each item of each Edge* linked list.
-    for V0 in range(edge_to_triangles.size):
-        edge = edge_to_triangles.edges[V0]
+    for V0 in range(edge2tri.size):
+        edge = edge2tri.edges[V0]
         while edge != NULL:
             tmp = edge.next_edge
             free(edge)
             edge = tmp
     # Free the array of linked list.
-    free(edge_to_triangles.edges)
+    free(edge2tri.edges)
     # Free the main structure.
-    free(edge_to_triangles)
+    free(edge2tri)
 
 
-cdef void edge_to_triangles_add(CEdgeToTriangles* edge_to_triangles,
+cdef void edge_to_triangles_add(CEdgeToTriangles* edge2tri,
                                 int V0, int V1, int T):
     cdef:
         Edge** edge_ptr
@@ -96,7 +97,7 @@ cdef void edge_to_triangles_add(CEdgeToTriangles* edge_to_triangles,
     # Take the address of the first Edge* in the linked list.
     # Note that the value of edge may be modified, so we need
     # its adress.
-    edge_ptr = edge_to_triangles.edges + V0
+    edge_ptr = edge2tri.edges + V0
     # Loop on the Edge* linked list until the end.
     while edge_ptr[0] != NULL:
         # (V0, V1) is already associated with T0. Now ssociated it with T1,
@@ -104,6 +105,7 @@ cdef void edge_to_triangles_add(CEdgeToTriangles* edge_to_triangles,
         if edge_ptr[0].V1 == V1:
             edge_ptr[0].has_two_triangles = True
             edge_ptr[0].T1 = T
+            edge2tri.NI += 1
             break
         # Move to the next item in `Edge*` linked list.
         edge_ptr= &(edge_ptr[0].next_edge)
@@ -112,10 +114,29 @@ cdef void edge_to_triangles_add(CEdgeToTriangles* edge_to_triangles,
         # `Edge*` at the end of the linked list.
         # Note that this requires a pointer to the
         edge_ptr[0] = edge_new(V1, T)
-        edge_to_triangles.edges_number += 1
+        edge2tri.NE += 1
 
 
-cdef Edge* edge_to_triangles_get(CEdgeToTriangles* edge_to_triangles,
+cdef void edge_to_triangles_compute(CEdgeToTriangles* edge2tri,
+                                    int[:,:] trivtx):
+    cdef:
+        int T, NT = trivtx.shape[0]
+        int V0, V1, V2
+
+    # Loop on each triangle vertices (V0,V1,V2), and marks the
+    # edges (V0,V1), (V1,V2), (V2,V0) to belongs to the triangle.
+    for T in range(NT):
+        V0 = trivtx[T,0]
+        V1 = trivtx[T,1]
+        V2 = trivtx[T,2]
+        edge_to_triangles_add(edge2tri, V0, V1, T)
+        edge_to_triangles_add(edge2tri, V1, V2, T)
+        edge_to_triangles_add(edge2tri, V2, V0, T)
+
+    edge2tri.NB = edge2tri.NE - edge2tri.NI
+
+
+cdef Edge* edge_to_triangles_get(CEdgeToTriangles* edge2tri,
                                  int V0, int V1):
     cdef:
         Edge* edge
@@ -123,7 +144,7 @@ cdef Edge* edge_to_triangles_get(CEdgeToTriangles* edge_to_triangles,
     if V0 > V1:
         V0, V1 = V1, V0
     # Get the linked list of `Edge*` connected to V0.
-    edge = edge_to_triangles.edges[V0]
+    edge = edge2tri.edges[V0]
     # Loop on each `Edge*` connected to V0, and check if V1 is found.
     while edge != NULL:
         if edge.V1 == V1:
@@ -137,25 +158,16 @@ cdef class EdgeToTriangles:
     """Mapping from edge to triangles the belongs to"""
 
     def __cinit__(self, int[:,:] trivtx, int NV):
-        self._edge_to_triangles = edge_to_triangles_new(NV)
+        self._edge2tri = edge_to_triangles_new(NV)
 
     def __dealloc__(self):
-        edge_to_triangle_del(self._edge_to_triangles)
+        edge_to_triangle_del(self._edge2tri)
 
     def __init__(self, int[:,:] trivtx, int NV):
-        cdef:
-            int T, NT = trivtx.shape[0]
-            int V0, V1, V2
-
-        # Loop on each triangle vertices (V0,V1,V2), and marks the
-        # edges (V0,V1), (V1,V2), (V2,V0) to belongs to the triangle.
-        for T in range(NT):
-            V0 = trivtx[T,0]
-            V1 = trivtx[T,1]
-            V2 = trivtx[T,2]
-            edge_to_triangles_add(self._edge_to_triangles, V0, V1, T)
-            edge_to_triangles_add(self._edge_to_triangles, V1, V2, T)
-            edge_to_triangles_add(self._edge_to_triangles, V2, V0, T)
+        edge_to_triangles_compute(self._edge2tri, trivtx)
+        self.NE = self._edge2tri.NE
+        self.NI = self._edge2tri.NI
+        self.NB = self._edge2tri.NB
 
     def __getitem__(self, V0V1):
         cdef:
@@ -163,7 +175,7 @@ cdef class EdgeToTriangles:
             Edge* edge
         V0 = V0V1[0]
         V1 = V0V1[1]
-        edge = edge_to_triangles_get(self._edge_to_triangles, V0, V1)
+        edge = edge_to_triangles_get(self._edge2tri, V0, V1)
         if edge == NULL:
             raise KeyError("No such edge: ({}, {})".format(V0, V1))
         if edge.has_two_triangles:
@@ -172,4 +184,4 @@ cdef class EdgeToTriangles:
             return edge.T0, None
 
     def __len__(self):
-        return self._edge_to_triangles.edges_number
+        return self._edge2tri.NE

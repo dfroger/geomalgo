@@ -16,8 +16,14 @@ cdef struct Edge:
 # last V0 vertice is not connected to a V1 vertice such as V0 > V1.
 # `edges_number` counts the total number of `Edges` in each linked list.
 cdef struct CEdgeToTriangles:
+    # Number of vertices - 1
     int size
-    int edges_number
+    # Number of edges (NI+NB)
+    int NE
+    # Number of internal edges.
+    int NI
+    # Number of boundary edges
+    int NB
     Edge** edges
 
 # Allocate and initialize a new `Edge`.
@@ -33,9 +39,17 @@ cdef void edge_to_triangle_del(CEdgeToTriangles* edge_to_triangles)
 cdef void edge_to_triangles_add(CEdgeToTriangles* edge_to_triangles,
                                 int V0, int V1, int T)
 
+# Compute all (V0,V1) -> (T0, T1) mappings
+cdef void edge_to_triangles_compute(CEdgeToTriangles* edge_to_triangles,
+                                    int[:,:] trivtx)
+
 # Retrieve a (V0,V1) -> (T0, T1) entry.
 cdef Edge* edge_to_triangles_get(CEdgeToTriangles* edge_to_triangles,
                                        int V0, int V1)
 cdef class EdgeToTriangles:
     cdef:
-        CEdgeToTriangles* _edge_to_triangles
+        CEdgeToTriangles* _edge2tri
+    cdef public:
+        int NE
+        int NI
+        int NB
