@@ -9,6 +9,10 @@ cdef struct Edge:
     bint has_two_triangles
     int T0
     int T1
+    # If True, (T0, V0, V1) is counterclockwise and (T1, V0, V1) is clockwise.
+    # If False, (T0, V0, V1) is clockwise and (T1, V0, V1) is
+    # counterclockwise.
+    bint counterclockwise
     Edge* next_edge
 
 # Edge** is an array of linked list of `Edge*`, indexed with V0, with V1>V0.
@@ -27,7 +31,7 @@ cdef struct CEdgeToTriangles:
     Edge** edges
 
 # Allocate and initialize a new `Edge`.
-cdef Edge* edge_new(int V1, int T0)
+cdef Edge* edge_new(int V1, int T0, bint counterclockwise)
 
 # Allocate and initialize a new edge_to_triangles_new.
 cdef CEdgeToTriangles* edge_to_triangles_new(int NV)

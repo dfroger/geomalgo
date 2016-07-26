@@ -36,18 +36,18 @@ class TestEdgeToTriangles(unittest.TestCase):
 
         expected = {
             (0, 1): (0, None),
-            (1, 2): (1, None),
-            (3, 4): (2, 4),
-            (4, 5): (3, None),
-            (6, 7): (5, None),
             (0, 3): (0, None),
-            (3, 6): (4, None),
-            (1, 4): (1, 2),
-            (4, 7): (5, None),
-            (2, 5): (3, None),
+            (1, 2): (1, None),
             (1, 3): (0, 2),
+            (1, 4): (1, 2),
             (2, 4): (1, 3),
+            (2, 5): (3, None),
+            (3, 4): (2, 4),
+            (3, 6): (4, None),
+            (4, 5): (3, None),
+            (4, 7): (5, None),
             (4, 6): (4, 5),
+            (6, 7): (5, None),
         }
 
         for V0V1, (T0, T1) in expected.items():

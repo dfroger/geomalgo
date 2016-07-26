@@ -39,13 +39,14 @@ V0=4 -> Edge(V1=5, T0=3)
 from libc.stdlib cimport malloc, free
 
 
-cdef Edge* edge_new(int V1, int T0):
+cdef Edge* edge_new(int V1, int T0, bint counterclockwise):
     cdef:
         Edge* edge
     edge = <Edge*> malloc(sizeof(Edge))
     edge.V1 = V1
     edge.has_two_triangles = False
     edge.T0 = T0
+    edge.counterclockwise = counterclockwise
     # T1 needs no initialization.
     edge.next_edge = NULL
     return edge
@@ -91,7 +92,10 @@ cdef void edge_to_triangles_add(CEdgeToTriangles* edge2tri,
     cdef:
         Edge** edge_ptr
     # Order (V0, V1) such as V0 > V1.
-    if V0 > V1:
+    if V0 < V1:
+        counterclockwise = True
+    else:
+        counterclockwise = False
         V0, V1 = V1, V0
     # Seach if (V0, V1) is already associated to a T0.
     # Take the address of the first Edge* in the linked list.
@@ -113,7 +117,7 @@ cdef void edge_to_triangles_add(CEdgeToTriangles* edge2tri,
         # (V0, V1) not yet in the `Edge*` linked list, create a new
         # `Edge*` at the end of the linked list.
         # Note that this requires a pointer to the
-        edge_ptr[0] = edge_new(V1, T)
+        edge_ptr[0] = edge_new(V1, T, counterclockwise)
         edge2tri.NE += 1
 
 
