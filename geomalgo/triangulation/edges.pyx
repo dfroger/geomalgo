@@ -7,13 +7,15 @@ from .edge_to_triangle cimport (
     edge_to_triangles_add, edge_to_triangles_get, edge_to_triangles_compute
 )
 
-cdef class BoundaryEdges:
-    pass
+class BoundaryEdges:
+    def __init__(self, NB):
+        self.vertices = np.empty((NB, 2), dtype='int32')
+        self.triangles = np.empty((NB,), dtype='int32')
 
-cdef class InternEdges:
-    property vertices:
-        def __get__(self):
-            return np.asarray(self.c_vertices)
+class InternEdges:
+    def __init__(self, NI):
+        self.vertices = np.empty((NI, 2), dtype='int32')
+        self.triangles = np.empty((NI, 2), dtype='int32')
 
 # is_intern_edge
 # boundary_vertex_neighbourg
@@ -26,8 +28,6 @@ def build_edges(int[:,:] trivtx, int NV):
         int NT = trivtx.shape[0]
         int T, V0, V1, V2
         Edge* edge
-        InternEdges intern = InternEdges()
-        BoundaryEdges boundary = BoundaryEdges()
 
     edge2tri = edge_to_triangles_new(NV)
     edge_to_triangles_compute(edge2tri, trivtx)
@@ -36,10 +36,14 @@ def build_edges(int[:,:] trivtx, int NV):
     NI = edge2tri.NI
     NB = edge2tri.NB
 
-    intern.triangles   = <int[:NI,:2]> malloc(sizeof(int)*NI*2)
-    intern.c_vertices    = <int[:NI,:2]> malloc(sizeof(int)*NI*2)
-    boundary.triangles = <int[:NB]>    malloc(sizeof(int)*NB)
-    boundary.vertices  = <int[:NB,:2]> malloc(sizeof(int)*NB*2)
+    boundary_edges = BoundaryEdges(NB)
+    intern_edges = InternEdges(NI)
+
+    cdef:
+        int[:,:] boundary_vertices = boundary_edges.vertices
+        int[:] boundary_triangles = boundary_edges.triangles
+        int[:,:] intern_vertices = intern_edges.vertices
+        int[:,:] intern_triangles = intern_edges.triangles
 
     I = 0
     B = 0
@@ -48,22 +52,26 @@ def build_edges(int[:,:] trivtx, int NV):
         edge = edge2tri.edges[V0]
         while edge != NULL:
             if edge.has_two_triangles:
+                intern_vertices[I,0] = V0
+                intern_vertices[I,1] = edge.V1
                 if edge.counterclockwise:
-                    intern.c_vertices[I,0] = V0
-                    intern.c_vertices[I,1] = edge.V1
+                    intern_triangles[I,0] = edge.T0
+                    intern_triangles[I,1] = edge.T1
                 else:
-                    intern.c_vertices[I,0] = edge.V1
-                    intern.c_vertices[I,1] = V0
-                intern.triangles[I,0] = edge.T0
-                intern.triangles[I,1] = edge.T1
+                    intern_triangles[I,0] = edge.T1
+                    intern_triangles[I,1] = edge.T0
                 I += 1
             else:
-                boundary.vertices[B,0] = V0
-                boundary.vertices[B,1] = edge.V1
-                boundary.triangles[B] = edge.T0
+                if edge.counterclockwise:
+                    boundary_vertices[B,0] = V0
+                    boundary_vertices[B,1] = edge.V1
+                else:
+                    boundary_vertices[B,0] = edge.V1
+                    boundary_vertices[B,1] = V0
+                boundary_triangles[B] = edge.T0
                 B += 1
             edge = edge.next_edge
 
     edge_to_triangle_del(edge2tri)
 
-    return intern, boundary
+    return intern_edges, boundary_edges
