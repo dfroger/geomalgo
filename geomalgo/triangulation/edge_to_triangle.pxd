@@ -50,6 +50,9 @@ cdef void edge_to_triangles_compute(CEdgeToTriangles* edge_to_triangles,
 # Retrieve a (V0,V1) -> (T0, T1) entry.
 cdef Edge* edge_to_triangles_get(CEdgeToTriangles* edge_to_triangles,
                                        int V0, int V1)
+
+cdef void edge_to_triangles_display(CEdgeToTriangles* edge2tri)
+
 cdef class EdgeToTriangles:
     cdef:
         CEdgeToTriangles* _edge2tri

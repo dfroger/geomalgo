@@ -37,7 +37,7 @@ V0=4 -> Edge(V1=5, T0=3)
 """
 
 from libc.stdlib cimport malloc, free
-
+from libc.stdio cimport printf
 
 cdef Edge* edge_new(int V1, int T0, bint counterclockwise):
     cdef:
@@ -104,7 +104,7 @@ cdef void edge_to_triangles_add(CEdgeToTriangles* edge2tri,
     edge_ptr = edge2tri.edges + V0
     # Loop on the Edge* linked list until the end.
     while edge_ptr[0] != NULL:
-        # (V0, V1) is already associated with T0. Now ssociated it with T1,
+        # (V0, V1) is already associated with T0. Now associated it with T1,
         # too.
         if edge_ptr[0].V1 == V1:
             edge_ptr[0].has_two_triangles = True
@@ -157,6 +157,28 @@ cdef Edge* edge_to_triangles_get(CEdgeToTriangles* edge2tri,
     else:
         return NULL
 
+cdef void edge_to_triangles_display(CEdgeToTriangles* edge2tri):
+    cdef:
+        Edge* edge
+        int V0
+
+    printf("NB=%d, NI=%d, NE=%d\n", edge2tri.NB, edge2tri.NI, edge2tri.NE)
+
+    for V0 in range(edge2tri.size):
+        edge = edge2tri.edges[V0]
+        while edge:
+            if edge.has_two_triangles:
+                if edge.counterclockwise:
+                    printf("I %d %d %d %d\n", V0, edge.V1, edge.T0, edge.T1)
+                else:
+                    printf("I %d %d %d %d *\n", V0, edge.V1, edge.T0, edge.T1)
+            else:
+                if edge.counterclockwise:
+                    printf("B %d %d %d\n", V0, edge.V1, edge.T0)
+                else:
+                    printf("B %d %d %d *\n", V0, edge.V1, edge.T0)
+            edge = edge.next_edge
+        printf("\n")
 
 cdef class EdgeToTriangles:
     """Mapping from edge to triangles the belongs to"""
@@ -189,3 +211,6 @@ cdef class EdgeToTriangles:
 
     def __len__(self):
         return self._edge2tri.NE
+
+    def display(self):
+        edge_to_triangles_display(self._edge2tri)
