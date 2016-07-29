@@ -3,36 +3,16 @@ import unittest
 import numpy as np
 
 from geomalgo import EdgeToTriangles
+from geomalgo.data import step, hole
 
-trivtx = np.array([
-    [0, 1, 3], [1, 2, 4], # T0, T1
-    [1, 4, 3], [2, 5, 4], # T2, T3
-    [3, 4, 6], [4, 7, 6], # T4, T5
-], dtype='int32')
-
-NV = 9
-
-class TestEdgeToTriangles(unittest.TestCase):
-
-    """
-    6-------7
-    | \  T5 |
-    |   \   |
-    | T4  \ |
-    3-------4-------5
-    | \  T2 | \  T3 |
-    |   \   |   \   |
-    | T0  \ | T1  \ |
-    0-------1-------2
-    """
+class TestStep(unittest.TestCase):
 
     def test_normal(self):
+        edge2tri = EdgeToTriangles(step.trivtx, 8)
 
-        edge2tri = EdgeToTriangles(trivtx, NV)
-
-        self.assertEqual(edge2tri.NE, 13)
-        self.assertEqual(edge2tri.NI,  5)
         self.assertEqual(edge2tri.NB,  8)
+        self.assertEqual(edge2tri.NI,  5)
+        self.assertEqual(edge2tri.NE, 13)
 
         expected = {
             (0, 1): (0, None),
@@ -54,13 +34,22 @@ class TestEdgeToTriangles(unittest.TestCase):
             self.assertEqual(edge2tri[V0V1], (T0, T1))
 
     def test_reversed_key(self):
-        edge2tri = EdgeToTriangles(trivtx, NV)
+        edge2tri = EdgeToTriangles(step.trivtx, 8)
         self.assertEqual(edge2tri[(4,2)], (1, 3))
 
     def test_wrong_key(self):
-        edge2tri = EdgeToTriangles(trivtx, NV)
+        edge2tri = EdgeToTriangles(step.trivtx, 8)
         with self.assertRaisesRegex(KeyError, "No such edge"):
             edge2tri[(3,7)]
+
+class TestHole(unittest.TestCase):
+
+    def test_normal(self):
+        edge2tri = EdgeToTriangles(hole.trivtx, 32)
+
+        self.assertEqual(edge2tri.NB, 23)
+        self.assertEqual(edge2tri.NI, 50)
+        self.assertEqual(edge2tri.NE, 73)
 
 if __name__ == '__main__':
     unittest.main()

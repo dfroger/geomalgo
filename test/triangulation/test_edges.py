@@ -1,31 +1,16 @@
 import unittest
 
-import numpy as np
 from numpy.testing import assert_equal
 
 from geomalgo import build_edges
-
-# 6-------7
-# | \  T5 |
-# |   \   |
-# | T4  \ |
-# 3-------4-------5
-# | \  T2 | \  T3 |
-# |   \   |   \   |
-# | T0  \ | T1  \ |
-# 0-------1-------2
-trivtx = np.array([
-    [0, 1, 3], [1, 2, 4], # T0, T1
-    [1, 4, 3], [2, 5, 4], # T2, T3
-    [3, 4, 6], [4, 7, 6], # T4, T5
-], dtype='int32')
+from geomalgo.data import step
 
 NV = 9
 
 class TestEdges(unittest.TestCase):
 
     def setUp(self):
-        self.intern_edges, self.boundary_edges = build_edges(trivtx, NV)
+        self.intern_edges, self.boundary_edges = build_edges(step.trivtx, NV)
 
     def test_internal_edges_vertices (self):
         vert = self.intern_edges.vertices
