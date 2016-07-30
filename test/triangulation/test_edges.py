@@ -3,7 +3,7 @@ import unittest
 from numpy.testing import assert_equal
 
 from geomalgo import build_edges
-from geomalgo.data import step
+from geomalgo.data import step, hole
 
 NV = 9
 
@@ -53,6 +53,46 @@ class TestEdges(unittest.TestCase):
         assert_equal(tri[5], 3)
         assert_equal(tri[6], 5)
         assert_equal(tri[7], 5)
+
+class TestHole(unittest.TestCase):
+
+    def setUp(self):
+        self.intern_edges, self.boundary_edges = build_edges(hole.trivtx,
+                                                             hole.NV)
+
+    def assert_intern_triangles(self, A, B, T, U):
+        """Check that intern edge (A, B) has triangles (T, U)"""
+        t, u = self.intern_edges[(A,B)]
+        if (t, u) != (T, U):
+            raise AssertionError(
+                "Expected intern edge ({}, {}) to have triangles ({}, {}),"
+                "but has triangles: ({}, {})" .format(T, U, t, u))
+
+    def test_internal_edges(self):
+        self.assertEqual(self.intern_edges.vertices.shape, (hole.NI, 2))
+        self.assertEqual(self.intern_edges.triangles.shape, (hole.NI, 2))
+        self.assert_intern_triangles( 9, 10,  8, 18)
+        self.assert_intern_triangles(24, 30, 36, 37)
+        self.assert_intern_triangles( 8, 15,  6, 23)
+
+    def test_no_such_intern_edge(self):
+        with self.assertRaisesRegex(KeyError, "No such intern edge"):
+            self.intern_edges[(10, 18)]
+
+    def assert_boundary_triangle(self, A, B, T):
+        """Check that boundary edge (A, B) has triangles T"""
+        t = self.boundary_edges[(A,B)]
+        if t != T:
+            raise AssertionError(
+                "Expected boundary edge ({}, {}) to have triangle {},"
+                "but has triangle: {}" .format(T, t))
+
+    def test_boundary_edges(self):
+        self.assertEqual(self.boundary_edges.vertices.shape, (hole.NB, 2))
+        self.assertEqual(self.boundary_edges.triangles.shape, (hole.NB, ))
+        self.assert_boundary_triangle( 2 , 3,  2)
+        self.assert_boundary_triangle(18, 17, 25)
+        self.assert_boundary_triangle(28, 21, 32)
 
 if __name__ == '__main__':
     unittest.main()

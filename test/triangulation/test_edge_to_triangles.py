@@ -45,11 +45,11 @@ class TestStep(unittest.TestCase):
 class TestHole(unittest.TestCase):
 
     def test_normal(self):
-        edge2tri = EdgeToTriangles(hole.trivtx, 32)
+        edge2tri = EdgeToTriangles(hole.trivtx, hole.NV)
 
-        self.assertEqual(edge2tri.NB, 23)
-        self.assertEqual(edge2tri.NI, 50)
-        self.assertEqual(edge2tri.NE, 73)
+        self.assertEqual(edge2tri.NB, hole.NB)
+        self.assertEqual(edge2tri.NI, hole.NI)
+        self.assertEqual(edge2tri.NE, hole.NE)
 
 if __name__ == '__main__':
     unittest.main()

@@ -21,6 +21,13 @@ import numpy as np
       0     1     2     3     4     5     6
 """
 
+NV = 32
+NT = 41
+
+NB = 23
+NI = 50
+NE = 73
+
 x = np.array([
     0, 1, 2, 3, 4, 5, 6, # Points  0 to  6
     0, 1, 2, 3, 4, 5, 6, # Points  7 to 13
