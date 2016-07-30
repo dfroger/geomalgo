@@ -8,11 +8,11 @@ from geomalgo.data import step, hole
 class TestStep(unittest.TestCase):
 
     def test_normal(self):
-        edge2tri = EdgeToTriangles(step.trivtx, 8)
+        edge2tri = EdgeToTriangles(step.trivtx, step.NV)
 
-        self.assertEqual(edge2tri.NB,  8)
-        self.assertEqual(edge2tri.NI,  5)
-        self.assertEqual(edge2tri.NE, 13)
+        self.assertEqual(edge2tri.NB, step.NB)
+        self.assertEqual(edge2tri.NI, step.NI)
+        self.assertEqual(edge2tri.NE, step.NE)
 
         expected = {
             (0, 1): (0, None),
@@ -34,11 +34,11 @@ class TestStep(unittest.TestCase):
             self.assertEqual(edge2tri[V0V1], (T0, T1))
 
     def test_reversed_key(self):
-        edge2tri = EdgeToTriangles(step.trivtx, 8)
+        edge2tri = EdgeToTriangles(step.trivtx, step.NV)
         self.assertEqual(edge2tri[(4,2)], (1, 3))
 
     def test_wrong_key(self):
-        edge2tri = EdgeToTriangles(step.trivtx, 8)
+        edge2tri = EdgeToTriangles(step.trivtx, step.NV)
         with self.assertRaisesRegex(KeyError, "No such edge"):
             edge2tri[(3,7)]
 

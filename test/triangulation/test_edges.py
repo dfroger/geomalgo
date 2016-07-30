@@ -5,16 +5,15 @@ from numpy.testing import assert_equal
 from geomalgo import build_edges
 from geomalgo.data import step, hole
 
-NV = 9
-
 class TestEdges(unittest.TestCase):
 
     def setUp(self):
-        self.intern_edges, self.boundary_edges = build_edges(step.trivtx, NV)
+        self.intern_edges, self.boundary_edges = \
+            build_edges(step.trivtx, step.NV)
 
     def test_internal_edges_vertices (self):
         vert = self.intern_edges.vertices
-        self.assertEqual(vert.shape, (5,2))
+        self.assertEqual(vert.shape, (step.NI, 2))
         assert_equal(vert[0], (1,3))
         assert_equal(vert[1], (1,4))
         assert_equal(vert[2], (2,4))
@@ -23,7 +22,7 @@ class TestEdges(unittest.TestCase):
 
     def test_internal_edges_triangles (self):
         tri = self.intern_edges.triangles
-        self.assertEqual(tri.shape, (5,2))
+        self.assertEqual(tri.shape, (step.NI, 2))
         assert_equal(tri[0], (0,2))
         assert_equal(tri[1], (2,1))
         assert_equal(tri[2], (1,3))
@@ -32,7 +31,7 @@ class TestEdges(unittest.TestCase):
 
     def test_boundary_edges_vertices(self):
         vert = self.boundary_edges.vertices
-        self.assertEqual(vert.shape, (8, 2))
+        self.assertEqual(vert.shape, (step.NB, 2))
         assert_equal(vert[0], (0,1))
         assert_equal(vert[1], (3,0))
         assert_equal(vert[2], (1,2))
@@ -44,7 +43,7 @@ class TestEdges(unittest.TestCase):
 
     def test_boundary_edges_triangles(self):
         tri = self.boundary_edges.triangles
-        self.assertEqual(tri.shape, (8,))
+        self.assertEqual(tri.shape, (step.NB,))
         assert_equal(tri[0], 0)
         assert_equal(tri[1], 0)
         assert_equal(tri[2], 1)
