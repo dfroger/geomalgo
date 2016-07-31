@@ -33,7 +33,7 @@ x = np.array([
     0, 1, 2, 3, 4, 5, 6,  # Vertices  7 to 13
     0, 1, 2, 3, 4, 5, 6,  # Vertices 14 to 20
     0, 1, 2, 3, 4, 5, 6,  # Vertices 21 to 27
-    0, 1, 2, 3, 4, 5, 6,  # Vertices 28 to 31
+    0, 1, 2, 3,           # Vertices 28 to 31
 ], dtype='d')
 
 y = np.array([
@@ -41,7 +41,7 @@ y = np.array([
    11, 11, 11, 11, 11, 11, 11,  # Vertices  7 to 13
    12, 12, 12, 12, 12, 12, 12,  # Vertices 14 to 20
    13, 13, 13, 13, 13, 13, 13,  # Vertices 21 to 27
-   15, 15, 15, 15, 15, 15, 15,  # Vertices 28 to 31
+   15, 15, 15, 15,              # Vertices 28 to 31
 ], dtype='d')
 
 trivtx = np.array([
