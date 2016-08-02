@@ -53,3 +53,7 @@ cdef class Triangle2D:
         Point2D B
         Point2D C
         CTriangle2D ctri2d
+
+    cdef _set_precomputed(Triangle2D self, Point2D A, Point2D B, Point2D C,
+                          int index, double signed_area, double gradx[3],
+                          double grady[3], double det[3])

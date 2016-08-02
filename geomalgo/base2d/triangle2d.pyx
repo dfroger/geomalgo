@@ -179,3 +179,21 @@ cdef class Triangle2D:
         f2 = self.det[2] + P.x*self.gradx[2] + P.y*self.grady[2]
 
         return f0*data[0] + f1*data[1] + f2*data[2]
+
+    cdef _set_precomputed(Triangle2D self, Point2D A, Point2D B, Point2D C,
+                          int index, double signed_area, double gradx[3],
+                          double grady[3], double det[3]):
+        self.A = A
+        self.B = B
+        self.C = C
+        self.index = index
+
+        # C points to Python.
+        self.ctri2d.A = A.cpoint2d
+        self.ctri2d.B = B.cpoint2d
+        self.ctri2d.C = C.cpoint2d
+
+        self.signed_area = signed_area
+        self.gradx = gradx
+        self.grady = grady
+        self.det = det
