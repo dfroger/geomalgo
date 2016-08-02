@@ -1,5 +1,7 @@
 import unittest
 
+import numpy as np
+
 #  3-------4-------5
 #  | \     | \     |
 #  |   \   |   \   |
@@ -26,10 +28,11 @@ class EdgeMap:
         )
 
         self.idx = np.array(
-            [0, 5, 1, 0, 1, 2, 2, 4, 3]
+        #   |   0   |     1     |   2   | 3 | 4 |
+            [ 0 , 5 , 1 , 0 , 1 , 2 , 2 , 4 , 3 ]
         )
 
-    def __getitem(self, V0V1):
+    def __getitem__(self, V0V1):
         V0, V1 = V0V1
         if V0 > V1:
             V0, V1 = V1, V0
@@ -49,7 +52,7 @@ class BoundaryEdges:
 
     def __init__(self):
 
-        sef.vertices = np.array(
+        self.vertices = np.array(
         #    0  1  2  3  4  5  6
             [0, 1, 2, 5, 4, 3, 0]
         )
@@ -70,7 +73,7 @@ class TestEdgeMap(unittest.TestCase):
         self.intern_edges = InternEdges()
 
     def test_intern(self):
-        is_intern, I = self.edge_map([2, 4])
+        is_intern, I = self.edge_map[(2, 4)]
         self.assertTrue(is_intern)
         V0, V1 = self.intern_edges.vertices[I]
         self.assertEqual(V0, 2)

@@ -5,10 +5,10 @@ from numpy.testing import assert_equal
 from geomalgo import build_edges
 from geomalgo.data import step, hole
 
-class TestEdges(unittest.TestCase):
+class TestStep(unittest.TestCase):
 
     def setUp(self):
-        self.intern_edges, self.boundary_edges = \
+        self.intern_edges, self.boundary_edges, self.edge_map = \
             build_edges(step.trivtx, step.NV)
 
     def test_internal_edges_vertices (self):
@@ -53,11 +53,34 @@ class TestEdges(unittest.TestCase):
         assert_equal(tri[6], 5)
         assert_equal(tri[7], 5)
 
+    def test_edge_map(self):
+        assert_equal(self.edge_map.bounds,
+            [ 0 , 2 , 5 , 7 , 9 , 12 , 12 , 13 ])
+        #     0   1   2   3   4   5    6    7      V0
+
+        assert_equal(self.edge_map.edges,
+            [ 1 , 3 , 3 , 2 , 4 , 4 , 5 , 4 , 6 , 5 , 6 , 7 , 7 ])
+        #   |       |           |       |       |           |   |
+        #   0       1           2       3       4         5,6   7
+
+        assert_equal(self.edge_map.is_intern,
+            [ 0 , 0 , 1 , 0 , 1 , 1 , 0 , 1 , 0 , 0 , 1 , 0 , 0 ]
+        #     0   0   1   1   1   2   2   3   3   4   4   4   6      V0
+        #     1   3   3   2   4   4   5   4   6   5   6   7   7      V1
+        #     0   1       2           3       4   5       6   7      idx in boundary_edges
+        #             0       1   2       3           4              idx in intern_edges
+        )
+
+        assert_equal(self.edge_map.idx,
+            # see above : idx in boudnary_edges and idx in intern_edges.
+            [ 0 , 1 , 0 , 2 , 1 , 2 , 3 , 3 , 4 , 5 , 4 , 6 , 7 ]
+        )
+
 class TestHole(unittest.TestCase):
 
     def setUp(self):
-        self.intern_edges, self.boundary_edges = build_edges(hole.trivtx,
-                                                             hole.NV)
+        self.intern_edges, self.boundary_edges, self.edge_map \
+            = build_edges(hole.trivtx, hole.NV)
 
     def assert_intern_triangles(self, A, B, T, U):
         """Check that intern edge (A, B) has triangles (T, U)"""
