@@ -7,7 +7,7 @@ from .edge_to_triangle cimport (
     edge_to_triangles_add, edge_to_triangles_get, edge_to_triangles_compute
 )
 
-class BoundaryEdges:
+cdef class BoundaryEdges:
     """
     Boundary edges are stored such that (V0, V1, T) is counterclockwise
     """
@@ -27,7 +27,7 @@ class BoundaryEdges:
         else:
             raise KeyError("No such boundary edge ({}, {})".format(A, B))
 
-class InternEdges:
+cdef class InternEdges:
     """
     Intern edges vertices (V0, V1) are stored such as V0 < V1, and
     sorted on increasing V0.
