@@ -68,13 +68,25 @@ cdef class EdgeMap:
         self.edges = np.empty(NE, dtype='int32')
 
         # Whether to find edge in BoundaryEdges or InternEdges.
-        self.is_intern = np.empty(NE, dtype='int32')
+        self.location = np.empty(NE, dtype='int32')
 
         # At which index to find edge in BoundaryEdges or InternEdges.
         self.idx = np.empty(NE, dtype='int32')
 
-# is_intern_edge
-# boundary_vertex_neighbourg
+cdef (int, int) search_edge(int V0, int V1, EdgeMap edge_map):
+    cdef:
+        int I, B, C
+    if V0 > V1:
+        V0, V1 = V1, V0
+    B, C = edge_map.bounds[V0], edge_map.bounds[V0+1]
+    for I in range(B, C):
+        if edge_map.edges[I] == V1:
+            break
+    else:
+        return EdgeLocation.not_found, 0
+    return edge_map.location[I], edge_map.idx[I]
+
+
 def build_edges(int[:,:] trivtx, int NV):
 
     cdef:
@@ -120,7 +132,7 @@ def build_edges(int[:,:] trivtx, int NV):
                 else:
                     intern_triangles[I,0] = edge.T1
                     intern_triangles[I,1] = edge.T0
-                edge_map.is_intern[E] = True
+                edge_map.location[E] = EdgeLocation.intern
                 edge_map.idx[E] = I
                 I += 1
             else:
@@ -131,7 +143,7 @@ def build_edges(int[:,:] trivtx, int NV):
                     boundary_vertices[B,0] = edge.V1
                     boundary_vertices[B,1] = V0
                 boundary_triangles[B] = edge.T0
-                edge_map.is_intern[E] = False
+                edge_map.location[E] = EdgeLocation.boundary
                 edge_map.idx[E] = B
                 B += 1
             edge_map.edges[E] = edge.V1

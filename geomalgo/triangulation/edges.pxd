@@ -1,3 +1,8 @@
+cdef enum EdgeLocation:
+    intern = 0
+    boundary = 1
+    not_found = 2
+
 cdef class BoundaryEdges:
     cdef public:
         int[:,:] vertices
@@ -14,5 +19,5 @@ cdef class EdgeMap:
     cdef public:
         int[:] bounds
         int[:] edges
-        bint[:] is_intern
+        int[:] location
         int[:] idx

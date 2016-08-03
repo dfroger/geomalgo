@@ -55,24 +55,29 @@ class TestStep(unittest.TestCase):
         assert_equal(tri[7], 5)
 
     def test_edge_map(self):
-        assert_equal(self.edge_map.bounds,
+        bounds = np.asarray(self.edge_map.bounds)
+        edges = np.asarray(self.edge_map.edges)
+        location = np.asarray(self.edge_map.location)
+        idx = np.asarray(self.edge_map.idx)
+
+        assert_equal(bounds,
             [ 0 , 2 , 5 , 7 , 9 , 12 , 12 , 13 ])
         #     0   1   2   3   4   5    6    7      V0
 
-        assert_equal(self.edge_map.edges,
+        assert_equal(edges,
             [ 1 , 3 , 3 , 2 , 4 , 4 , 5 , 4 , 6 , 5 , 6 , 7 , 7 ])
         #   |       |           |       |       |           |   |
         #   0       1           2       3       4         5,6   7
 
-        assert_equal(self.edge_map.is_intern,
-            [ 0 , 0 , 1 , 0 , 1 , 1 , 0 , 1 , 0 , 0 , 1 , 0 , 0 ]
+        assert_equal(location,
+            [ 1 , 1 , 0 , 1 , 0 , 0 , 1 , 0 , 1 , 1 , 0 , 1 , 1 ]
         #     0   0   1   1   1   2   2   3   3   4   4   4   6      V0
         #     1   3   3   2   4   4   5   4   6   5   6   7   7      V1
         #     0   1       2           3       4   5       6   7      idx in boundary_edges
         #             0       1   2       3           4              idx in intern_edges
         )
 
-        assert_equal(self.edge_map.idx,
+        assert_equal(idx,
             # see above : idx in boudnary_edges and idx in intern_edges.
             [ 0 , 1 , 0 , 2 , 1 , 2 , 3 , 3 , 4 , 5 , 4 , 6 , 7 ]
         )
