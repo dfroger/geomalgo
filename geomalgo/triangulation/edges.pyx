@@ -54,7 +54,7 @@ cdef class InternEdges:
         else:
             raise KeyError("No such intern edge ({}, {})".format(A, B))
 
-class EdgeMap:
+cdef class EdgeMap:
     """
     See TestStep.test_edge_map (test_edges.py)
     """
@@ -120,7 +120,7 @@ def build_edges(int[:,:] trivtx, int NV):
                 else:
                     intern_triangles[I,0] = edge.T1
                     intern_triangles[I,1] = edge.T0
-                edge_map.is_intern[E] = 1
+                edge_map.is_intern[E] = True
                 edge_map.idx[E] = I
                 I += 1
             else:
@@ -131,7 +131,7 @@ def build_edges(int[:,:] trivtx, int NV):
                     boundary_vertices[B,0] = edge.V1
                     boundary_vertices[B,1] = V0
                 boundary_triangles[B] = edge.T0
-                edge_map.is_intern[E] = 0
+                edge_map.is_intern[E] = False
                 edge_map.idx[E] = B
                 B += 1
             edge_map.edges[E] = edge.V1
