@@ -1,10 +1,8 @@
 import numpy as np
 
-from libc.stdlib cimport malloc
-
 from .edge_to_triangle cimport (
     CEdgeToTriangles, Edge, edge_to_triangles_new, edge_to_triangle_del,
-    edge_to_triangles_add, edge_to_triangles_get, edge_to_triangles_compute
+    edge_to_triangles_compute
 )
 
 
