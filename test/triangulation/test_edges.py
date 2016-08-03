@@ -9,8 +9,9 @@ from geomalgo.data import step, hole
 class TestStep(unittest.TestCase):
 
     def setUp(self):
-        self.intern_edges, self.boundary_edges, self.edge_map = \
-            build_edges(step.trivtx, step.NV)
+        self.intern_edges, self.boundary_edges = build_edges(step.trivtx,
+                                                             step.NV)
+        self.edge_map = self.intern_edges.edge_map
 
     def test_internal_edges_vertices (self):
         vert = np.asarray(self.intern_edges.vertices)
@@ -85,8 +86,9 @@ class TestStep(unittest.TestCase):
 class TestHole(unittest.TestCase):
 
     def setUp(self):
-        self.intern_edges, self.boundary_edges, self.edge_map \
-            = build_edges(hole.trivtx, hole.NV)
+        self.intern_edges, self.boundary_edges = build_edges(hole.trivtx,
+                                                             hole.NV)
+        self.edge_map = self.intern_edges.edge_map
 
     def assert_intern_triangles(self, A, B, T, U):
         """Check that intern edge (A, B) has triangles (T, U)"""

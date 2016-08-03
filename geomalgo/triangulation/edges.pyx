@@ -7,52 +7,6 @@ from .edge_to_triangle cimport (
     edge_to_triangles_add, edge_to_triangles_get, edge_to_triangles_compute
 )
 
-cdef class BoundaryEdges:
-    """
-    Boundary edges are stored such that (V0, V1, T) is counterclockwise
-    """
-
-    def __init__(self, NB):
-        self.vertices = np.empty((NB, 2), dtype='int32')
-        self.triangles = np.empty((NB,), dtype='int32')
-
-    def __getitem__(self, AB):
-        """
-        Search for triangles of boundary edge (A, B).
-        """
-        A, B = AB
-        for I, (a, b) in enumerate(self.vertices):
-            if (a, b) == (A, B):
-                return self.triangles[I]
-        else:
-            raise KeyError("No such boundary edge ({}, {})".format(A, B))
-
-cdef class InternEdges:
-    """
-    Intern edges vertices (V0, V1) are stored such as V0 < V1, and
-    sorted on increasing V0.
-
-    (V0, V1, T0) is counterclockwise, and (V0, V1, T1) is clockwise.
-    """
-
-    def __init__(self, NI):
-        self.vertices = np.empty((NI, 2), dtype='int32')
-        self.triangles = np.empty((NI, 2), dtype='int32')
-
-    def __getitem__(self, AB):
-        """
-        Search for triangles of intern edge (A, B).
-
-        Note:
-            Speed is O(n), but could be optimized to O(log N), has intern
-            edges are sorted with increasing V0.
-        """
-        A, B = AB
-        for I, (a, b) in enumerate(self.vertices):
-            if (a, b) == (A, B):
-                return self.triangles[I]
-        else:
-            raise KeyError("No such intern edge ({}, {})".format(A, B))
 
 cdef class EdgeMap:
     """
@@ -73,19 +27,102 @@ cdef class EdgeMap:
         # At which index to find edge in BoundaryEdges or InternEdges.
         self.idx = np.empty(NE, dtype='int32')
 
-cdef (int, int) search_edge(int V0, int V1, EdgeMap edge_map):
-    cdef:
-        int I, B, C
-    if V0 > V1:
-        V0, V1 = V1, V0
-    B, C = edge_map.bounds[V0], edge_map.bounds[V0+1]
-    for I in range(B, C):
-        if edge_map.edges[I] == V1:
-            break
-    else:
-        return EdgeLocation.not_found, 0
-    return edge_map.location[I], edge_map.idx[I]
+    cdef (EdgeLocation, int) search_edge(EdgeMap self, int V0, int V1):
+        cdef:
+            int I, B, C
+        if V0 > V1:
+            V0, V1 = V1, V0
+        B, C = self.bounds[V0], self.bounds[V0+1]
+        for I in range(B, C):
+            if self.edges[I] == V1:
+                return <EdgeLocation> self.location[I], self.idx[I]
+        else:
+            return EdgeLocation.not_found, 0
 
+
+cdef class BoundaryEdges:
+    """
+    Boundary edges are stored such that (V0, V1, T) is counterclockwise
+    """
+
+    def __init__(self, NB):
+        self.vertices = np.empty((NB, 2), dtype='int32')
+        self.triangles = np.empty((NB,), dtype='int32')
+
+    def __getitem__(self, V0V1):
+        """
+        Retrieve triangles for boundary edge (V0, V1).
+        """
+        cdef:
+            EdgeLocation location
+            int B
+            int V0, V1, V0_, V1_
+
+        V0, V1 = V0V1
+
+        location, B = self.edge_map.search_edge(V0, V1)
+
+        if location == EdgeLocation.boundary:
+            V0_ = self.vertices[B, 0]
+            V1_ = self.vertices[B, 1]
+            if not ((V0==V0_ and V1==V1_) or (V0==V1_ and V1==V0_)):
+                raise RuntimeError(
+                    "Expected vertices ({}, {}), but got vertices ({}, {})"
+                    .format(V0, V1, V0_, V1_))
+            return self.triangles[B]
+
+        elif location == EdgeLocation.intern:
+            raise KeyError("({}, {}) is an intern edge".format(V0, V1))
+
+        elif location == EdgeLocation.not_found:
+            raise KeyError("No such boundary edge ({}, {})".format(V0, V1))
+
+        else:
+            RuntimeError("Unexpected EdgeLocation value: {}".format(location))
+
+
+cdef class InternEdges:
+    """
+    Intern edges vertices (V0, V1) are stored such as V0 < V1, and
+    sorted on increasing V0.
+
+    (V0, V1, T0) is counterclockwise, and (V0, V1, T1) is clockwise.
+    """
+
+    def __init__(self, NI):
+        self.vertices = np.empty((NI, 2), dtype='int32')
+        self.triangles = np.empty((NI, 2), dtype='int32')
+
+    def __getitem__(self, V0V1):
+        """
+        Retrive triangles for intern edge (V0, V1).
+        """
+        cdef:
+            EdgeLocation location
+            int I
+            int V0, V1, V0_, V1_
+
+        V0, V1 = V0V1
+
+        location, I = self.edge_map.search_edge(V0, V1)
+
+        if location == EdgeLocation.intern:
+            V0_ = self.vertices[I, 0]
+            V1_ = self.vertices[I, 1]
+            if not ((V0==V0_ and V1==V1_) or (V0==V1_ and V1==V0_)):
+                raise RuntimeError(
+                    "Expected vertices ({}, {}), but got vertices ({}, {})"
+                    .format(V0, V1, V0_, V1_))
+            return np.asarray(self.triangles[I], dtype='int32')
+
+        elif location == EdgeLocation.boundary:
+            raise KeyError("({}, {}) is a boundary edge".format(V0, V1))
+
+        elif location == EdgeLocation.not_found:
+            raise KeyError("No such intern edge ({}, {})".format(V0, V1))
+
+        else:
+            RuntimeError("Unexpected EdgeLocation value: {}".format(location))
 
 def build_edges(int[:,:] trivtx, int NV):
 
@@ -153,4 +190,7 @@ def build_edges(int[:,:] trivtx, int NV):
 
     edge_to_triangle_del(edge2tri)
 
-    return intern_edges, boundary_edges, edge_map
+    intern_edges.edge_map = edge_map
+    boundary_edges.edge_map = edge_map
+
+    return intern_edges, boundary_edges
