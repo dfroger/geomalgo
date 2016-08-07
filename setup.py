@@ -43,6 +43,7 @@ setup(
         'geomalgo.base2d',
         'geomalgo.base3d',
         'geomalgo.cylindrical',
+        'geomalgo.data',
         'geomalgo.inclusion',
         'geomalgo.intersection',
         'geomalgo.polar',
