@@ -47,10 +47,11 @@ cdef class BoundaryEdges:
         self.vertices = np.empty((NB, 2), dtype='int32')
         self.triangles = np.empty((NB,), dtype='int32')
 
-    def __getitem__(self, V0V1):
+    def index_of(self, V0V1):
         """
-        Retrieve triangles for boundary edge (V0, V1).
+        Retrieve index for boundary edge(V0, V1)
         """
+
         cdef:
             EdgeLocation location
             int B
@@ -67,7 +68,7 @@ cdef class BoundaryEdges:
                 raise RuntimeError(
                     "Expected vertices ({}, {}), but got vertices ({}, {})"
                     .format(V0, V1, V0_, V1_))
-            return self.triangles[B]
+            return B
 
         elif location == EdgeLocation.intern:
             raise KeyError("({}, {}) is an intern edge".format(V0, V1))
@@ -77,6 +78,15 @@ cdef class BoundaryEdges:
 
         else:
             RuntimeError("Unexpected EdgeLocation value: {}".format(location))
+
+    def __getitem__(self, V0V1):
+        """
+        Retrieve triangles for boundary edge (V0, V1).
+        """
+        cdef:
+            int B
+        B = self.index_of(V0V1)
+        return self.triangles[B]
 
 
 cdef class InternEdges:
@@ -91,9 +101,9 @@ cdef class InternEdges:
         self.vertices = np.empty((NI, 2), dtype='int32')
         self.triangles = np.empty((NI, 2), dtype='int32')
 
-    def __getitem__(self, V0V1):
+    def index_of(self, V0V1):
         """
-        Retrive triangles for intern edge (V0, V1).
+        Retrieve index for intern edge(V0, V1)
         """
         cdef:
             EdgeLocation location
@@ -111,7 +121,7 @@ cdef class InternEdges:
                 raise RuntimeError(
                     "Expected vertices ({}, {}), but got vertices ({}, {})"
                     .format(V0, V1, V0_, V1_))
-            return np.asarray(self.triangles[I], dtype='int32')
+            return I
 
         elif location == EdgeLocation.boundary:
             raise KeyError("({}, {}) is a boundary edge".format(V0, V1))
@@ -121,6 +131,15 @@ cdef class InternEdges:
 
         else:
             RuntimeError("Unexpected EdgeLocation value: {}".format(location))
+
+    def __getitem__(self, V0V1):
+        """
+        Retrive triangles for intern edge (V0, V1).
+        """
+        cdef:
+            int I
+        I = self.index_of(V0V1)
+        return np.asarray(self.triangles[I], dtype='int32')
 
 def build_edges(int[:,:] trivtx, int NV):
 
