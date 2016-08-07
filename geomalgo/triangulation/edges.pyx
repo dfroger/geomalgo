@@ -25,7 +25,8 @@ cdef class EdgeMap:
         # At which index to find edge in BoundaryEdges or InternEdges.
         self.idx = np.empty(NE, dtype='int32')
 
-    cdef (EdgeLocation, int) search_edge(EdgeMap self, int V0, int V1):
+    cdef int search_edge(EdgeMap self, int V0, int V1,
+                         EdgeLocation* edge_location):
         cdef:
             int I, B, C
         if V0 > V1:
@@ -33,9 +34,11 @@ cdef class EdgeMap:
         B, C = self.bounds[V0], self.bounds[V0+1]
         for I in range(B, C):
             if self.edges[I] == V1:
-                return <EdgeLocation> self.location[I], self.idx[I]
+                edge_location[0] = <EdgeLocation> self.location[I]
+                return self.idx[I]
         else:
-            return EdgeLocation.not_found, 0
+            edge_location[0] = EdgeLocation.not_found
+            return 0
 
 
 cdef class BoundaryEdges:
@@ -59,7 +62,7 @@ cdef class BoundaryEdges:
 
         V0, V1 = V0V1
 
-        location, B = self.edge_map.search_edge(V0, V1)
+        B = self.edge_map.search_edge(V0, V1, &location)
 
         if location == EdgeLocation.boundary:
             V0_ = self.vertices[B, 0]
@@ -112,7 +115,7 @@ cdef class InternEdges:
 
         V0, V1 = V0V1
 
-        location, I = self.edge_map.search_edge(V0, V1)
+        I = self.edge_map.search_edge(V0, V1, &location)
 
         if location == EdgeLocation.intern:
             V0_ = self.vertices[I, 0]

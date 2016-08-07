@@ -11,7 +11,9 @@ cdef class EdgeMap:
         int[:] location
         int[:] idx
 
-    cdef (EdgeLocation, int) search_edge(EdgeMap self, int V0, int V1)
+    cdef int search_edge(EdgeMap self, int V0, int V1,
+                         EdgeLocation* edge_location)
+
 
 cdef class BoundaryEdges:
     cdef public:
