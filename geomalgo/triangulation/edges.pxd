@@ -17,6 +17,7 @@ cdef class EdgeMap:
 
 cdef class BoundaryEdges:
     cdef public:
+        int size
         int[:,:] vertices
         int[:] triangles
         EdgeMap edge_map
@@ -24,6 +25,7 @@ cdef class BoundaryEdges:
 
 cdef class InternEdges:
     cdef public:
+        int size
         int[:,:] vertices
         int[:,:] triangles
         EdgeMap edge_map

@@ -46,9 +46,10 @@ cdef class BoundaryEdges:
     Boundary edges are stored such that (V0, V1, T) is counterclockwise
     """
 
-    def __init__(self, NB):
-        self.vertices = np.empty((NB, 2), dtype='int32')
-        self.triangles = np.empty((NB,), dtype='int32')
+    def __init__(self, size):
+        self.size = size
+        self.vertices = np.empty((size, 2), dtype='int32')
+        self.triangles = np.empty((size,), dtype='int32')
 
     def index_of(self, V0V1):
         """
@@ -100,9 +101,10 @@ cdef class InternEdges:
     (V0, V1, T0) is counterclockwise, and (V0, V1, T1) is clockwise.
     """
 
-    def __init__(self, NI):
-        self.vertices = np.empty((NI, 2), dtype='int32')
-        self.triangles = np.empty((NI, 2), dtype='int32')
+    def __init__(self, size):
+        self.size = size
+        self.vertices = np.empty((size, 2), dtype='int32')
+        self.triangles = np.empty((size, 2), dtype='int32')
 
     def index_of(self, V0V1):
         """
