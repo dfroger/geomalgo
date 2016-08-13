@@ -72,15 +72,16 @@ cdef CEdgeToTriangles* edge_to_triangles_new(int NV):
 cdef void edge_to_triangle_del(CEdgeToTriangles* edge2tri):
     cdef:
         int V0
-        Edge* tmp
+        Edge* edge
+        Edge* next_edge
     # First, free each item of each Edge* linked list.
     for V0 in range(edge2tri.NV):
         edge = edge2tri.edges[V0]
         while edge != NULL:
-            tmp = edge.next_edge
+            next_edge = edge.next_edge
             free(edge)
-            edge = tmp
-    # Free the array of linked list.
+            edge = next_edge
+    # Then, free the array of linked list.
     free(edge2tri.edges)
     # Free the main structure.
     free(edge2tri)
