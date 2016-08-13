@@ -61,26 +61,51 @@ class TestStep(unittest.TestCase):
         location = np.asarray(self.edge_map.location)
         idx = np.asarray(self.edge_map.idx)
 
-        assert_equal(bounds,
-            [ 0 , 2 , 5 , 7 , 9 , 12 , 12 , 13 , 13 ])
-        #     0   1   2   3   4   5    6    7    8      V0
+        # Indices for edges.
+        assert_equal(bounds, [
+             0, # 0
+             2, # 1
+             5, # 2
+             7, # 3
+             9, # 4
+            12, # 5
+            12, # 6
+            13, # 7
+            13,
+        ])
 
-        assert_equal(edges,
-            [ 1 , 3 , 3 , 2 , 4 , 4 , 5 , 4 , 6 , 5 , 6 , 7 , 7 ])
-        #   |       |           |       |       |           |   |
-        #   0       1           2       3       4         5,6   7
+        assert_equal(edges, [
+                     # V0    bounds  edges
+            1, 3,    # 0 =>  0: 2 => (0,1), (0,3)
+            3, 2, 4, # 1 =>  2: 5 => (1,3), (1,2), (1,4)
+            4, 5,    # 2 =>  5: 7 => (2,4), (2,5)
+            4, 6,    # 3 =>  7: 9 => (3,4), (3,6)
+            5, 6, 7, # 4 =>  9:12 => (4,5), (4,6), (4,7)
+                     # 5 => 12:12 =>
+            7,       # 6 => 12:13 => (6,7)
+                     # 7 => 13:13 =>
+        ])
 
-        assert_equal(location,
-            [ 1 , 1 , 0 , 1 , 0 , 0 , 1 , 0 , 1 , 1 , 0 , 1 , 1 ]
-        #     0   0   1   1   1   2   2   3   3   4   4   4   6      V0
-        #     1   3   3   2   4   4   5   4   6   5   6   7   7      V1
-        #     0   1       2           3       4   5       6   7      idx in boundary_edges
-        #             0       1   2       3           4              idx in intern_edges
-        )
+        # Whether to use idx for boundary_edges or intern_edges
+        assert_equal(location, [
+            1, 1,    # 0
+            0, 1, 0, # 1
+            0, 1,    # 2
+            0, 1,    # 3
+            1, 0, 1, # 4
+                     # 5
+            1,       # 6
+        ])
 
-        assert_equal(idx,
-            # see above : idx in boudnary_edges and idx in intern_edges.
-            [ 0 , 1 , 0 , 2 , 1 , 2 , 3 , 3 , 4 , 5 , 4 , 6 , 7 ]
+        # Index for boundary_edges or intern_edges
+        assert_equal(idx, [
+            0, 1,     # 0
+            0 ,2 ,1,  # 1
+            2, 3 ,    # 2
+            3, 4,     # 3
+            5, 4, 6,  # 4
+                      # 5
+            7 ]       # 6
         )
 
 class TestHole(unittest.TestCase):
