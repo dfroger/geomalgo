@@ -54,6 +54,18 @@ class TestStep(unittest.TestCase):
         self.assertEqual(edge2tri.superior_neighbours(6), [7])
         self.assertEqual(edge2tri.superior_neighbours(7), [])
 
+    def test_inferior_neighbours(self):
+        edge2tri = EdgeToTriangles(step.trivtx, step.NV)
+
+        self.assertEqual(edge2tri.inferior_neighbours(0), [])
+        self.assertEqual(edge2tri.inferior_neighbours(1), [0])
+        self.assertEqual(edge2tri.inferior_neighbours(2), [1])
+        self.assertEqual(edge2tri.inferior_neighbours(3), [0, 1])
+        self.assertEqual(edge2tri.inferior_neighbours(4), [1, 2, 3])
+        self.assertEqual(edge2tri.inferior_neighbours(5), [2, 4])
+        self.assertEqual(edge2tri.inferior_neighbours(6), [3, 4])
+        self.assertEqual(edge2tri.inferior_neighbours(7), [4, 6])
+
 class TestHole(unittest.TestCase):
 
     def test_normal(self):

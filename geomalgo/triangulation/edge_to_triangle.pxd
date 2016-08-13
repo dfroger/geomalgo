@@ -15,6 +15,13 @@ cdef struct Edge:
     bint counterclockwise
     Edge* next_edge
 
+# Edges (V0,V1) with V1<V0. This store duplicated edge, as (V0,V1) is stored
+# in Edge, and (V1,V0) is InferiorEdge. Given a vertice V0, this allow to
+# find all V1 vertice connected by edge with 0(1) performance.
+cdef struct InferiorEdge:
+    int V0
+    InferiorEdge* next_inferior_edge
+
 # Edge** is an array of linked list of `Edge*`, indexed with V0, with V1>V0.
 # `edges_number` counts the total number of `Edges` in each linked list.
 cdef struct CEdgeToTriangles:
@@ -27,9 +34,13 @@ cdef struct CEdgeToTriangles:
     # Number of boundary edges
     int NB
     Edge** edges
+    InferiorEdge** inferior_edges
 
 # Allocate and initialize a new `Edge`.
 cdef Edge* edge_new(int V1, int T0, bint counterclockwise)
+
+# Allocate and initialize a new `InferiorEdge`.
+cdef InferiorEdge* inferior_edge_new(int V1)
 
 # Allocate and initialize a new edge_to_triangles_new.
 cdef CEdgeToTriangles* edge_to_triangles_new(int NV)

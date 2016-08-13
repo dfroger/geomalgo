@@ -34,6 +34,13 @@ V0=3 -> Edge(V1=4, T0=2)
 V0=4 -> Edge(V1=5, T0=3)
 ]
 
+This module loops on all triangle edges and add data to linked list. Boundary
+and internal edges can only be distinguished when the loop on triangle edges
+is completed.
+
+Later, in edges module, linked list data are stored in more effecient arrays
+data structures.
+
 """
 
 from libc.stdlib cimport malloc, free
@@ -52,6 +59,15 @@ cdef Edge* edge_new(int V1, int T0, bint counterclockwise):
     return edge
 
 
+cdef InferiorEdge* inferior_edge_new(int V0):
+    cdef:
+        InferiorEdge* inferior_edge
+    inferior_edge = <InferiorEdge*> malloc(sizeof(InferiorEdge))
+    inferior_edge.V0 = V0
+    inferior_edge.next_inferior_edge = NULL
+    return inferior_edge
+
+
 cdef CEdgeToTriangles* edge_to_triangles_new(int NV):
     cdef:
         CEdgeToTriangles* edge2tri
@@ -66,6 +82,11 @@ cdef CEdgeToTriangles* edge_to_triangles_new(int NV):
     # Each linked list is just one Edge* with value NULL.
     for V in range(NV):
         edge2tri.edges[V] = NULL
+    # Allocate array of linked list of `InferiorEdge*`
+    edge2tri.inferior_edges = <InferiorEdge**> malloc(sizeof(InferiorEdge)*NV)
+    # Each linked list is just one InferiorEdge* with value NULL.
+    for V in range(NV):
+        edge2tri.inferior_edges[V] = NULL
     return edge2tri
 
 
@@ -74,6 +95,8 @@ cdef void edge_to_triangle_del(CEdgeToTriangles* edge2tri):
         int V0
         Edge* edge
         Edge* next_edge
+        InferiorEdge* inferior_edge
+        InferiorEdge* next_inferior_edge
     # First, free each item of each Edge* linked list.
     for V0 in range(edge2tri.NV):
         edge = edge2tri.edges[V0]
@@ -83,6 +106,15 @@ cdef void edge_to_triangle_del(CEdgeToTriangles* edge2tri):
             edge = next_edge
     # Then, free the array of linked list.
     free(edge2tri.edges)
+    # First, free each item of each InferiorEdge* linked list.
+    for V1 in range(edge2tri.NV):
+        inferior_edge = edge2tri.inferior_edges[V1]
+        while inferior_edge != NULL:
+            next_inferior_edge = inferior_edge.next_inferior_edge
+            free(inferior_edge)
+            inferior_edge = next_inferior_edge
+    # Then, free the array of linked list.
+    free(edge2tri.inferior_edges)
     # Free the main structure.
     free(edge2tri)
 
@@ -90,6 +122,7 @@ cdef void edge_to_triangle_del(CEdgeToTriangles* edge2tri):
 cdef void edge_to_triangles_add(CEdgeToTriangles* edge2tri,
                                 int V0, int V1, int T):
     cdef:
+        InferiorEdge** inferior_edge_ptr
         Edge** edge_ptr
     # Order (V0, V1) such as V0 > V1.
     if V0 < V1:
@@ -97,6 +130,7 @@ cdef void edge_to_triangles_add(CEdgeToTriangles* edge2tri,
     else:
         counterclockwise = False
         V0, V1 = V1, V0
+
     # Search if (V0, V1) is already associated to a T0.
     # Take the address of the first Edge* in the linked list.
     # Note that the value of edge may be modified, so we need
@@ -119,6 +153,21 @@ cdef void edge_to_triangles_add(CEdgeToTriangles* edge2tri,
         # Note that this requires a pointer to the
         edge_ptr[0] = edge_new(V1, T, counterclockwise)
         edge2tri.NE += 1
+
+    # For vertice V1 add InferiorEdge with V0.
+    # Take the address of the first Edge* in the linked list.
+    # Note that the value of edge may be modified, so we need
+    # its adress.
+    inferior_edge_ptr = edge2tri.inferior_edges + V1
+    # Search if V0 is already added. For a intern edge, we will try to add
+    # it two times, for a boundary edge, we will try to add it one time.
+    while inferior_edge_ptr[0] != NULL:
+        if inferior_edge_ptr[0].V0 == V0:
+            break
+        inferior_edge_ptr = &(inferior_edge_ptr[0].next_inferior_edge)
+    # If not yet added, add it
+    else:
+        inferior_edge_ptr[0] = inferior_edge_new(V0)
 
 
 cdef void edge_to_triangles_compute(CEdgeToTriangles* edge2tri,
@@ -228,5 +277,21 @@ cdef class EdgeToTriangles:
         while edge != NULL:
             result.append(edge.V1)
             edge = edge.next_edge
+
+        return sorted(result)
+
+    def inferior_neighbours(self, int V1):
+        cdef:
+            InferiorEdge* inferior_edge
+
+        result = []
+
+        # Get the linked list of `InferiorEdge*` connected to V1.
+        inferior_edge = self._edge2tri.inferior_edges[V1]
+
+        # Loop on each `Edge*` connected to V0.
+        while inferior_edge != NULL:
+            result.append(inferior_edge.V0)
+            inferior_edge = inferior_edge.next_inferior_edge
 
         return sorted(result)
