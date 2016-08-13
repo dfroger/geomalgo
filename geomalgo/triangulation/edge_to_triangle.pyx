@@ -55,18 +55,17 @@ cdef Edge* edge_new(int V1, int T0, bint counterclockwise):
 cdef CEdgeToTriangles* edge_to_triangles_new(int NV):
     cdef:
         CEdgeToTriangles* edge2tri
-        int size, i
+        int V
     # Allocate and initialize main CEdgeToTriangles structure.
     edge2tri =  <CEdgeToTriangles*> malloc(sizeof(CEdgeToTriangles))
-    size = NV - 1
-    edge2tri.size = size
+    edge2tri.NV = NV
     edge2tri.NE = 0
     edge2tri.NI = 0
     # Allocate array of linked list of `Edge*`.
-    edge2tri.edges = <Edge**> malloc(sizeof(Edge*)*size)
+    edge2tri.edges = <Edge**> malloc(sizeof(Edge*)*NV)
     # Each linked list is just one Edge* with value NULL.
-    for i in range(size):
-        edge2tri.edges[i] = NULL
+    for V in range(NV):
+        edge2tri.edges[V] = NULL
     return edge2tri
 
 
@@ -75,7 +74,7 @@ cdef void edge_to_triangle_del(CEdgeToTriangles* edge2tri):
         int V0
         Edge* tmp
     # First, free each item of each Edge* linked list.
-    for V0 in range(edge2tri.size):
+    for V0 in range(edge2tri.NV):
         edge = edge2tri.edges[V0]
         while edge != NULL:
             tmp = edge.next_edge
@@ -164,7 +163,7 @@ cdef void edge_to_triangles_display(CEdgeToTriangles* edge2tri):
 
     printf("NB=%d, NI=%d, NE=%d\n", edge2tri.NB, edge2tri.NI, edge2tri.NE)
 
-    for V0 in range(edge2tri.size):
+    for V0 in range(edge2tri.NV):
         edge = edge2tri.edges[V0]
         while edge:
             if edge.has_two_triangles:

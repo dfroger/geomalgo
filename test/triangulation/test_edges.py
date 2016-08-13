@@ -62,8 +62,8 @@ class TestStep(unittest.TestCase):
         idx = np.asarray(self.edge_map.idx)
 
         assert_equal(bounds,
-            [ 0 , 2 , 5 , 7 , 9 , 12 , 12 , 13 ])
-        #     0   1   2   3   4   5    6    7      V0
+            [ 0 , 2 , 5 , 7 , 9 , 12 , 12 , 13 , 13 ])
+        #     0   1   2   3   4   5    6    7    8      V0
 
         assert_equal(edges,
             [ 1 , 3 , 3 , 2 , 4 , 4 , 5 , 4 , 6 , 5 , 6 , 7 , 7 ])

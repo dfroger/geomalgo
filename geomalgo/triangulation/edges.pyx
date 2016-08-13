@@ -13,7 +13,7 @@ cdef class EdgeMap:
 
     def __init__(self, NV, NE):
         # For a vertice V0, give index bounds to search V1 in self.edges.
-        self.bounds = np.empty(NV, dtype='int32')
+        self.bounds = np.empty(NV+1, dtype='int32')
 
         # Between self.edges[self.bounds[V0]:self.bounds[V0+1]] give all V1
         # connected to V0 such as V1 > V0.
@@ -179,7 +179,7 @@ def build_edges(int[:,:] trivtx, int NV):
 
     edge_map.bounds[0] = 0
 
-    for V0 in range(edge2tri.size):
+    for V0 in range(edge2tri.NV):
         edge = edge2tri.edges[V0]
         while edge != NULL:
             if edge.has_two_triangles:

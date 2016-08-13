@@ -16,12 +16,10 @@ cdef struct Edge:
     Edge* next_edge
 
 # Edge** is an array of linked list of `Edge*`, indexed with V0, with V1>V0.
-# It has size = NV -1 (with NV the number of vertices), because by definition,
-# last V0 vertice is not connected to a V1 vertice such as V0 > V1.
 # `edges_number` counts the total number of `Edges` in each linked list.
 cdef struct CEdgeToTriangles:
-    # Number of vertices - 1
-    int size
+    # Number of vertices
+    int NV
     # Number of edges (NI+NB)
     int NE
     # Number of internal edges.
