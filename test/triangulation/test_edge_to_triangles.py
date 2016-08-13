@@ -42,6 +42,18 @@ class TestStep(unittest.TestCase):
         with self.assertRaisesRegex(KeyError, "No such edge"):
             edge2tri[(3,7)]
 
+    def test_superior_neighbours(self):
+        edge2tri = EdgeToTriangles(step.trivtx, step.NV)
+
+        self.assertEqual(edge2tri.superior_neighbours(0), [1, 3])
+        self.assertEqual(edge2tri.superior_neighbours(1), [2, 3, 4])
+        self.assertEqual(edge2tri.superior_neighbours(2), [4, 5])
+        self.assertEqual(edge2tri.superior_neighbours(3), [4, 6])
+        self.assertEqual(edge2tri.superior_neighbours(4), [5, 6, 7])
+        self.assertEqual(edge2tri.superior_neighbours(5), [])
+        self.assertEqual(edge2tri.superior_neighbours(6), [7])
+        self.assertEqual(edge2tri.superior_neighbours(7), [])
+
 class TestHole(unittest.TestCase):
 
     def test_normal(self):

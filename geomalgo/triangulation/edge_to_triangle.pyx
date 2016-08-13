@@ -96,15 +96,15 @@ cdef void edge_to_triangles_add(CEdgeToTriangles* edge2tri,
     else:
         counterclockwise = False
         V0, V1 = V1, V0
-    # Seach if (V0, V1) is already associated to a T0.
+    # Search if (V0, V1) is already associated to a T0.
     # Take the address of the first Edge* in the linked list.
     # Note that the value of edge may be modified, so we need
     # its adress.
     edge_ptr = edge2tri.edges + V0
     # Loop on the Edge* linked list until the end.
     while edge_ptr[0] != NULL:
-        # (V0, V1) is already associated with T0. Now associated it with T1,
-        # too.
+        # (V0, V1) is already associated with T0.
+        # Now associated it with T1, too.
         if edge_ptr[0].V1 == V1:
             edge_ptr[0].has_two_triangles = True
             edge_ptr[0].T1 = T
@@ -213,3 +213,19 @@ cdef class EdgeToTriangles:
 
     def display(self):
         edge_to_triangles_display(self._edge2tri)
+
+    def superior_neighbours(self, int V0):
+        cdef:
+            Edge* edge
+
+        result = []
+
+        # Get the linked list of `Edge*` connected to V0.
+        edge = self._edge2tri.edges[V0]
+
+        # Loop on each `Edge*` connected to V0.
+        while edge != NULL:
+            result.append(edge.V1)
+            edge = edge.next_edge
+
+        return sorted(result)
