@@ -1,8 +1,8 @@
 import numpy as np
 
 from .edge_to_triangle cimport (
-    CEdgeToTriangles, Edge, edge_to_triangles_new, edge_to_triangle_del,
-    edge_to_triangles_compute
+    CEdgeToTriangles, Edge, InferiorEdge, edge_to_triangles_new,
+    edge_to_triangle_del, edge_to_triangles_compute
 )
 
 
@@ -13,29 +13,33 @@ cdef class EdgeMap:
 
     def __init__(self, NV, NE):
         # For a vertice V0, give index bounds to search V1 in self.edges.
-        self.bounds = np.empty(NV+1, dtype='int32')
+        self.bounds = np.empty(2*NV+1, dtype='int32')
 
-        # Between self.edges[self.bounds[V0]:self.bounds[V0+1]] give all V1
+        # Between self.edges[self.bounds[2*V0]:self.bounds[2*V0+1]] give all V1
         # connected to V0 such as V1 > V0.
-        self.edges = np.empty(NE, dtype='int32')
+        # Between self.edges[self.bounds[2*V0+1]:self.bounds[2*V0+2]] give all V1
+        # connected to V0 such as V1 < V0.
+        # Note that all vertice neighbours (vertices connected by edge) are
+        # stored in a continuous memory block.
+        self.edges = np.empty(2*NE, dtype='int32')
 
         # Whether to find edge in BoundaryEdges or InternEdges.
-        self.location = np.empty(NE, dtype='int32')
+        self.location = np.empty(2*NE, dtype='int32')
 
         # At which index to find edge in BoundaryEdges or InternEdges.
-        self.idx = np.empty(NE, dtype='int32')
+        self.idx = np.empty(2*NE, dtype='int32')
 
     cdef int search_edge(EdgeMap self, int V0, int V1,
                          EdgeLocation* edge_location):
         cdef:
-            int I, B, C
+            int E, E0, E1
         if V0 > V1:
             V0, V1 = V1, V0
-        B, C = self.bounds[V0], self.bounds[V0+1]
-        for I in range(B, C):
-            if self.edges[I] == V1:
-                edge_location[0] = <EdgeLocation> self.location[I]
-                return self.idx[I]
+        E0, E1 = self.bounds[2*V0], self.bounds[2*V0+1]
+        for E in range(E0, E1):
+            if self.edges[E] == V1:
+                edge_location[0] = <EdgeLocation> self.location[E]
+                return self.idx[E]
         else:
             edge_location[0] = EdgeLocation.not_found
             return 0
@@ -150,11 +154,13 @@ def build_edges(int[:,:] trivtx, int NV):
 
     cdef:
         CEdgeToTriangles* edge2tri
-        int E, I, B
+        int E, I, B, E0, E1
         int NE, NI, NB
         int NT = trivtx.shape[0]
         int T, V0, V1, V2
         Edge* edge
+        InferiorEdge * inferior_edge
+        EdgeLocation location
 
     edge2tri = edge_to_triangles_new(NV)
     edge_to_triangles_compute(edge2tri, trivtx)
@@ -180,6 +186,7 @@ def build_edges(int[:,:] trivtx, int NV):
     edge_map.bounds[0] = 0
 
     for V0 in range(edge2tri.NV):
+        # Edge
         edge = edge2tri.edges[V0]
         while edge != NULL:
             if edge.has_two_triangles:
@@ -208,7 +215,23 @@ def build_edges(int[:,:] trivtx, int NV):
             edge_map.edges[E] = edge.V1
             edge = edge.next_edge
             E += 1
-        edge_map.bounds[V0+1] = E
+        edge_map.bounds[2*V0+1] = E
+
+        # InferiorEdge
+        inferior_edge = edge2tri.inferior_edges[V0]
+        while inferior_edge != NULL:
+            edge_map.edges[E] = inferior_edge.V0
+            inferior_edge = inferior_edge.next_inferior_edge
+            E += 1
+        edge_map.bounds[2*V0+2] = E
+
+    # Fill location and idx for inferior edges
+    for V1 in range(edge2tri.NV):
+        E0, E1 = edge_map.bounds[2*V1+1], edge_map.bounds[2*V1+2]
+        for E in range(E0, E1):
+            V0 = edge_map.edges[E]
+            edge_map.idx[E] = edge_map.search_edge(V0, V1, &location)
+            edge_map.location[E] = <int> location
 
     edge_to_triangle_del(edge2tri)
 
