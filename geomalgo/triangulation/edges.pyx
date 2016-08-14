@@ -44,6 +44,28 @@ cdef class EdgeMap:
             edge_location[0] = EdgeLocation.not_found
             return 0
 
+    cdef int search_next_boundary_edge(EdgeMap self, int V0, int V1):
+        """
+        V5--V4--V3
+        | \ | \ |
+        V0--V1--V2
+
+        Given boundary edge V0V1, search next boundary edge V1V2.
+        """
+        cdef:
+            int E, E0, E1
+            EdgeLocation location
+
+        # Search a boundary edge in all edges connected to V1, that
+        # is not V0V1.
+        E0, E1 = self.bounds[2*V1], self.bounds[2*V1+2]
+        for E in range(E0, E1):
+            location = <EdgeLocation> self.location[E]
+            if location == EdgeLocation.boundary and self.edges[E] != V0:
+                return self.idx[E]
+        else:
+            return -1
+
 
 cdef class BoundaryEdges:
     """
@@ -53,7 +75,27 @@ cdef class BoundaryEdges:
     def __init__(self, size):
         self.size = size
         self.vertices = np.empty((size, 2), dtype='int32')
-        self.triangles = np.empty((size,), dtype='int32')
+        self.triangles = np.empty(size, dtype='int32')
+        self.next_boundary_edge = np.empty(size, dtype='int32')
+
+    def finalize(self):
+        """
+        Create next boundary edge
+        """
+        cdef:
+            int B, V0, V1, V2
+        for B in range(self.size):
+            V0 = self.vertices[B, 0]
+            V1 = self.vertices[B, 1]
+            E = self.edge_map.search_next_boundary_edge(V0, V1)
+            if E == -1:
+                raise ValueError(
+                    "Can't find boundary edge connected by vertice {} to"
+                    " boundary edge of vertices ({},{})".format(V1, V0, V1)
+                )
+            else:
+                self.next_boundary_edge[B] = E
+
 
     def index_of(self, V0V1):
         """
@@ -237,5 +279,6 @@ def build_edges(int[:,:] trivtx, int NV):
 
     intern_edges.edge_map = edge_map
     boundary_edges.edge_map = edge_map
+    boundary_edges.finalize()
 
     return intern_edges, boundary_edges

@@ -14,12 +14,14 @@ cdef class EdgeMap:
     cdef int search_edge(EdgeMap self, int V0, int V1,
                          EdgeLocation* edge_location)
 
+    cdef int search_next_boundary_edge(EdgeMap self, int V0, int V1)
 
 cdef class BoundaryEdges:
     cdef public:
         int size
         int[:,:] vertices
         int[:] triangles
+        int[:] next_boundary_edge
         EdgeMap edge_map
 
 

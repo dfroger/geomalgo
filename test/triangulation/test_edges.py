@@ -55,6 +55,18 @@ class TestStep(unittest.TestCase):
         assert_equal(tri[6], 5)
         assert_equal(tri[7], 5)
 
+    def test_boundary_edge_next(self):
+        nextbe = np.asarray(self.boundary_edges.next_boundary_edge)
+        self.assertEqual(nextbe.shape, (step.NB,))
+        self.assertEqual(nextbe[0], 2) # (0,1), (1,2)
+        self.assertEqual(nextbe[1], 0) # (3,0), (0,1)
+        self.assertEqual(nextbe[2], 3) # (1,2), (2,5)
+        self.assertEqual(nextbe[3], 5) # (2,5), (5,4)
+        self.assertEqual(nextbe[4], 1) # (6,3), (3,0)
+        self.assertEqual(nextbe[5], 6) # (5,4), (4,7)
+        self.assertEqual(nextbe[6], 7) # (4,7), (7,6)
+        self.assertEqual(nextbe[7], 4) # (7,6), (6,3)
+
     def test_edge_map(self):
         bounds = np.asarray(self.edge_map.bounds)
         edges = np.asarray(self.edge_map.edges)
