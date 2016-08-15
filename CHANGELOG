@@ -26,3 +26,17 @@ Dev:
 - Add CylindricalPoint
 - Add Segment2D
 - Add segment2d intersection
+
+0.0.6 (2016-08-15)
+==================
+
+- Compute segment length
+- Compute Segment2D middle point
+- Add Triangle2D.center
+- Various internal code reorganization
+- Add Triangle2D.interpolate
+- Triangulation: add boundary and intern edges
+- Triangulation: add boundary and intern edges map
+- Triangulation: add example data
+- Add various geomalgo cimport
+- Add Triangle2D._set_precomputed

@@ -3,7 +3,7 @@ from setuptools import setup, Extension
 
 from Cython.Build import cythonize
 
-__version__ = '0.0.5'
+__version__ = '0.0.6'
 
 def module_name(fp):
     """
