@@ -97,7 +97,7 @@ cdef class BoundaryEdges:
                 self.next_boundary_edge[B] = E
 
 
-    def index_of(self, V0V1):
+    def index_of(BoundaryEdges self, int V0, int V1):
         """
         Retrieve index for boundary edge(V0, V1)
         """
@@ -105,9 +105,7 @@ cdef class BoundaryEdges:
         cdef:
             EdgeLocation location
             int B
-            int V0, V1, V0_, V1_
-
-        V0, V1 = V0V1
+            int V0_, V1_
 
         B = self.edge_map.search_edge(V0, V1, &location)
 
@@ -134,8 +132,9 @@ cdef class BoundaryEdges:
         Retrieve triangles for boundary edge (V0, V1).
         """
         cdef:
-            int B
-        B = self.index_of(V0V1)
+            int B, V0, V1
+        V0, V1 = V0V1
+        B = self.index_of(V0, V1)
         return self.triangles[B]
 
 
@@ -152,16 +151,14 @@ cdef class InternEdges:
         self.vertices = np.empty((size, 2), dtype='int32')
         self.triangles = np.empty((size, 2), dtype='int32')
 
-    def index_of(self, V0V1):
+    def index_of(InternEdges self, int V0, int V1):
         """
         Retrieve index for intern edge(V0, V1)
         """
         cdef:
             EdgeLocation location
             int I
-            int V0, V1, V0_, V1_
-
-        V0, V1 = V0V1
+            int V0_, V1_
 
         I = self.edge_map.search_edge(V0, V1, &location)
 
@@ -188,8 +185,9 @@ cdef class InternEdges:
         Retrive triangles for intern edge (V0, V1).
         """
         cdef:
-            int I
-        I = self.index_of(V0V1)
+            int I, V0, V1
+        V0, V1 = V0V1
+        I = self.index_of(V0, V1)
         return np.asarray(self.triangles[I], dtype='int32')
 
 def build_edges(int[:,:] trivtx, int NV):
