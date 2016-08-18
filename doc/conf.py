@@ -32,10 +32,12 @@ import os
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
+    'sphinx.ext.napoleon',
     'sphinx.ext.intersphinx',
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
+    'sphinx_gallery.gen_gallery',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -296,3 +298,51 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'https://docs.python.org/': None}
+
+# ============================================================================
+# Napoleon
+# ============================================================================
+
+napoleon_numpy_docstring = True
+napoleon_include_special_with_doc = True
+
+# ============================================================================
+# Mayavi
+# ============================================================================
+
+from mayavi import mlab
+mlab.options.offscreen = True
+
+# ============================================================================
+# Sphinx gallery
+# ============================================================================
+
+sphinx_gallery_conf = {
+    'filename_pattern' : '/example_',
+
+    # path to your examples scripts
+    'examples_dirs'  : [
+        '../examples/basic',
+    ],
+
+    # path where to save gallery generated examples
+    'gallery_dirs'   : [
+        'auto_examples_basic',
+    ],
+
+    # path to store the module using example template
+    'mod_example_dir': 'modules/generated',
+
+    # Your documented modules.
+    'doc_module'     : ('geomalgo'),
+
+    'reference_url': {
+         # The module you locally document uses a None
+        'geomalgo': None,
+
+        # External python modules use their documentation websites
+        'matplotlib': 'http://matplotlib.org',
+        'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
+    },
+    'find_mayavi_figures': True,
+}
