@@ -40,6 +40,7 @@ cdef class Point2D:
 
     Parameters
     ----------
+
     x: float
         First coordinate
 
@@ -88,6 +89,21 @@ cdef class Point2D:
             assert False
 
     def distance(Point2D self, Point2D other):
+        """
+        Compute distance to another point
+
+        Parameters
+        ----------
+
+        other: Point2D
+            Other point to compute distance to
+
+        Parameters
+        ----------
+
+        float
+            Distance between the two points
+        """
         return c_point2d_distance(self.cpoint2d, other.cpoint2d)
 
     def to_polar(self):

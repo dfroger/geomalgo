@@ -8,3 +8,7 @@ craftrc.py
 *.pyd
 *.exp
 *.lib
+
+doc/_build/
+doc/modules/generated/
+doc/auto_examples_basic/
