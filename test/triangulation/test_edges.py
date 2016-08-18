@@ -172,6 +172,41 @@ class TestStep(unittest.TestCase):
             6, 7,    # 7 => 24:26 => (7,4), (7,6)
         ])
 
+    def test_references(self):
+        self.boundary_edges.add_references(step.boundary_edge_references)
+
+        ref = self.boundary_edges.references
+
+        self.assertEqual(ref.shape, (step.NB,))
+        self.assertEqual(ref[0], 1) # (0,1)
+        self.assertEqual(ref[1], 2) # (3,0)
+        self.assertEqual(ref[2], 1) # (1,2)
+        self.assertEqual(ref[3], 2) # (2,5)
+        self.assertEqual(ref[4], 2) # (6,3)
+        self.assertEqual(ref[5], 2) # (5,4)
+        self.assertEqual(ref[6], 2) # (4,7)
+        self.assertEqual(ref[7], 3) # (7,6)
+
+    def test_wrong_number_of_reference(self):
+        ref_wrong_number = step.boundary_edge_references[:-1]
+        msg = "7 references are given, but there are 8 boundary edges"
+        with self.assertRaisesRegex(ValueError, msg):
+            self.boundary_edges.add_references(ref_wrong_number)
+
+    def test_missing_reference(self):
+        ref_missing = step.boundary_edge_references.copy()
+        ref_missing[0] = ref_missing[-1]
+        msg = "Missing reference for edge \(0, 1\)"
+        with self.assertRaisesRegex(ValueError, msg):
+            self.boundary_edges.add_references(ref_missing)
+
+    def test_duplicated_reference(self):
+        ref_duplicated = step.boundary_edge_references.copy()
+        ref_duplicated[1] = ref_duplicated[0]
+        msg = "Reference for edge \(0, 1\) is given 2 times"
+        with self.assertRaisesRegex(ValueError, msg):
+            self.boundary_edges.add_references(ref_duplicated)
+
 
 class TestHole(unittest.TestCase):
 
@@ -213,6 +248,13 @@ class TestHole(unittest.TestCase):
         self.assert_boundary_triangle( 2 , 3,  2)
         self.assert_boundary_triangle(18, 17, 25)
         self.assert_boundary_triangle(28, 21, 32)
+
+    def test_references(self):
+        self.boundary_edges.add_references(hole.boundary_edge_references)
+
+        ref = self.boundary_edges.references
+
+        self.assertEqual(ref.shape, (hole.NB,))
 
 if __name__ == '__main__':
     unittest.main()

@@ -22,6 +22,7 @@ cdef class BoundaryEdges:
         int[:,:] vertices
         int[:] triangles
         int[:] next_boundary_edge
+        int[:] references
         EdgeMap edge_map
 
 

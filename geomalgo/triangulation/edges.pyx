@@ -78,7 +78,7 @@ cdef class BoundaryEdges:
         self.triangles = np.empty(size, dtype='int32')
         self.next_boundary_edge = np.empty(size, dtype='int32')
 
-    def finalize(self):
+    def finalize(BoundaryEdges self):
         """
         Create next boundary edge
         """
@@ -95,6 +95,45 @@ cdef class BoundaryEdges:
                 )
             else:
                 self.next_boundary_edge[B] = E
+
+    def add_references(BoundaryEdges self, int[:,:] references):
+        cdef:
+            int R, NR = references.shape[0]
+            int V0, V1, ref
+            int B
+            int[:] count
+
+        if NR != self.size:
+            raise ValueError(
+                "{} references are given, but there are {} boundary edges"
+                .format(NR, self.size))
+
+        self.references = np.empty(self.size, dtype='int32')
+
+        count = np.zeros(self.size, dtype='int32')
+
+        for R in range(NR):
+            V0 = references[R,0]
+            V1 = references[R,1]
+            ref = references[R,2]
+
+            B = self.index_of(V0, V1)
+
+            self.references[B] = ref
+            count[B] += 1
+
+        for B in range(self.size):
+            if count[B] == 0:
+                V0 = self.vertices[B, 0]
+                V1 = self.vertices[B, 1]
+                raise ValueError(
+                    "Missing reference for edge ({}, {})".format(V0, V1))
+            elif count[B] > 1:
+                V0 = self.vertices[B, 0]
+                V1 = self.vertices[B, 1]
+                raise ValueError(
+                    "Reference for edge ({}, {}) is given {} times"
+                    .format(V0, V1, count[B]))
 
 
     def index_of(BoundaryEdges self, int V0, int V1):
