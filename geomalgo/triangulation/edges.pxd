@@ -23,6 +23,7 @@ cdef class BoundaryEdges:
         int[:] triangles
         int[:] next_boundary_edge
         int[:] references
+        double[:] length
         EdgeMap edge_map
 
 

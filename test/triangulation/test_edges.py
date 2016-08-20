@@ -11,7 +11,9 @@ class TestStep(unittest.TestCase):
     def setUp(self):
         self.intern_edges, self.boundary_edges = build_edges(step.trivtx,
                                                              step.NV)
-        self.edge_map = self.intern_edges.edge_map
+
+        self.boundary_edges.add_references(step.boundary_edge_references)
+        self.boundary_edges.compute_length(step.x, step.y)
 
     def test_internal_edges_vertices(self):
         vert = np.asarray(self.intern_edges.vertices)
@@ -68,10 +70,12 @@ class TestStep(unittest.TestCase):
         self.assertEqual(nextbe[7], 4) # (7,6), (6,3)
 
     def test_edge_map(self):
-        bounds = np.asarray(self.edge_map.bounds)
-        edges = np.asarray(self.edge_map.edges)
-        location = np.asarray(self.edge_map.location)
-        idx = np.asarray(self.edge_map.idx)
+        edge_map = self.intern_edges.edge_map
+
+        bounds = np.asarray(edge_map.bounds)
+        edges = np.asarray(edge_map.edges)
+        location = np.asarray(edge_map.location)
+        idx = np.asarray(edge_map.idx)
 
         # Indices for edges.
         assert_equal(bounds, [
@@ -173,8 +177,6 @@ class TestStep(unittest.TestCase):
         ])
 
     def test_references(self):
-        self.boundary_edges.add_references(step.boundary_edge_references)
-
         ref = self.boundary_edges.references
 
         self.assertEqual(ref.shape, (step.NB,))
@@ -206,6 +208,18 @@ class TestStep(unittest.TestCase):
         msg = "Reference for edge \(0, 1\) is given 2 times"
         with self.assertRaisesRegex(ValueError, msg):
             self.boundary_edges.add_references(ref_duplicated)
+
+    def test_length(self):
+        length = np.asarray(self.boundary_edges.length)
+        self.assertEqual(length.shape, (step.NB,))
+        assert_equal(length[0], 1)   # (0,1)
+        assert_equal(length[1], 1)   # (3,0)
+        assert_equal(length[2], 1.5) # (1,2)
+        assert_equal(length[3], 1)   # (2,5)
+        assert_equal(length[4], 1)   # (6,3)
+        assert_equal(length[5], 1.5) # (5,4)
+        assert_equal(length[6], 1)   # (4,7)
+        assert_equal(length[7], 1)   # (7,6)
 
 
 class TestHole(unittest.TestCase):

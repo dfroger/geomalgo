@@ -1,5 +1,9 @@
 import numpy as np
 
+from ..base2d.point2d cimport (
+    CPoint2D, c_point2d_distance
+)
+
 from .edge_to_triangle cimport (
     CEdgeToTriangles, Edge, InferiorEdge, edge_to_triangles_new,
     edge_to_triangle_del, edge_to_triangles_compute
@@ -134,6 +138,25 @@ cdef class BoundaryEdges:
                 raise ValueError(
                     "Reference for edge ({}, {}) is given {} times"
                     .format(V0, V1, count[B]))
+
+    def compute_length(BoundaryEdges self, double[:] x, double[:] y):
+        cdef:
+            int B, V0, V1
+            CPoint2D P0, P1
+
+        self.length = np.empty(self.size, dtype='d')
+
+        for B in range(self.size):
+            V0 = self.vertices[B, 0]
+            V1 = self.vertices[B, 1]
+
+            P0.x = x[V0]
+            P0.y = y[V0]
+
+            P1.x = x[V1]
+            P1.y = y[V1]
+
+            self.length[B] = c_point2d_distance(&P0, &P1)
 
 
     def index_of(BoundaryEdges self, int V0, int V1):
