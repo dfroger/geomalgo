@@ -26,6 +26,24 @@ cdef class Vector2D:
         def __get__(self):
             return compute_norm2d(self.cvector2d)
 
+    property normal:
+        """
+        Compute and return normal
+
+        Normal BN of vector AB is such as ABN is counterclockwise
+
+        A---------B
+                  |
+                  |
+                  N
+        """
+
+        def __get__(self):
+            cdef:
+                Vector2D normal = Vector2D.__new__(Vector2D)
+            compute_normal2d(self.cvector2d, normal.cvector2d)
+            return normal
+
     def __cinit__(self):
         self.cvector2d = new_vector2d()
 
@@ -67,4 +85,3 @@ cdef class Vector2D:
     def __str__(self):
         return "<Vector2D({},{}>".format(self.cvector2d.x,
                                              self.cvector2d.y)
-

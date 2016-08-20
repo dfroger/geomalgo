@@ -32,6 +32,11 @@ cdef inline void normalize_vector2d(CVector2D *a):
     a.x /= norm
     a.y /= norm
 
+cdef inline void compute_normal2d(CVector2D *vec, CVector2D *normal):
+    normal.x = - vec.y
+    normal.y = - vec.x
+    normalize_vector2d(normal)
+
 cdef class Vector2D:
     cdef:
         CVector2D* cvector2d

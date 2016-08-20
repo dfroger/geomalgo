@@ -45,6 +45,68 @@ class TestVector(unittest.TestCase):
         self.assertAlmostEqual(A.y, 0.8)
         self.assertAlmostEqual(A.norm, 1.)
 
+class TestNormal(unittest.TestCase):
+
+    def test_horizontal(self):
+        """
+        vec
+        ---------->  |
+                     | normal
+                     v
+        """
+        V = Vector2D(3, 0)
+        N = V.normal
+        self.assertAlmostEqual(N.x, 0)
+        self.assertAlmostEqual(N.y, -1)
+
+    def test_horizontal_negative(self):
+        """
+        ^ normal
+        |          vec
+        |  <----------
+        """
+        V = Vector2D(-0.2, 0)
+        N = V.normal
+        self.assertAlmostEqual(N.x, 0)
+        self.assertAlmostEqual(N.y, 1)
+
+    def test_vertical(self):
+        """
+        ^ vec
+        |          normal
+        |  <----------
+        """
+        V = Vector2D(0, 0.2)
+        N = V.normal
+        self.assertAlmostEqual(N.x, -1)
+        self.assertAlmostEqual(N.y, 0)
+
+    def test_vertical_negative(self):
+        """
+        normal
+        ---------->  |
+                     | vec
+                     v
+        """
+        V = Vector2D(0, -0.2)
+        N = V.normal
+        self.assertAlmostEqual(N.x, 1)
+        self.assertAlmostEqual(N.y, 0)
+
+    def test_oblique(self):
+        """
+                   _
+                   /| vec
+                /
+            / \
+        /      \
+               _\| normal
+        """
+        V = Vector2D(3, 4)
+        N = V.normal
+        self.assertAlmostEqual(N.x, -0.8)
+        self.assertAlmostEqual(N.y, -0.6)
+
 
 if __name__ == '__main__':
     unittest.main()
