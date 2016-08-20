@@ -24,6 +24,7 @@ cdef class BoundaryEdges:
         int[:] next_boundary_edge
         int[:] references
         double[:] length
+        double[:,:] normal
         EdgeMap edge_map
 
 

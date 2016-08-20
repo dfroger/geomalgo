@@ -14,6 +14,7 @@ class TestStep(unittest.TestCase):
 
         self.boundary_edges.add_references(step.boundary_edge_references)
         self.boundary_edges.compute_length(step.x, step.y)
+        self.boundary_edges.compute_normal(step.x, step.y)
 
     def test_internal_edges_vertices(self):
         vert = np.asarray(self.intern_edges.vertices)
@@ -220,6 +221,18 @@ class TestStep(unittest.TestCase):
         assert_equal(length[5], 1.5) # (5,4)
         assert_equal(length[6], 1)   # (4,7)
         assert_equal(length[7], 1)   # (7,6)
+
+    def test_normal(self):
+        normal = np.asarray(self.boundary_edges.normal)
+        self.assertEqual(normal.shape, (step.NB, 2))
+        assert_equal(normal[0], ( 0, -1))  # (0,1)
+        assert_equal(normal[1], (-1,  0))  # (3,0)
+        assert_equal(normal[2], ( 0, -1))  # (1,2)
+        assert_equal(normal[3], ( 1,  0))  # (2,5)
+        assert_equal(normal[4], (-1,  0))  # (6,3)
+        assert_equal(normal[5], ( 0,  1))  # (5,4)
+        assert_equal(normal[6], ( 1,  0))  # (4,7)
+        assert_equal(normal[7], ( 0,  1))  # (7,6)
 
 
 class TestHole(unittest.TestCase):
