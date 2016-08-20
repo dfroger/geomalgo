@@ -30,7 +30,7 @@ cdef class Vector2D:
         """
         Compute and return normal
 
-        Normal BN of vector AB is such as ABN is counterclockwise
+        Normal BN of vector AB is such as ABN is clockwise
 
         A---------B
                   |

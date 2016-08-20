@@ -73,25 +73,25 @@ class TestNormal(unittest.TestCase):
     def test_vertical(self):
         """
         ^ vec
-        |          normal
-        |  <----------
+        |         normal
+        |  --------->
         """
         V = Vector2D(0, 0.2)
         N = V.normal
-        self.assertAlmostEqual(N.x, -1)
+        self.assertAlmostEqual(N.x, 1)
         self.assertAlmostEqual(N.y, 0)
 
     def test_vertical_negative(self):
         """
         normal
-        ---------->  |
-                     | vec
-                     v
+        <---------  |
+                    | vec
+                    v
         """
         V = Vector2D(0, -0.2)
         N = V.normal
-        self.assertAlmostEqual(N.x, 1)
-        self.assertAlmostEqual(N.y, 0)
+        self.assertAlmostEqual(N.x, -1)
+        self.assertAlmostEqual(N.y,  0)
 
     def test_oblique(self):
         """
@@ -104,7 +104,7 @@ class TestNormal(unittest.TestCase):
         """
         V = Vector2D(3, 4)
         N = V.normal
-        self.assertAlmostEqual(N.x, -0.8)
+        self.assertAlmostEqual(N.x,  0.8)
         self.assertAlmostEqual(N.y, -0.6)
 
 
