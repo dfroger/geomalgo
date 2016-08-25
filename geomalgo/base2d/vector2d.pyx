@@ -41,7 +41,7 @@ cdef class Vector2D:
         def __get__(self):
             cdef:
                 Vector2D normal = Vector2D.__new__(Vector2D)
-            compute_normal2d(self.cvector2d, normal.cvector2d)
+            compute_normal2d(self.cvector2d, self.norm, normal.cvector2d)
             return normal
 
     def __cinit__(self):
