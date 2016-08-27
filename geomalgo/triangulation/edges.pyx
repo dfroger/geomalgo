@@ -4,7 +4,9 @@ from ..base2d.point2d cimport (
     CPoint2D, c_point2d_distance
 )
 
-from ..base2d.vector2d cimport CVector2D, compute_normal2d
+from ..base2d.vector2d cimport (
+    CVector2D, compute_normal2d, compute_norm2d
+)
 
 from .edge_to_triangle cimport (
     CEdgeToTriangles, Edge, InferiorEdge, edge_to_triangles_new,
@@ -163,6 +165,7 @@ cdef class BoundaryEdges:
     def compute_normal(BoundaryEdges self, double[:] x, double[:] y):
         cdef:
             int B, V0, V1
+            double vec_norm
             CVector2D vec, normal
 
         self.normal = np.empty((self.size, 2), dtype='d')
@@ -174,7 +177,8 @@ cdef class BoundaryEdges:
             vec.x = x[V1] - x[V0]
             vec.y = y[V1] - y[V0]
 
-            compute_normal2d(&vec, &normal)
+            vec_norm = compute_norm2d(&vec)
+            compute_normal2d(&vec, vec_norm, &normal)
 
             self.normal[B, 0] = normal.x
             self.normal[B, 1] = normal.y
