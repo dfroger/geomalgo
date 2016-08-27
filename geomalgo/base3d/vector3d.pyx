@@ -3,7 +3,7 @@ from libc.stdlib cimport malloc, free
 cdef CVector3D* new_vector3d():
     return <CVector3D*> malloc(sizeof(CVector3D))
 
-cdef void del_vector(CVector3D* V):
+cdef void del_vector3d(CVector3D* V):
     if V is not NULL:
         free(V)
 

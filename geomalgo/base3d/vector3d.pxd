@@ -7,7 +7,7 @@ cdef struct CVector3D:
 
 cdef CVector3D* new_vector3d()
 
-cdef void del_vector(CVector3D* V)
+cdef void del_vector3d(CVector3D* V)
 
 cdef inline void cross_product3d(CVector3D *c, CVector3D *a, CVector3D *b):
     c.x = a.y*b.z - a.z*b.y
