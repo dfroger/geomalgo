@@ -33,7 +33,7 @@ x = np.array([
     0, 1, 2, 3, 4, 5, 6,  # Vertices  7 to 13
     0, 1, 2, 3, 4, 5, 6,  # Vertices 14 to 20
     0, 1, 2, 3, 4, 5, 6,  # Vertices 21 to 27
-    0, 1, 2, 3,           # Vertices 28 to 31
+    0, 2, 4, 6,           # Vertices 28 to 31
 ], dtype='d')
 
 y = np.array([
