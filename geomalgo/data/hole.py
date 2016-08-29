@@ -62,7 +62,7 @@ trivtx = np.array([
     [25, 26, 30], [26, 31, 30], [26, 27, 31],  # Triangles 38 to 40
 ], dtype='int32')
 
-boundary_edge_references = np.array([
+boundary_edge_reference = np.array([
     [0, 1, 1], [1, 2, 1], [2, 3, 1], [3, 4, 1],
     [4, 5, 1], [5, 6, 1],                              # bottom : ref=1
     [6, 13, 2], [13, 20, 2], [20, 27, 2], [27, 31, 2], # right  : ref=2

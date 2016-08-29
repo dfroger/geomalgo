@@ -83,7 +83,7 @@ cdef class BoundaryEdges:
     def __init__(self, size):
         self.size = size
         self.vertices = np.empty((size, 2), dtype='int32')
-        self.triangles = np.empty(size, dtype='int32')
+        self.triangle = np.empty(size, dtype='int32')
         self.next_boundary_edge = np.empty(size, dtype='int32')
 
     def finalize(BoundaryEdges self):
@@ -104,30 +104,30 @@ cdef class BoundaryEdges:
             else:
                 self.next_boundary_edge[B] = E
 
-    def add_references(BoundaryEdges self, int[:,:] references):
+    def add_reference(BoundaryEdges self, int[:,:] reference):
         cdef:
-            int R, NR = references.shape[0]
+            int R, NR = reference.shape[0]
             int V0, V1, ref
             int B
             int[:] count
 
         if NR != self.size:
             raise ValueError(
-                "{} references are given, but there are {} boundary edges"
+                "{} reference are given, but there are {} boundary edges"
                 .format(NR, self.size))
 
-        self.references = np.empty(self.size, dtype='int32')
+        self.reference = np.empty(self.size, dtype='int32')
 
         count = np.zeros(self.size, dtype='int32')
 
         for R in range(NR):
-            V0 = references[R,0]
-            V1 = references[R,1]
-            ref = references[R,2]
+            V0 = reference[R,0]
+            V1 = reference[R,1]
+            ref = reference[R,2]
 
             B = self.index_of(V0, V1)
 
-            self.references[B] = ref
+            self.reference[B] = ref
             count[B] += 1
 
         for B in range(self.size):
@@ -216,13 +216,13 @@ cdef class BoundaryEdges:
 
     def __getitem__(self, V0V1):
         """
-        Retrieve triangles for boundary edge (V0, V1).
+        Retrieve triangle for boundary edge (V0, V1).
         """
         cdef:
             int B, V0, V1
         V0, V1 = V0V1
         B = self.index_of(V0, V1)
-        return self.triangles[B]
+        return self.triangle[B]
 
 
 cdef class InternEdges:
@@ -302,7 +302,7 @@ def build_edges(int[:,:] trivtx, int NV):
 
     cdef:
         int[:,:] boundary_vertices = boundary_edges.vertices
-        int[:] boundary_triangles = boundary_edges.triangles
+        int[:] boundary_triangle = boundary_edges.triangle
         int[:,:] intern_vertices = intern_edges.vertices
         int[:,:] intern_triangles = intern_edges.triangles
 
@@ -335,7 +335,7 @@ def build_edges(int[:,:] trivtx, int NV):
                 else:
                     boundary_vertices[B,0] = edge.V1
                     boundary_vertices[B,1] = V0
-                boundary_triangles[B] = edge.T0
+                boundary_triangle[B] = edge.T0
                 edge_map.location[E] = EdgeLocation.boundary
                 edge_map.idx[E] = B
                 B += 1

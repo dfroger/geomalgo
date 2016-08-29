@@ -20,9 +20,9 @@ cdef class BoundaryEdges:
     cdef public:
         int size
         int[:,:] vertices
-        int[:] triangles
+        int[:] triangle
         int[:] next_boundary_edge
-        int[:] references
+        int[:] reference
         double[:] length
         double[:,:] normal
         EdgeMap edge_map
