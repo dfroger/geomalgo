@@ -1,3 +1,5 @@
+from libc.math cimport fabs
+
 from .point2d cimport CPoint2D, Point2D, c_is_left
 from ..triangulation cimport CTriangulation2D
 
@@ -18,6 +20,9 @@ cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P)
 
 cdef inline double triangle2d_signed_area(CTriangle2D* T):
     return 0.5 * c_is_left(T.A, T.B, T.C)
+
+cdef inline double triangle2d_area(CTriangle2D* T):
+    return fabs(0.5 * c_is_left(T.A, T.B, T.C))
 
 cdef inline void triangle2d_center(CTriangle2D* T, CPoint2D* C):
     C.x = (T.A.x + T.B.x + T.C.x) / 3.
