@@ -38,5 +38,13 @@ Dev:
 - Triangulation: add boundary and intern edges
 - Triangulation: add boundary and intern edges map
 - Triangulation: add example data
-- Add various geomalgo cimport
-- Add Triangle2D._set_precomputed
+- Add various geomalgo cimport Add Triangle2D._set_precomputed
+
+0.1.0 (2016-09-03)
+==================
+
+- Add boundary edge reference
+- Add boundary edge length
+- Add boundary edge normal
+- Add vector2D normal
+- Start documentation skeleton
