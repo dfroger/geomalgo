@@ -18,5 +18,5 @@ script:
 
 deploy:
   provider: script
-  script: conda-recipe/upload.sh
+  script: conda-recipe/travis-upload.sh
   skip_cleanup: True

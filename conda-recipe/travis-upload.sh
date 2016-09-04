@@ -1,12 +1,10 @@
 #!/bin/bash
 
-GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-
-if [ "$GIT_BRANCH" == "master" ]
+if [ "$TRAVIS_BRANCH" == "master" ]
 then
-    GIT_COMMIT=$(git rev-parse HEAD)
+    TRAVIS_COMMIT=$(git rev-parse HEAD)
 
-    if [ "$(uname)" == "Darwin" ]
+    if [ $TRAVIS_OS_NAME == "osx" ]
     then
 				CONDA_PACKAGE=$(ls /Users/travis/miniconda/conda-bld/osx-64/geomalgo-*.tar.bz2)
 		else
@@ -18,11 +16,11 @@ then
         upload \
         --user="$ANACONDA_USER" \
         --label=travis \
-        --label=$GIT_BRANCH \
-        --label=$GIT_COMMIT \
+        --label=$TRAVIS_BRANCH \
+        --label=$TRAVIS_COMMIT \
         --force \
         $CONDA_PACKAGE
 
 else
-    echo "Do not upload the Conda package on $GIT_BRANCH branch (do only on master)"
+    echo "Do not upload the Conda package on $TRAVIS_BRANCH branch (do only on master)"
 fi
