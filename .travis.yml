@@ -4,10 +4,6 @@ os:
 
 language: c
 
-compiler:
-  - gcc
-  - clang
-
 install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then wget -O miniconda.sh https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh; fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then curl -o miniconda.sh -L https://repo.continuum.io/miniconda/Miniconda-latest-MacOSX-x86_64.sh; fi
@@ -19,3 +15,7 @@ install:
 
 script:
   - conda build --python=3.5 conda-recipe
+
+deploy:
+	provider: script
+  script: conda-recipe/upload.sh
