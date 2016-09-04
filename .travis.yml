@@ -19,3 +19,4 @@ script:
 deploy:
   provider: script
   script: conda-recipe/upload.sh
+  skip_cleanup: True
