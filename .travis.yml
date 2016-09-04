@@ -17,5 +17,5 @@ script:
   - conda build --python=3.5 conda-recipe
 
 deploy:
-	provider: script
+  provider: script
   script: conda-recipe/upload.sh
