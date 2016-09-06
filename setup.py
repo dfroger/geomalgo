@@ -49,6 +49,18 @@ setup(
         'geomalgo.polar',
         'geomalgo.triangulation',
     ],
+    package_data = {
+        'geomalgo': ['*.pxd', '../geomalgo.pxd'],
+        'geomalgo.base1d': ['*.pxd'],
+        'geomalgo.base2d': ['*.pxd'],
+        'geomalgo.base3d': ['*.pxd'],
+        'geomalgo.cylindrical': ['*.pxd'],
+        'geomalgo.data': ['*.pxd'],
+        'geomalgo.inclusion': ['*.pxd'],
+        'geomalgo.intersection': ['*.pxd'],
+        'geomalgo.polar': ['*.pxd'],
+        'geomalgo.triangulation': ['*.pxd'],
+    },
     ext_modules = cythonize(
         extensions,
         compiler_directives = {
