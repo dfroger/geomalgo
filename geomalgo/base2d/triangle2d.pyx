@@ -11,37 +11,6 @@ cdef void del_triangle2d(CTriangle2D* ctri2d):
     if ctri2d is not NULL:
         free(ctri2d)
 
-cdef void triangle2d_from_triangulation2d(CTriangle2D* T,
-                                          CTriangulation2D* TG,
-                                          int triangle_index):
-    """
-    Set 2D triangle point coordinates from its index in a triangulation
-
-    Notes:
-    ------
-
-    Triangle points must be allocated before calling this function.
-    """
-    cdef:
-        int ia, ib, ic
-
-    # Get points A, B and C indexes.
-    ia = TG.trivtx[triangle_index,0]
-    ib = TG.trivtx[triangle_index,1]
-    ic = TG.trivtx[triangle_index,2]
-
-    # Set triangle point A coordinates
-    T.A.x = TG.x[ia]
-    T.A.y = TG.y[ia]
-
-    # Set triangle point B coordinates
-    T.B.x = TG.x[ib]
-    T.B.y = TG.y[ib]
-
-    # Set triangle point C coordinates
-    T.C.x = TG.x[ic]
-    T.C.y = TG.y[ic]
-
 cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P):
     """
     inclusion.winding.polygon2d_winding_point2d specialized for triangle,
@@ -104,6 +73,7 @@ cdef class Triangle2D:
             # C points to Python.
             self.ctri2d.A = A.cpoint2d
 
+
     property B:
         def __get__(self):
             return self.B
@@ -111,6 +81,7 @@ cdef class Triangle2D:
             self.B = B
             # C points to Python.
             self.ctri2d.B = B.cpoint2d
+
 
     property C:
         def __get__(self):
@@ -120,9 +91,11 @@ cdef class Triangle2D:
             # C points to Python.
             self.ctri2d.C = C.cpoint2d
 
+
     property area:
         def __get__(self):
             return fabs(self.signed_area)
+
 
     property center:
         def __get__(self):
@@ -131,9 +104,11 @@ cdef class Triangle2D:
             triangle2d_center(&self.ctri2d, C.cpoint2d)
             return C
 
+
     property counterclockwise:
         def __get__(self):
             return self.signed_area > 0.
+
 
     def __init__(self, Point2D A, Point2D B, Point2D C, index=0,
                  force_counterclockwise=False):
@@ -160,6 +135,7 @@ cdef class Triangle2D:
 
         self.recompute()
 
+
     def recompute(Triangle2D self):
         """Must be called manually if any point coordinate changed"""
         self.signed_area = triangle2d_signed_area(&self.ctri2d)
@@ -167,8 +143,10 @@ cdef class Triangle2D:
         triangle2d_gradx_grady_det(&self.ctri2d, self.area,
                                    self.gradx, self.grady, self.det)
 
+
     def includes_point(Triangle2D self, Point2D point):
         return triangle2d_includes_point2d(&self.ctri2d, point.cpoint2d)
+
 
     def interpolate(Triangle2D self, double[:] data, Point2D P):
         cdef:
@@ -179,6 +157,7 @@ cdef class Triangle2D:
         f2 = self.det[2] + P.x*self.gradx[2] + P.y*self.grady[2]
 
         return f0*data[0] + f1*data[1] + f2*data[2]
+
 
     cdef _set_precomputed(Triangle2D self, Point2D A, Point2D B, Point2D C,
                           int index, double signed_area, double gradx[3],
@@ -197,3 +176,14 @@ cdef class Triangle2D:
         self.gradx = gradx
         self.grady = grady
         self.det = det
+
+    cdef alloc_new(Triangle2D self):
+        # TODO: Do it in __new__, and adapt __init__
+        self.A = Point2D.__new__(Point2D)
+        self.B = Point2D.__new__(Point2D)
+        self.C = Point2D.__new__(Point2D)
+
+        # C points to Python.
+        self.ctri2d.A = self.A.cpoint2d
+        self.ctri2d.B = self.B.cpoint2d
+        self.ctri2d.C = self.C.cpoint2d

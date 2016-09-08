@@ -14,8 +14,7 @@ from .base2d.segment2d cimport (
 )
 
 from .base2d.triangle2d cimport (
-    CTriangle2D, new_triangle2d, del_triangle2d,
-    triangle2d_from_triangulation2d, triangle2d_includes_point2d,
+    CTriangle2D, new_triangle2d, del_triangle2d, triangle2d_includes_point2d,
     triangle2d_signed_area, triangle2d_area, triangle2d_center,
     triangle2d_counterclockwise, triangle2d_gradx_grady_det, Triangle2D
 )

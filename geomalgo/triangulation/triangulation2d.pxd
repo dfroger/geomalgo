@@ -1,11 +1,4 @@
-cdef struct CTriangulation2D:
-    double[:] x
-    double[:] y
-    int[:,:] trivtx
-
-cdef CTriangulation2D* new_ctriangulation2d()
-
-cdef void del_ctriangulation2d(CTriangulation2D* ctriangulation2d)
+from ..base2d cimport CTriangle2D
 
 cdef class Triangulation2D:
 
@@ -13,3 +6,5 @@ cdef class Triangulation2D:
         double[:] x
         double[:] y
         int[:,:] trivtx
+
+    cdef c_get(Triangulation2D self, int I, CTriangle2D* T)

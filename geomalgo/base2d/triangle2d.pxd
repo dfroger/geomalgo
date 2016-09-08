@@ -1,7 +1,6 @@
 from libc.math cimport fabs
 
 from .point2d cimport CPoint2D, Point2D, c_is_left
-from ..triangulation cimport CTriangulation2D
 
 cdef struct CTriangle2D:
     CPoint2D* A
@@ -11,10 +10,6 @@ cdef struct CTriangle2D:
 cdef CTriangle2D* new_triangle2d()
 
 cdef void del_triangle2d(CTriangle2D* ctri2d)
-
-cdef void triangle2d_from_triangulation2d(CTriangle2D* ctriangle2d,
-                                          CTriangulation2D* ctriangulation2d,
-                                          int triangle_index)
 
 cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P)
 
@@ -27,6 +22,12 @@ cdef inline double triangle2d_area(CTriangle2D* T):
 cdef inline void triangle2d_center(CTriangle2D* T, CPoint2D* C):
     C.x = (T.A.x + T.B.x + T.C.x) / 3.
     C.y = (T.A.y + T.B.y + T.C.y) / 3.
+
+cdef inline void triangle2d_set(CTriangle2D* ABC,
+                                CPoint2D* A, CPoint2D* B, CPoint2D* C):
+    ABC.A = A
+    ABC.B = B
+    ABC.C = C
 
 cdef inline double triangle2d_counterclockwise(CTriangle2D* T):
     """
@@ -62,3 +63,5 @@ cdef class Triangle2D:
     cdef _set_precomputed(Triangle2D self, Point2D A, Point2D B, Point2D C,
                           int index, double signed_area, double gradx[3],
                           double grady[3], double det[3])
+
+    cdef alloc_new(Triangle2D self)
