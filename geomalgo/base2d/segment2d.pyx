@@ -97,6 +97,17 @@ cdef class Segment2D:
 
         self.recompute()
 
+    cdef alloc_new(Segment2D self):
+        # TODO: put in __new__ and adapt __init__
+        self.A = Point2D.__new__(Point2D)
+        self.B = Point2D.__new__(Point2D)
+        self.AB = Vector2D.__new__(Vector2D)
+
+        # C points to Python.
+        self.csegment2d.A = self.A.cpoint2d
+        self.csegment2d.B = self.B.cpoint2d
+        self.csegment2d.AB = self.AB.cvector2d
+
     def __str__(self):
         return "Segment2D(({self.A.x},{self.A.y}),({self.B.x},{self.B.y}))" \
                .format(self=self)
@@ -153,3 +164,26 @@ cdef class Segment2D:
             Point2D M = Point2D.__new__(Point2D)
         segment2d_middle(M.cpoint2d, &self.csegment2d)
         return M
+
+
+cdef class Segment2DCollection:
+
+    def __init__(self, double[:,:] x, double[:,:] y):
+        self.x = x
+        self.y = y
+
+    cdef c_get(Segment2DCollection self, CSegment2D* segment,
+               int segment_index):
+        segment.A.x = self.x[segment_index, 0]
+        segment.A.y = self.y[segment_index, 0]
+
+        segment.B.x = self.x[segment_index, 1]
+        segment.B.y = self.y[segment_index, 1]
+
+    def __getitem__(Segment2DCollection self, int segment_index):
+        cdef:
+            Segment2D segment = Segment2D.__new__(Segment2D)
+        segment.alloc_new()
+        self.c_get(&segment.csegment2d, segment_index)
+        segment.recompute()
+        return segment

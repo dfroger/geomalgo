@@ -27,3 +27,14 @@ cdef class Segment2D:
         Point2D A
         Point2D B
         CSegment2D csegment2d
+
+    cdef alloc_new(Segment2D self)
+
+cdef class Segment2DCollection:
+
+    cdef:
+        double[:,:] x
+        double[:,:] y
+
+    cdef c_get(Segment2DCollection self, CSegment2D* segment,
+               int segment_index)

@@ -1,7 +1,9 @@
 import unittest
 from math import sqrt
 
-from geomalgo import Point2D, Segment2D
+import numpy as np
+
+from geomalgo import Point2D, Segment2D, Segment2DCollection
 
 class TestSegment2D(unittest.TestCase):
 
@@ -223,6 +225,41 @@ class TestSegment2DWhere(unittest.TestCase):
         coord = segment.where(P)
 
         self.assertAlmostEqual(coord, 0.25)
+
+class TestSegment2DCollection(unittest.TestCase):
+
+    def test_get(self):
+        """
+        12  E------F
+
+        11  C------D
+
+        10  A------B
+            1      2
+        """
+
+        x = np.array([
+            [1, 2], # AB
+            [1, 2], # CD
+            [1, 2], # EF
+        ], dtype='d')
+
+        y = np.array([
+            [10, 10], # AB
+            [11, 11], # CD
+            [12, 12], # EF
+        ], dtype='d')
+
+        collection = Segment2DCollection(x, y)
+        CD = collection[1]
+
+        self.assertEqual(CD.A.x,  1)
+        self.assertEqual(CD.A.y, 11)
+
+        self.assertEqual(CD.B.x,  2)
+        self.assertEqual(CD.B.y, 11)
+
+        self.assertAlmostEqual(CD.length, 1)
 
 if __name__ == '__main__':
     unittest.main()
