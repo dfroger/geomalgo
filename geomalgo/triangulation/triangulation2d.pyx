@@ -4,6 +4,12 @@ cdef class Triangulation2D:
 
 
     def __init__(self, double[:] x, double[:] y, int[:,:] trivtx):
+        self.NV = x.shape[0]
+        self.NT = trivtx.shape[0]
+
+        assert y.shape[0] == self.NV
+        assert trivtx.shape[1] == 3
+
         self.x = x
         self.y = y
         self.trivtx = trivtx

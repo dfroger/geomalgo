@@ -17,6 +17,10 @@ cdef double segment2d_where(CSegment2D* AB, CPoint2D* P)
 
 cdef void segment2d_middle(CPoint2D* M, CSegment2D* seg)
 
+cdef inline void segment2d_set(CSegment2D* AB, CPoint2D* A, CPoint2D* B):
+    AB.A = A
+    AB.B = B
+
 cdef class Segment2D:
 
     cdef readonly:
@@ -36,5 +40,8 @@ cdef class Segment2DCollection:
         double[:,:] x
         double[:,:] y
 
-    cdef c_get(Segment2DCollection self, CSegment2D* segment,
-               int segment_index)
+    cdef c_get(Segment2DCollection self, int segment_index,
+               CSegment2D* segment)
+
+    cdef c_set(Segment2DCollection self, int segment_index,
+               CPoint2D* A, CPoint2D * B)

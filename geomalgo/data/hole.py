@@ -1,5 +1,7 @@
 import numpy as np
 
+from ..triangulation import Triangulation2D
+
 """
     15  28----------29----------30----------31
          |\         /|\         /|\         /|
@@ -61,6 +63,8 @@ trivtx = np.array([
     [23, 24, 29], [24, 30, 29], [24, 25, 30],  # Triangles 35 to 37
     [25, 26, 30], [26, 31, 30], [26, 27, 31],  # Triangles 38 to 40
 ], dtype='int32')
+
+triangulation = Triangulation2D(x, y, trivtx)
 
 boundary_edge_reference = np.array([
     [0, 1, 1], [1, 2, 1], [2, 3, 1], [3, 4, 1],

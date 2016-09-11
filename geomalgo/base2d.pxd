@@ -10,13 +10,15 @@ from .base2d.polygon2d cimport (
 
 from .base2d.segment2d cimport (
     CSegment2D, new_segment2d, del_segment2d, create_segment2d, segment2d_at,
-    segment2d_where, segment2d_middle, Segment2D, Segment2DCollection
+    segment2d_where, segment2d_middle, Segment2D, Segment2DCollection,
+    segment2d_set
 )
 
 from .base2d.triangle2d cimport (
     CTriangle2D, new_triangle2d, del_triangle2d, triangle2d_includes_point2d,
     triangle2d_signed_area, triangle2d_area, triangle2d_center,
-    triangle2d_counterclockwise, triangle2d_gradx_grady_det, Triangle2D
+    triangle2d_set, triangle2d_counterclockwise, triangle2d_gradx_grady_det,
+    Triangle2D
 )
 
 from .base2d.vector2d cimport (

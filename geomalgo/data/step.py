@@ -1,5 +1,7 @@
 import numpy as np
 
+from ..triangulation import Triangulation2D
+
 """
     12  6-------7
         | \  T5 |
@@ -39,6 +41,8 @@ trivtx = np.array([
     [1, 4, 3], [2, 5, 4],  # Triangles 2 to 3
     [3, 4, 6], [4, 7, 6],  # Triangles 4 to 5
 ], dtype='int32')
+
+triangulation = Triangulation2D(x, y, trivtx)
 
 boundary_edge_reference = np.array([
     [0, 1, 1], [1, 2, 1],            # bottom : ref=1

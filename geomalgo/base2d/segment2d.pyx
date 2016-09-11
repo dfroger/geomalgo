@@ -172,18 +172,27 @@ cdef class Segment2DCollection:
         self.x = x
         self.y = y
 
-    cdef c_get(Segment2DCollection self, CSegment2D* segment,
-               int segment_index):
+    cdef c_get(Segment2DCollection self, int segment_index,
+               CSegment2D* segment):
         segment.A.x = self.x[segment_index, 0]
         segment.A.y = self.y[segment_index, 0]
 
         segment.B.x = self.x[segment_index, 1]
         segment.B.y = self.y[segment_index, 1]
 
+    cdef c_set(Segment2DCollection self, int segment_index,
+               CPoint2D* A, CPoint2D * B):
+
+        self.x[segment_index, 0] = A.x
+        self.x[segment_index, 1] = B.x
+
+        self.y[segment_index, 0] = A.y
+        self.y[segment_index, 1] = B.y
+
     def __getitem__(Segment2DCollection self, int segment_index):
         cdef:
             Segment2D segment = Segment2D.__new__(Segment2D)
         segment.alloc_new()
-        self.c_get(&segment.csegment2d, segment_index)
+        self.c_get(segment_index, &segment.csegment2d)
         segment.recompute()
         return segment
