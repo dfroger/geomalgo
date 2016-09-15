@@ -9,9 +9,9 @@ Welcome to geomalgo's documentation!
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
-   gallery
+   auto_examples/index
    modules/index
    devel
 

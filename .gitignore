@@ -11,4 +11,4 @@ craftrc.py
 
 doc/_build/
 doc/modules/generated/
-doc/auto_examples_basic/
+doc/auto_examples/

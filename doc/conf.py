@@ -322,12 +322,12 @@ sphinx_gallery_conf = {
 
     # path to your examples scripts
     'examples_dirs'  : [
-        '../examples/basic',
+        '../examples/',
     ],
 
     # path where to save gallery generated examples
     'gallery_dirs'   : [
-        'auto_examples_basic',
+        'auto_examples',
     ],
 
     # path to store the module using example template

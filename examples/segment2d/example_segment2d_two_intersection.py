@@ -10,11 +10,12 @@ import matplotlib.pylab as plt
 
 import geomalgo as ga
 
-# Create two points.
+# Create segment AB.
 A = ga.Point2D(2, 1, name='A')
 B = ga.Point2D(6, 3, name='B')
 AB = ga.Segment2D(A, B)
 
+# Create segment CD.
 C = ga.Point2D(4, 2, name='C')
 D = ga.Point2D(8, 4, name='D')
 CD = ga.Segment2D(C, D)
@@ -28,9 +29,11 @@ CD.plot()
 # Compute intersection
 I, J = AB.intersect_segment(CD)
 
+# Plot first intersection Point.
 I.name = 'I'
 I.plot(marker='x', markersize=12, color='red', offset=(0, -0.4))
 
+# Plot second intersection Point.
 J.name = 'J'
 J.plot(marker='x', markersize=12, color='red', offset=(0, -0.4))
 
