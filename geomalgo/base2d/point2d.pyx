@@ -1,5 +1,7 @@
 import math
 
+import matplotlib.pyplot as plt
+
 from libc.stdlib cimport malloc, free
 from libc.math cimport sqrt, atan2
 
@@ -66,10 +68,11 @@ cdef class Point2D:
     def __dealloc__(self):
         del_point2d(self.cpoint2d)
 
-    def __init__(self, x, y, index=0):
+    def __init__(self, x, y, index=0, name=None):
         self.cpoint2d.x = x
         self.cpoint2d.y = y
         self.index = index
+        self.name = name
 
     def __str__(self):
         return 'Point2D({self.x}, {self.y})'.format(self=self)
@@ -113,3 +116,10 @@ cdef class Point2D:
         r = sqrt(self.x**2 + self.y**2)
         theta = atan2(self.y, self.x);
         return PolarPoint(r, theta)
+
+    def plot(self, marker='o', markersize=6, color='b',  offset=(0, 0.2)):
+        plt.plot(self.x, self.y, marker=marker, markersize=markersize, color=color)
+        if self.name is not None:
+            plt.text(self.x+offset[0], self.y+offset[1], self.name,
+                     color=color,
+                     horizontalalignment='center')

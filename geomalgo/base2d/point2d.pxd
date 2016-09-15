@@ -37,5 +37,6 @@ cdef inline bint point2d_equal(CPoint2D* A, CPoint2D* B):
 cdef class Point2D:
     cdef public:
         int index
+        str name
     cdef:
         CPoint2D* cpoint2d

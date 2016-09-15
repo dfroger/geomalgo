@@ -11,8 +11,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   modules/index
    gallery
+   modules/index
    devel
 
 

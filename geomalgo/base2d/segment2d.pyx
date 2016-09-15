@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 from libc.stdlib cimport malloc, free
 
 from .point2d cimport subtract_points2d, CPoint2D, point2d_plus_vector2d
@@ -164,6 +166,11 @@ cdef class Segment2D:
             Point2D M = Point2D.__new__(Point2D)
         segment2d_middle(M.cpoint2d, &self.csegment2d)
         return M
+
+    def plot(self, style='b-'):
+        x = [self.A.x, self.B.x]
+        y = [self.A.y, self.B.y]
+        plt.plot(x, y, style)
 
 
 cdef class Segment2DCollection:
