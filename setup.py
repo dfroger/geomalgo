@@ -71,6 +71,6 @@ setup(
             'language_level': 3,
         },
     ),
-    requires = ['numpy'],
+    requires = ['numpy', 'matplotlib'],
     tests_require = ['nose', 'coverage'],
 )
