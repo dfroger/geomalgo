@@ -27,15 +27,15 @@ AB.plot()
 CD.plot()
 
 # Compute intersection
-I, J = AB.intersect_segment(CD)
+X, Y = AB.intersect_segment(CD)
 
 # Plot first intersection Point.
-I.name = 'I'
-I.plot(marker='x', markersize=12, color='red', offset=(0, -0.4))
+X.name = 'X'
+X.plot(marker='x', markersize=12, color='red', offset=(0, -0.4))
 
 # Plot second intersection Point.
-J.name = 'J'
-J.plot(marker='x', markersize=12, color='red', offset=(0, -0.4))
+Y.name = 'Y'
+Y.plot(marker='x', markersize=12, color='red', offset=(0, -0.4))
 
 # Adjust the plot.
 plt.axis('scaled')

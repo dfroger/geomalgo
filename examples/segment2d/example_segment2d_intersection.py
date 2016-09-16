@@ -27,12 +27,12 @@ AB.plot()
 CD.plot()
 
 # Compute first intersection point.
-I, J = AB.intersect_segment(CD)
-I.name = 'I'
-I.plot(color='red')
+X, Y = AB.intersect_segment(CD)
+X.name = 'X'
+X.plot(color='red')
 
 # Their is no second intersection point.
-print('Second intersection point:', J)
+print('Second intersection point:', Y)
 
 # Adjust the plot.
 plt.axis('scaled')
