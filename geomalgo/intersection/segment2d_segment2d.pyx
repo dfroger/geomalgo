@@ -2,7 +2,7 @@ from ..base2d.point2d cimport (subtract_points2d, point2d_plus_vector2d,
                                point2d_equal)
 from ..base2d.vector2d cimport CVector2D, cross_product2d, dot_product2d
 from ..base2d.segment2d cimport segment2d_where
-from ..inclusion.segment2d_point2d cimport segment2d_includes_point2d
+from ..inclusion.segment2d_point2d cimport segment2d_includes_collinear_point2d
 
 cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
                                        CSegment2D* segment1,
@@ -88,7 +88,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
 
         if PQ2 == 0:
             # segment0 is a single point
-            if not segment2d_includes_point2d(segment1, P):
+            if not segment2d_includes_collinear_point2d(segment1, P):
                 # But is not in segment1.
                 # P Q
                 #  +   R-----S
@@ -107,7 +107,7 @@ cdef int intersect_segment2d_segment2d(CSegment2D* segment0,
 
         if RS2 == 0:
             # segment1 a single point
-            if  not segment2d_includes_point2d(segment0, R):
+            if  not segment2d_includes_collinear_point2d(segment0, R):
                 # But is not in segment0.
                 # R S
                 #  +   P-----Q

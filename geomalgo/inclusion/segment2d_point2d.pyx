@@ -1,6 +1,6 @@
-cdef bint segment2d_includes_point2d(CSegment2D* S, CPoint2D* P):
+cdef bint segment2d_includes_collinear_point2d(CSegment2D* S, CPoint2D* P):
     """
-    Determine if a point is inside a segment
+    Determine if a point is inside a collinear segment
 
     Parameters
     ----------
@@ -9,7 +9,7 @@ cdef bint segment2d_includes_point2d(CSegment2D* S, CPoint2D* P):
        A point.
 
     S: Segment2d
-        A collinar segment.
+        A collinear segment.
 
     Returns
     -------

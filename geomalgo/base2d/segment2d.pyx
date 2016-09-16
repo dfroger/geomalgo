@@ -4,7 +4,7 @@ from libc.stdlib cimport malloc, free
 
 from .point2d cimport subtract_points2d, CPoint2D, point2d_plus_vector2d
 from .vector2d cimport compute_norm2d
-from ..inclusion.segment2d_point2d cimport segment2d_includes_point2d
+from ..inclusion.segment2d_point2d cimport segment2d_includes_collinear_point2d
 from ..intersection.segment2d_segment2d cimport intersect_segment2d_segment2d
 
 cdef CSegment2D* new_segment2d():
@@ -129,8 +129,8 @@ cdef class Segment2D:
     def where(Segment2D self, Point2D P):
         return segment2d_where(&self.csegment2d, P.cpoint2d)
 
-    def includes_point(Segment2D self, Point2D P):
-        return segment2d_includes_point2d(&self.csegment2d, P.cpoint2d)
+    def includes_collinear_point(Segment2D self, Point2D P):
+        return segment2d_includes_collinear_point2d(&self.csegment2d, P.cpoint2d)
 
     def intersect_segment(Segment2D self, Segment2D other, epsilon=1.E-08,
                           return_coords=False):

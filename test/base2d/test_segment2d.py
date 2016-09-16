@@ -73,13 +73,13 @@ class TestIncludesPoint(unittest.TestCase):
         I = Point2D( 0.5, 0)
         P = Point2D( 1.5, 0)
 
-        self.assertTrue( segment.includes_point(I) )
+        self.assertTrue( segment.includes_collinear_point(I) )
 
-        self.assertTrue( segment.includes_point(A) )
-        self.assertTrue( segment.includes_point(B) )
+        self.assertTrue( segment.includes_collinear_point(A) )
+        self.assertTrue( segment.includes_collinear_point(B) )
 
-        self.assertFalse( segment.includes_point(O) )
-        self.assertFalse( segment.includes_point(P) )
+        self.assertFalse( segment.includes_collinear_point(O) )
+        self.assertFalse( segment.includes_collinear_point(P) )
 
     def test_vertical_segment(self):
         """
@@ -102,13 +102,14 @@ class TestIncludesPoint(unittest.TestCase):
         I = Point2D(0,  0.5)
         P = Point2D(0,  1.5)
 
-        self.assertTrue( segment.includes_point(I) )
+        self.assertTrue( segment.includes_collinear_point(I) )
 
-        self.assertTrue( segment.includes_point(A) )
-        self.assertTrue( segment.includes_point(B) )
+        self.assertTrue( segment.includes_collinear_point(A) )
+        self.assertTrue( segment.includes_collinear_point(B) )
 
-        self.assertFalse( segment.includes_point(O) )
-        self.assertFalse( segment.includes_point(P) )
+        self.assertFalse( segment.includes_collinear_point(O) )
+        self.assertFalse( segment.includes_collinear_point(P) )
+
 
 class TestSegment2DAt(unittest.TestCase):
 
