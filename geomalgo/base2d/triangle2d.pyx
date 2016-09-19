@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 from libc.stdlib cimport malloc, free
 from libc.math cimport fabs
 
@@ -187,3 +189,8 @@ cdef class Triangle2D:
         self.ctri2d.A = self.A.cpoint2d
         self.ctri2d.B = self.B.cpoint2d
         self.ctri2d.C = self.C.cpoint2d
+
+    def plot(self, style='b-'):
+        x = [self.A.x, self.B.x, self.C.x, self.A.x]
+        y = [self.A.y, self.B.y, self.C.y, self.A.y]
+        plt.plot(x, y, style)
