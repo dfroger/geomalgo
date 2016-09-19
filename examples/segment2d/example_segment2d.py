@@ -10,21 +10,31 @@ import matplotlib.pylab as plt
 
 import geomalgo as ga
 
-# Create segment AB.
-A = ga.Point2D(2, 1, name='A')
-B = ga.Point2D(5, 4, name='B')
-AB = ga.Segment2D(A, B)
+# Create segment XY.
+X = ga.Point2D(2, 1, name='X')
+Y = ga.Point2D(5, 4, name='Y')
+XY = ga.Segment2D(X, Y)
 
-# Create two points, the first on the segment
-C = ga.Point2D(3, 2, name='C')
-D = ga.Point2D(4, 2, name='D')
+# Plot segment.
+X.plot()
+Y.plot()
+XY.plot()
 
-# Plot points and segment.
-A.plot()
-B.plot()
-AB.plot()
-C.plot(color='red')
-D.plot(color='red')
+# Retrieve points.
+print('Segment first point:', XY.A)
+print('Segment second point:', XY.B)
+
+# Use parametric coordinates.
+print('Point at paraemtric coordinate 1/3:', XY.at(1/3))
+print('Point (3, 2) is at paraemtric coordinate:', XY.where(ga.Point2D(3, 2)))
+
+# Length and recompute.
+print("Segment length:", XY.length)
+XY.A.x = 4
+XY.B.x = 4
+print("Old egment length:", XY.length)
+XY.recompute()
+print("Updated segment length:", XY.length)
 
 # Adjust the plot.
 plt.axis('scaled')
@@ -32,6 +42,3 @@ plt.xlim(1, 6)
 plt.ylim(0, 5)
 plt.grid()
 plt.show()
-
-print('AB includes point C:', AB.includes_point(C))
-print('AB includes point D:', AB.includes_point(D))
