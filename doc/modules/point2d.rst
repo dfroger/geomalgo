@@ -1,13 +1,9 @@
 :mod:`point2d`
 **************
 
-.. automodule:: geomalgo.base2d.point2d
+.. automodule:: geomalgo
 
-.. currentmodule:: geomalgo.base2d.point2d
-
-.. testsetup::
-
-    import geomalgo as ga
+.. currentmodule:: geomalgo
 
 
 :class:`Point2D` class
@@ -15,6 +11,15 @@
 
 .. autoclass:: Point2D
    :members:
+   :undoc-members:
+
+
+:func:`is_left` function
+====================================
+
+.. autofunction:: is_left
+
+
 
 .. include:: generated/geomalgo.Point2D.examples
 .. raw:: html

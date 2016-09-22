@@ -51,12 +51,14 @@ cdef class Point2D:
     """
 
     property x:
+        """First coodinate"""
         def __get__(self):
             return self.cpoint2d.x
         def __set__(self, double x):
             self.cpoint2d.x = x
 
     property y:
+        """Second coodinate"""
         def __get__(self):
             return self.cpoint2d.y
         def __set__(self, double y):

@@ -37,6 +37,9 @@ cdef inline bint point2d_equal(CPoint2D* A, CPoint2D* B):
 cdef class Point2D:
     cdef public:
         int index
+        """Optional point index, for example fo a triangulation."""
+
         str name
+        """Optional point name, to annotate a plot with."""
     cdef:
         CPoint2D* cpoint2d
