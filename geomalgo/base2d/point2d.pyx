@@ -25,8 +25,7 @@ cdef void point2d_plus_vector2d(CPoint2D* result, CPoint2D* start,
     result.y = start.y + factor*vector.y
 
 def is_left(Point2D A, Point2D B, Point2D P, comparer=math.isclose):
-    """
-    Test if a point P is left|on|right of an infinite line (AB).
+    """Test if a point P is left|on|right of an infinite line (AB).
     """
 
     res = c_is_left(A.cpoint2d, B.cpoint2d, P.cpoint2d)
@@ -42,12 +41,12 @@ cdef class Point2D:
 
     Parameters
     ----------
-
     x: float
         First coordinate
 
     y: float
         Second coordinate
+
     """
 
     property x:
@@ -77,9 +76,25 @@ cdef class Point2D:
         self.name = name
 
     def __str__(self):
+        """String representation
+        """
+
         return 'Point2D({self.x}, {self.y})'.format(self=self)
 
     def __sub__(Point2D self, Point2D other):
+        """Compute vector between two points
+
+        Parameters
+        ----------
+        other: geomalgo.Point2D
+            Point to compute vector to
+
+        Returns
+        -------
+        geomalgo.Vector2D
+            Vector between self and other
+
+        """
         cdef:
             Vector2D vector = Vector2D.__new__(Vector2D)
         subtract_points2d(vector.cvector2d, self.cpoint2d, other.cpoint2d)
@@ -99,19 +114,26 @@ cdef class Point2D:
 
         Parameters
         ----------
-
-        other: Point2D
+        other: geomalgo.Point2D
             Other point to compute distance to
 
         Parameters
         ----------
-
         float
             Distance between the two points
+
         """
         return c_point2d_distance(self.cpoint2d, other.cpoint2d)
 
     def to_polar(self):
+        """Compute coordinates in polar system
+
+        Returns
+        -------
+        geomalgo.PolarPoint
+            Point in polor system.
+
+        """
         cdef:
             double r
             double theta
@@ -120,6 +142,23 @@ cdef class Point2D:
         return PolarPoint(r, theta)
 
     def plot(self, marker='o', markersize=6, color='b',  offset=(0, 0.2)):
+        """Plot point in a matplotlib figure
+
+        Parameters
+        ----------
+        marker: string
+            Matplotlib marker
+
+        markersize: string
+            Matplotlib markersize
+
+        color: string
+            Matplotlib color
+
+        offset: tuple
+            (x, y) offset at which annotate figure with point name (if any)
+
+        """
         plt.plot(self.x, self.y, marker=marker, markersize=markersize, color=color)
         if self.name is not None:
             plt.text(self.x+offset[0], self.y+offset[1], self.name,
