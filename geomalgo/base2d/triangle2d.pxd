@@ -42,7 +42,7 @@ cdef inline double triangle2d_counterclockwise(CTriangle2D* T):
     """
     return triangle2d_signed_area(T)
 
-cdef void triangle2d_gradx_grady_det(CTriangle2D* T, double area,
+cdef void triangle2d_gradx_grady_det(CTriangle2D* T, double signed_area,
                                      double gradx[3], double grady[3],
                                      double det[3])
 

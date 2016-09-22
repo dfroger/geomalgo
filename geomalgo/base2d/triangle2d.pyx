@@ -44,14 +44,14 @@ cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P):
 
     return winding_number != 0
 
-cdef void triangle2d_gradx_grady_det(CTriangle2D* tri, double area,
+cdef void triangle2d_gradx_grady_det(CTriangle2D* tri, double signed_area,
                                      double gradx[3], double grady[3],
                                      double det[3]):
     cdef:
         double xa = tri.A.x, ya = tri.A.y
         double xb = tri.B.x, yb = tri.B.y
         double xc = tri.C.x, yc = tri.C.y
-        double alpha = 0.5 / area
+        double alpha = 0.5 / signed_area
 
     gradx[0] = (yb - yc) * alpha
     gradx[1] = (yc - ya) * alpha
@@ -142,7 +142,7 @@ cdef class Triangle2D:
         """Must be called manually if any point coordinate changed"""
         self.signed_area = triangle2d_signed_area(&self.ctri2d)
 
-        triangle2d_gradx_grady_det(&self.ctri2d, self.area,
+        triangle2d_gradx_grady_det(&self.ctri2d, self.signed_area,
                                    self.gradx, self.grady, self.det)
 
 
