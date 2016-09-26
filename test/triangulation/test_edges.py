@@ -12,7 +12,7 @@ class TestStep(unittest.TestCase):
         self.intern_edges, self.boundary_edges = build_edges(step.trivtx,
                                                              step.NV)
 
-        self.boundary_edges.add_reference(step.boundary_edge_reference)
+        self.boundary_edges.add_label(step.boundary_edge_label)
         self.boundary_edges.compute_length(step.x, step.y)
         self.boundary_edges.compute_normal(step.x, step.y)
 
@@ -177,38 +177,38 @@ class TestStep(unittest.TestCase):
             6, 7,    # 7 => 24:26 => (7,4), (7,6)
         ])
 
-    def test_reference(self):
-        ref = self.boundary_edges.reference
+    def test_label(self):
+        label = self.boundary_edges.label
 
-        self.assertEqual(ref.shape, (step.NB,))
-        self.assertEqual(ref[0], 1) # (0,1)
-        self.assertEqual(ref[1], 2) # (3,0)
-        self.assertEqual(ref[2], 1) # (1,2)
-        self.assertEqual(ref[3], 2) # (2,5)
-        self.assertEqual(ref[4], 2) # (6,3)
-        self.assertEqual(ref[5], 2) # (5,4)
-        self.assertEqual(ref[6], 2) # (4,7)
-        self.assertEqual(ref[7], 3) # (7,6)
+        self.assertEqual(label.shape, (step.NB,))
+        self.assertEqual(label[0], 1) # (0,1)
+        self.assertEqual(label[1], 2) # (3,0)
+        self.assertEqual(label[2], 1) # (1,2)
+        self.assertEqual(label[3], 2) # (2,5)
+        self.assertEqual(label[4], 2) # (6,3)
+        self.assertEqual(label[5], 2) # (5,4)
+        self.assertEqual(label[6], 2) # (4,7)
+        self.assertEqual(label[7], 3) # (7,6)
 
-    def test_wrong_number_of_references(self):
-        ref_wrong_number = step.boundary_edge_reference[:-1]
-        msg = "7 reference are given, but there are 8 boundary edges"
+    def test_wrong_number_of_label(self):
+        label_wrong_number = step.boundary_edge_label[:-1]
+        msg = "7 label are given, but there are 8 boundary edges"
         with self.assertRaisesRegex(ValueError, msg):
-            self.boundary_edges.add_reference(ref_wrong_number)
+            self.boundary_edges.add_label(label_wrong_number)
 
-    def test_missing_reference(self):
-        ref_missing = step.boundary_edge_reference.copy()
-        ref_missing[0] = ref_missing[-1]
-        msg = "Missing reference for edge \(0, 1\)"
+    def test_missing_label(self):
+        label_missing = step.boundary_edge_label.copy()
+        label_missing[0] = label_missing[-1]
+        msg = "Missing label for edge \(0, 1\)"
         with self.assertRaisesRegex(ValueError, msg):
-            self.boundary_edges.add_reference(ref_missing)
+            self.boundary_edges.add_label(label_missing)
 
-    def test_duplicated_reference(self):
-        ref_duplicated = step.boundary_edge_reference.copy()
-        ref_duplicated[1] = ref_duplicated[0]
+    def test_duplicated_label(self):
+        label_duplicated = step.boundary_edge_label.copy()
+        label_duplicated[1] = label_duplicated[0]
         msg = "Reference for edge \(0, 1\) is given 2 times"
         with self.assertRaisesRegex(ValueError, msg):
-            self.boundary_edges.add_reference(ref_duplicated)
+            self.boundary_edges.add_label(label_duplicated)
 
     def test_length(self):
         length = np.asarray(self.boundary_edges.length)
@@ -276,12 +276,12 @@ class TestHole(unittest.TestCase):
         self.assert_boundary_triangle(18, 17, 25)
         self.assert_boundary_triangle(28, 21, 32)
 
-    def test_reference(self):
-        self.boundary_edges.add_reference(hole.boundary_edge_reference)
+    def test_label(self):
+        self.boundary_edges.add_label(hole.boundary_edge_label)
 
-        ref = self.boundary_edges.reference
+        label = self.boundary_edges.label
 
-        self.assertEqual(ref.shape, (hole.NB,))
+        self.assertEqual(label.shape, (hole.NB,))
 
 if __name__ == '__main__':
     unittest.main()

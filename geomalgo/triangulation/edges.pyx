@@ -104,30 +104,29 @@ cdef class BoundaryEdges:
             else:
                 self.next_boundary_edge[B] = E
 
-    def add_reference(BoundaryEdges self, int[:,:] reference):
+    def add_label(BoundaryEdges self, int[:,:] label):
         cdef:
-            int R, NR = reference.shape[0]
-            int V0, V1, ref
+            int R, NR = label.shape[0]
+            int V0, V1
             int B
             int[:] count
 
         if NR != self.size:
             raise ValueError(
-                "{} reference are given, but there are {} boundary edges"
+                "{} label are given, but there are {} boundary edges"
                 .format(NR, self.size))
 
-        self.reference = np.empty(self.size, dtype='int32')
+        self.label = np.empty(self.size, dtype='int32')
 
         count = np.zeros(self.size, dtype='int32')
 
         for R in range(NR):
-            V0 = reference[R,0]
-            V1 = reference[R,1]
-            ref = reference[R,2]
+            V0 = label[R,0]
+            V1 = label[R,1]
 
             B = self.index_of(V0, V1)
 
-            self.reference[B] = ref
+            self.label[B] = label[R,2]
             count[B] += 1
 
         for B in range(self.size):
@@ -135,7 +134,7 @@ cdef class BoundaryEdges:
                 V0 = self.vertices[B, 0]
                 V1 = self.vertices[B, 1]
                 raise ValueError(
-                    "Missing reference for edge ({}, {})".format(V0, V1))
+                    "Missing label for edge ({}, {})".format(V0, V1))
             elif count[B] > 1:
                 V0 = self.vertices[B, 0]
                 V1 = self.vertices[B, 1]

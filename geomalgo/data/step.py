@@ -44,9 +44,9 @@ trivtx = np.array([
 
 triangulation = Triangulation2D(x, y, trivtx)
 
-boundary_edge_reference = np.array([
-    [0, 1, 1], [1, 2, 1],            # bottom : ref=1
-    [2, 5, 2], [5, 4, 2], [4, 7, 2], # right  : ref=2
-    [7, 6, 3],                       # top    : ref=3
-    [6, 3, 2], [3, 0, 2]             # left   : ref=2
+boundary_edge_label = np.array([
+    [0, 1, 1], [1, 2, 1],            # bottom : label=1
+    [2, 5, 2], [5, 4, 2], [4, 7, 2], # right  : label=2
+    [7, 6, 3],                       # top    : label=3
+    [6, 3, 2], [3, 0, 2]             # left   : label=2
 ], dtype='int32')
