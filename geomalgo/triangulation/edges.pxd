@@ -16,6 +16,8 @@ cdef class EdgeMap:
 
     cdef int search_next_boundary_edge(EdgeMap self, int V0, int V1)
 
+    cpdef int[:] neighbours(EdgeMap self, int V0)
+
 cdef class BoundaryEdges:
     cdef public:
         int size

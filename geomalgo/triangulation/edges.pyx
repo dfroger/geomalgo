@@ -74,6 +74,9 @@ cdef class EdgeMap:
         else:
             return -1
 
+    cpdef int[:] neighbours(EdgeMap self, int V0):
+        return self.edges[self.bounds[2*V0]:self.bounds[2*V0+2]]
+
 
 cdef class BoundaryEdges:
     """

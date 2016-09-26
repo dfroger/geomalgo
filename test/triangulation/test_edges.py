@@ -177,6 +177,16 @@ class TestStep(unittest.TestCase):
             6, 7,    # 7 => 24:26 => (7,4), (7,6)
         ])
 
+    def assert_memview_equal(self, arr0, arr1):
+        """Assert memory view are equal"""
+        assert_equal(np.asarray(arr0), np.asarray(arr1))
+
+    def test_neighbours(self):
+        edge_map = self.intern_edges.edge_map
+
+        self.assert_memview_equal(edge_map.neighbours(0), [1, 3])
+        self.assert_memview_equal(edge_map.neighbours(1), [3, 2, 4, 0])
+
     def test_label(self):
         label = self.boundary_edges.label
 
