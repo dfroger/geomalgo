@@ -3,5 +3,5 @@ from .triangulation.triangulation2d cimport (
 )
 
 from .triangulation.edges cimport (
-    EdgeLocation, EdgeMap, BoundaryEdges, InternEdges
+    EdgeMap, BoundaryEdges, InternEdges
 )
