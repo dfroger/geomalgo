@@ -2,6 +2,8 @@ import numpy as np
 
 from .constant cimport *
 
+ctypedef (bint, int) bint_int
+
 cdef class InternEdges:
     """
     Intern edges vertices (V0, V1) are stored such as V0 < V1, and
@@ -20,13 +22,20 @@ cdef class InternEdges:
         Retrieve index for intern edge(V0, V1)
         """
         cdef:
+            bint found
             int location
-            int I
+            int I, E
             int V0_, V1_
 
-        I = self.edge_map.search_edge(V0, V1, &location)
+        found, E = self.edge_map.search_edge_idx(V0, V1)
+
+        if not found:
+            raise KeyError("No such intern edge ({}, {})".format(V0, V1))
+
+        location = self.edge_map.location[E]
 
         if location == INTERN_EDGE:
+            I = self.edge_map.idx[E]
             V0_ = self.vertices[I, 0]
             V1_ = self.vertices[I, 1]
             if not ((V0==V0_ and V1==V1_) or (V0==V1_ and V1==V0_)):
@@ -37,9 +46,6 @@ cdef class InternEdges:
 
         elif location == BOUNDARY_EDGE:
             raise KeyError("({}, {}) is a boundary edge".format(V0, V1))
-
-        elif location == NOTFOUND_EDGE:
-            raise KeyError("No such intern edge ({}, {})".format(V0, V1))
 
         else:
             RuntimeError("Unexpected edge location: {}".format(location))

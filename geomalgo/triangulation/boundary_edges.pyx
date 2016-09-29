@@ -10,6 +10,7 @@ from ..base2d.vector2d cimport (
 
 from .constant cimport *
 
+ctypedef (bint, int) bint_int
 
 cdef class BoundaryEdges:
     """
@@ -126,12 +127,18 @@ cdef class BoundaryEdges:
 
         cdef:
             int location
-            int B
+            int B, E
             int V0_, V1_
 
-        B = self.edge_map.search_edge(V0, V1, &location)
+        found, E = self.edge_map.search_edge_idx(V0, V1)
+
+        if not found:
+            raise KeyError("No such boundary edge ({}, {})".format(V0, V1))
+
+        location = self.edge_map.location[E]
 
         if location == BOUNDARY_EDGE:
+            B = self.edge_map.idx[E]
             V0_ = self.vertices[B, 0]
             V1_ = self.vertices[B, 1]
             if not ((V0==V0_ and V1==V1_) or (V0==V1_ and V1==V0_)):
@@ -142,9 +149,6 @@ cdef class BoundaryEdges:
 
         elif location == INTERN_EDGE:
             raise KeyError("({}, {}) is an intern edge".format(V0, V1))
-
-        elif location == NOTFOUND_EDGE:
-            raise KeyError("No such boundary edge ({}, {})".format(V0, V1))
 
         else:
             RuntimeError("Unexpected edge location: {}".format(location))
