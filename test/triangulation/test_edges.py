@@ -244,6 +244,95 @@ class TestStep(unittest.TestCase):
         assert_equal(normal[6], ( 1,  0))  # (4,7)
         assert_equal(normal[7], ( 0,  1))  # (7,6)
 
+    def test_reorder_intern_edges(self):
+
+        intern_edges = self.intern_edges
+
+        # Before reordering:
+        #
+        # | -------- | --------- |
+        # | vertices | triangles |
+        # | -------- | --------- |
+        # | 1, 3     | 0, 2      |
+        # | 1, 4     | 2, 1      |
+        # | 2, 4     | 1, 3      |
+        # | 3, 4     | 4, 2      |
+        # | 4, 6     | 4, 5      |
+
+        # After reordering:
+        vertices = np.array([
+            [3, 4],
+            [3, 1],
+            [2, 4],
+            [1, 4],
+            [6, 4],
+        ], dtype='int32')
+
+        # After reordering:
+        triangles = np.array([
+            [4, 2],
+            [2, 0],
+            [1, 3],
+            [2, 1],
+            [5, 4],
+        ], dtype='int32')
+
+        intern_edges.reorder(vertices)
+
+        assert_equal(intern_edges.vertices, vertices)
+        assert_equal(intern_edges.triangles, triangles)
+        self.assertEqual(intern_edges.index_of(3, 4), 0)
+        self.assertEqual(intern_edges.index_of(3, 1), 1)
+        self.assertEqual(intern_edges.index_of(2, 4), 2)
+        self.assertEqual(intern_edges.index_of(1, 4), 3)
+        self.assertEqual(intern_edges.index_of(6, 4), 4)
+
+    def test_reorder_intern_edges_using_boundary_vertices(self):
+
+        intern_edges = self.intern_edges
+
+        vertices = np.array([
+            [2, 5],
+            [3, 1],
+            [2, 4],
+            [1, 4],
+            [6, 4],
+        ], dtype='int32')
+
+        with self.assertRaisesRegex(ValueError, 'not found'):
+            intern_edges.reorder(vertices)
+
+    def test_reorder_intern_edges_using_no_such_vertices(self):
+
+        intern_edges = self.intern_edges
+
+        vertices = np.array([
+            [10, 20],
+            [3, 1],
+            [2, 4],
+            [1, 4],
+            [6, 4],
+        ], dtype='int32')
+
+        with self.assertRaisesRegex(ValueError, 'not found'):
+            intern_edges.reorder(vertices)
+
+    def test_reorder_intern_edges_using_duplicated_vertices(self):
+
+        intern_edges = self.intern_edges
+
+        # (6, 4) is duplicated.
+        vertices = np.array([
+            [3, 4],
+            [6, 4],
+            [2, 4],
+            [1, 4],
+            [6, 4],
+        ], dtype='int32')
+
+        with self.assertRaisesRegex(ValueError, 'duplicated'):
+            intern_edges.reorder(vertices)
+
 
 class TestHole(unittest.TestCase):
 

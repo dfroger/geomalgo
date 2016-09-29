@@ -17,6 +17,62 @@ cdef class InternEdges:
         self.vertices = np.empty((size, 2), dtype='int32')
         self.triangles = np.empty((size, 2), dtype='int32')
 
+    def reorder(InternEdges self, int[:,:] vertices):
+        cdef:
+            bint[:] check_consistancy
+            int V0_NEW, V1_NEW, V0_OLD, V1_OLD
+            int INEW, IOLD
+            int[:,:] triangles_new
+
+        if vertices.shape[0] != self.size:
+            raise ValueError('Expected {} interfaces, got {}'
+                             .format(vertices.shape[0], self.size))
+
+        if vertices.shape[1] != 2:
+            raise ValueError('Each interfaces must have 2 vertices, got {}'
+                             .format(vertices.shape[1]))
+
+        check_consistancy = np.zeros(self.size, dtype='int32')
+        triangles_new = np.empty_like(self.triangles)
+        idx_new = np.empty_like(self.edge_map.idx.shape)
+
+        for INEW in range(self.size):
+            V0_NEW = vertices[INEW, 0]
+            V1_NEW = vertices[INEW, 1]
+
+            found, E = self.edge_map.search_edge_idx(V0_NEW, V1_NEW)
+            if not found or self.edge_map.location[E] != INTERN_EDGE:
+                raise ValueError('Edge {} with vertices ({},{}) not found'
+                                 .format(INEW, V0_NEW, V1_NEW))
+
+            IOLD = self.edge_map.idx[E]
+
+            check_consistancy[IOLD] += 1
+            if check_consistancy[IOLD] > 1:
+                raise ValueError("Edge ({}, {}) is duplicated"
+                                 .format(V0_NEW, V1_NEW))
+
+            V0_OLD = self.vertices[IOLD, 0]
+            V1_OLD = self.vertices[IOLD, 1]
+
+            if V0_NEW == V0_OLD and V1_NEW == V1_OLD:
+                triangles_new[INEW, 0] = self.triangles[IOLD, 0]
+                triangles_new[INEW, 1] = self.triangles[IOLD, 1]
+
+            elif V0_NEW == V1_OLD and V1_NEW == V0_OLD:
+                triangles_new[INEW, 0] = self.triangles[IOLD, 1]
+                triangles_new[INEW, 1] = self.triangles[IOLD, 0]
+
+            else:
+                raise RuntimeError(
+                    "Expected vertices ({}, {}), but got vertices ({}, {})"
+                    .format(V0_NEW, V1_NEW, V0_OLD, V1_OLD))
+
+            self.edge_map.idx[E] = INEW
+
+        self.triangles = triangles_new
+        self.vertices = vertices
+
     def index_of(InternEdges self, int V0, int V1):
         """
         Retrieve index for intern edge(V0, V1)

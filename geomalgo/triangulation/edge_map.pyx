@@ -9,6 +9,9 @@ cdef class EdgeMap:
     """
 
     def __init__(self, NV, NE):
+        self.NV = NV
+        self.NE = NE
+
         # For a vertice V0, give index bounds to search V1 in self.edges.
         self.bounds = np.empty(2*NV+1, dtype='int32')
 
@@ -31,6 +34,8 @@ cdef class EdgeMap:
             int E, E0, E1
         if V0 > V1:
             V0, V1 = V1, V0
+        if V0 >= self.NV:
+            return False, 0
         E0, E1 = self.bounds[2*V0], self.bounds[2*V0+1]
         for E in range(E0, E1):
             if self.edges[E] == V1:

@@ -1,5 +1,7 @@
 cdef class EdgeMap:
     cdef public:
+        int NV
+        int NE
         int[:] bounds
         int[:] edges
         int[:] location
