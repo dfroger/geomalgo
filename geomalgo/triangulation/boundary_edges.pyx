@@ -10,7 +10,6 @@ from ..base2d.vector2d cimport (
 
 from .constant cimport *
 
-ctypedef (bint, int) bint_int
 
 cdef class BoundaryEdges:
     """
@@ -29,6 +28,7 @@ cdef class BoundaryEdges:
             int V0_NEW, V1_NEW, V0_OLD, V1_OLD
             int BNEW, BOLD
             int[:] triangle_new
+            bint found
 
         if vertices.shape[0] != self.size:
             raise ValueError('Expected {} interfaces, got {}'
@@ -46,7 +46,7 @@ cdef class BoundaryEdges:
             V0_NEW = vertices[BNEW, 0]
             V1_NEW = vertices[BNEW, 1]
 
-            found, E = self.edge_map.search_edge_idx(V0_NEW, V1_NEW)
+            E = self.edge_map.search_edge_idx(V0_NEW, V1_NEW, &found)
             if not found or self.edge_map.location[E] != BOUNDARY_EDGE:
                 raise ValueError('Edge {} with vertices ({},{}) not found'
                                  .format(BNEW, V0_NEW, V1_NEW))
@@ -185,8 +185,9 @@ cdef class BoundaryEdges:
             int location
             int B, E
             int V0_, V1_
+            bint found
 
-        found, E = self.edge_map.search_edge_idx(V0, V1)
+        E = self.edge_map.search_edge_idx(V0, V1, &found)
 
         if not found:
             raise KeyError("No such boundary edge ({}, {})".format(V0, V1))

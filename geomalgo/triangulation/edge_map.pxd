@@ -7,7 +7,7 @@ cdef class EdgeMap:
         int[:] location
         int[:] idx
 
-    cdef (bint, int) search_edge_idx(EdgeMap self, int V0, int V1)
+    cdef int search_edge_idx(EdgeMap self, int V0, int V1, bint* found)
 
     cdef int search_next_boundary_edge(EdgeMap self, int V0, int V1)
 

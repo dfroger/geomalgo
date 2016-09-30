@@ -10,7 +10,6 @@ from .edge_to_triangle cimport (
     edge_to_triangle_del, edge_to_triangles_compute
 )
 
-ctypedef (bint, int) bint_int
 
 def build_edges(int[:,:] trivtx, int NV, intern_edges_order=None,
                 boundary_edges_order=None):
@@ -23,6 +22,7 @@ def build_edges(int[:,:] trivtx, int NV, intern_edges_order=None,
         int T, V0, V1, V2
         Edge* edge
         InferiorEdge * inferior_edge
+        bint found
 
     edge2tri = edge_to_triangles_new(NV)
     edge_to_triangles_compute(edge2tri, trivtx)
@@ -92,7 +92,7 @@ def build_edges(int[:,:] trivtx, int NV, intern_edges_order=None,
         E0, E1 = edge_map.bounds[2*V1+1], edge_map.bounds[2*V1+2]
         for Einf in range(E0, E1):
             V0 = edge_map.edges[Einf]
-            found, E = edge_map.search_edge_idx(V0, V1)
+            E = edge_map.search_edge_idx(V0, V1, &found)
             edge_map.idx[Einf] = edge_map.idx[E]
             edge_map.location[Einf] = edge_map.location[E]
 

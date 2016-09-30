@@ -2,7 +2,6 @@ import numpy as np
 
 from .constant cimport *
 
-ctypedef (bint, int) bint_int
 
 cdef class InternEdges:
     """
@@ -23,6 +22,7 @@ cdef class InternEdges:
             int V0_NEW, V1_NEW, V0_OLD, V1_OLD
             int INEW, IOLD
             int[:,:] triangles_new
+            bint found
 
         if vertices.shape[0] != self.size:
             raise ValueError('Expected {} interfaces, got {}'
@@ -40,7 +40,7 @@ cdef class InternEdges:
             V0_NEW = vertices[INEW, 0]
             V1_NEW = vertices[INEW, 1]
 
-            found, E = self.edge_map.search_edge_idx(V0_NEW, V1_NEW)
+            E = self.edge_map.search_edge_idx(V0_NEW, V1_NEW, &found)
             if not found or self.edge_map.location[E] != INTERN_EDGE:
                 raise ValueError('Edge {} with vertices ({},{}) not found'
                                  .format(INEW, V0_NEW, V1_NEW))
@@ -84,7 +84,7 @@ cdef class InternEdges:
             int I, E
             int V0_, V1_
 
-        found, E = self.edge_map.search_edge_idx(V0, V1)
+        E = self.edge_map.search_edge_idx(V0, V1, &found)
 
         if not found:
             raise KeyError("No such intern edge ({}, {})".format(V0, V1))
