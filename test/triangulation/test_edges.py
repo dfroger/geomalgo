@@ -333,6 +333,134 @@ class TestStep(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'duplicated'):
             intern_edges.reorder(vertices)
 
+    def test_reorder_boundary_edges(self):
+
+        boundary_edges = self.boundary_edges
+
+        # Before reordering:
+        #
+        # | ----- | -------- | -------- |
+        # | index | vertices | triangle |
+        # | ----- | -------- | -------- |
+        # | 0     | 0, 1     | 0        |
+        # | 1     | 3, 0     | 0        |
+        # | 2     | 1, 2     | 1        |
+        # | 3     | 2, 5     | 3        |
+        # | 4     | 6, 3     | 4        |
+        # | 5     | 5, 4     | 3        |
+        # | 6     | 4, 7     | 5        |
+        # | 7     | 7, 6     | 5        |
+
+        # After reordering:
+        vertices = np.array([
+            [5, 4], # 5
+            [0, 1], # 0
+            [1, 2], # 2 *
+            [7, 6], # 7
+            [3, 0], # 1
+            [6, 3], # 4
+            [4, 7], # 6 *
+            [2, 5], # 3
+        ], dtype='int32')
+
+        # After reordering:
+        triangle = np.array([
+            3, # 5
+            0, # 0
+            1, # 2 *
+            5, # 7
+            0, # 1
+            4, # 4
+            5, # 6 *
+            3, # 3
+        ], dtype='int32')
+
+        boundary_edges.reorder(vertices)
+
+        assert_equal(boundary_edges.vertices, vertices)
+        assert_equal(boundary_edges.triangle, triangle)
+        self.assertEqual(boundary_edges.index_of(5, 4), 0)
+        self.assertEqual(boundary_edges.index_of(0, 1), 1)
+        self.assertEqual(boundary_edges.index_of(1, 2), 2)
+        self.assertEqual(boundary_edges.index_of(7, 6), 3)
+        self.assertEqual(boundary_edges.index_of(3, 0), 4)
+        self.assertEqual(boundary_edges.index_of(6, 3), 5)
+        self.assertEqual(boundary_edges.index_of(4, 7), 6)
+        self.assertEqual(boundary_edges.index_of(2, 5), 7)
+
+    def test_reorder_boundary_edges_using_intern_vertices(self):
+
+        boundary_edges = self.boundary_edges
+
+        vertices = np.array([
+            [3, 4], # 5 intern edge
+            [0, 1], # 0
+            [1, 2], # 2 *
+            [7, 6], # 7
+            [3, 0], # 1
+            [6, 3], # 4
+            [4, 7], # 6 *
+            [2, 5], # 3
+        ], dtype='int32')
+
+        with self.assertRaisesRegex(ValueError, 'not found'):
+            boundary_edges.reorder(vertices)
+
+    def test_reorder_boundary_edges_using_undirect_vertices(self):
+
+        boundary_edges = self.boundary_edges
+
+        # After reordering:
+        vertices = np.array([
+            [4, 5], # 5 not direct
+            [0, 1], # 0
+            [1, 2], # 2 *
+            [7, 6], # 7
+            [3, 0], # 1
+            [6, 3], # 4
+            [4, 7], # 6 *
+            [2, 5], # 3
+        ], dtype='int32')
+
+        with self.assertRaisesRegex(ValueError, 'not direct'):
+            boundary_edges.reorder(vertices)
+
+    def test_reorder_boundary_edges_using_no_such_vertices(self):
+
+        boundary_edges = self.boundary_edges
+
+        vertices = np.array([
+            [10, 20], # 5 no such
+            [0, 1], # 0
+            [1, 2], # 2 *
+            [7, 6], # 7
+            [3, 0], # 1
+            [6, 3], # 4
+            [4, 7], # 6 *
+            [2, 5], # 3
+        ], dtype='int32')
+
+        with self.assertRaisesRegex(ValueError, 'not found'):
+            boundary_edges.reorder(vertices)
+
+    def test_reorder_boundary_edges_using_duplicated_vertices(self):
+
+        boundary_edges = self.boundary_edges
+
+        # (6, 4) is duplicated.
+        vertices = np.array([
+            [5, 4], # 5
+            [5, 4], # 0 duplicated
+            [1, 2], # 2 *
+            [7, 6], # 7
+            [3, 0], # 1
+            [6, 3], # 4
+            [4, 7], # 6 *
+            [2, 5], # 3
+        ], dtype='int32')
+
+        with self.assertRaisesRegex(ValueError, 'duplicated'):
+            boundary_edges.reorder(vertices)
 
 class TestHole(unittest.TestCase):
 

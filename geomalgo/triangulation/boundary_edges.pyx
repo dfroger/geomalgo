@@ -23,6 +23,62 @@ cdef class BoundaryEdges:
         self.triangle = np.empty(size, dtype='int32')
         self.next_boundary_edge = np.empty(size, dtype='int32')
 
+    def reorder(BoundaryEdges self, int[:,:] vertices):
+        cdef:
+            bint[:] check_consistancy
+            int V0_NEW, V1_NEW, V0_OLD, V1_OLD
+            int BNEW, BOLD
+            int[:] triangle_new
+
+        if vertices.shape[0] != self.size:
+            raise ValueError('Expected {} interfaces, got {}'
+                             .format(vertices.shape[0], self.size))
+
+        if vertices.shape[1] != 2:
+            raise ValueError('Each interfaces must have 2 vertices, got {}'
+                             .format(vertices.shape[1]))
+
+        check_consistancy = np.zeros(self.size, dtype='int32')
+        triangle_new = np.empty_like(self.triangle)
+        idx_new = np.empty_like(self.edge_map.idx)
+
+        for BNEW in range(self.size):
+            V0_NEW = vertices[BNEW, 0]
+            V1_NEW = vertices[BNEW, 1]
+
+            found, E = self.edge_map.search_edge_idx(V0_NEW, V1_NEW)
+            if not found or self.edge_map.location[E] != BOUNDARY_EDGE:
+                raise ValueError('Edge {} with vertices ({},{}) not found'
+                                 .format(BNEW, V0_NEW, V1_NEW))
+
+            BOLD = self.edge_map.idx[E]
+
+            check_consistancy[BOLD] += 1
+            if check_consistancy[BOLD] > 1:
+                raise ValueError("Edge ({}, {}) is duplicated"
+                                 .format(V0_NEW, V1_NEW))
+
+            V0_OLD = self.vertices[BOLD, 0]
+            V1_OLD = self.vertices[BOLD, 1]
+
+            if V0_NEW == V0_OLD and V1_NEW == V1_OLD:
+                triangle_new[BNEW] = self.triangle[BOLD]
+
+            elif V0_NEW == V1_OLD and V1_NEW == V0_OLD:
+                raise ValueError('Edge ({}, {}) is not direct'
+                                 .format(V0_NEW, V1_NEW))
+
+            else:
+                raise RuntimeError(
+                    "Expected vertices ({}, {}), but got vertices ({}, {})"
+                    .format(V0_NEW, V1_NEW, V0_OLD, V1_OLD))
+
+            idx_new[E] = BNEW
+
+        self.edge_map.idx = idx_new
+        self.triangle = triangle_new
+        self.vertices = vertices
+
     def finalize(BoundaryEdges self):
         """
         Create next boundary edge

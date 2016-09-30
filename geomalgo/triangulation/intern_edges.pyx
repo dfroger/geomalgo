@@ -34,7 +34,7 @@ cdef class InternEdges:
 
         check_consistancy = np.zeros(self.size, dtype='int32')
         triangles_new = np.empty_like(self.triangles)
-        idx_new = np.empty_like(self.edge_map.idx.shape)
+        idx_new = np.empty_like(self.edge_map.idx)
 
         for INEW in range(self.size):
             V0_NEW = vertices[INEW, 0]
@@ -68,8 +68,9 @@ cdef class InternEdges:
                     "Expected vertices ({}, {}), but got vertices ({}, {})"
                     .format(V0_NEW, V1_NEW, V0_OLD, V1_OLD))
 
-            self.edge_map.idx[E] = INEW
+            idx_new[E] = INEW
 
+        self.edge_map.idx = idx_new
         self.triangles = triangles_new
         self.vertices = vertices
 

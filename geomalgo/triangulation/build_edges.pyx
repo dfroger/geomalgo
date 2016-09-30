@@ -12,7 +12,8 @@ from .edge_to_triangle cimport (
 
 ctypedef (bint, int) bint_int
 
-def build_edges(int[:,:] trivtx, int NV):
+def build_edges(int[:,:] trivtx, int NV, intern_edges_order=None,
+                boundary_edges_order=None):
 
     cdef:
         CEdgeToTriangles* edge2tri
@@ -98,7 +99,12 @@ def build_edges(int[:,:] trivtx, int NV):
     edge_to_triangle_del(edge2tri)
 
     intern_edges.edge_map = edge_map
+    if intern_edges_order:
+        intern_edges.reorder(intern_edges_order)
+
     boundary_edges.edge_map = edge_map
+    if boundary_edges_order:
+        boundary_edges.reorder(boundary_edges_order)
     boundary_edges.finalize()
 
     return intern_edges, boundary_edges
