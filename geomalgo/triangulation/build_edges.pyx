@@ -99,11 +99,11 @@ def build_edges(int[:,:] trivtx, int NV, intern_edges_order=None,
     edge_to_triangle_del(edge2tri)
 
     intern_edges.edge_map = edge_map
-    if intern_edges_order:
+    if intern_edges_order is not None:
         intern_edges.reorder(intern_edges_order)
 
     boundary_edges.edge_map = edge_map
-    if boundary_edges_order:
+    if boundary_edges_order is not None:
         boundary_edges.reorder(boundary_edges_order)
     boundary_edges.finalize()
 
