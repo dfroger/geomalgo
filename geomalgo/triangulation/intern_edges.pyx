@@ -34,7 +34,7 @@ cdef class InternEdges:
 
         check_consistancy = np.zeros(self.size, dtype='int32')
         triangles_new = np.empty_like(self.triangles)
-        idx_new = np.empty_like(self.edge_map.idx)
+        idx_new = np.copy(self.edge_map.idx) # keep BoundaryEdges indices
 
         for INEW in range(self.size):
             V0_NEW = vertices[INEW, 0]
