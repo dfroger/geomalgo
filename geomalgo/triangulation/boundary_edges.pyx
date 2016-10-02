@@ -23,15 +23,25 @@ cdef class BoundaryEdges:
         self.next_boundary_edge = np.empty(size, dtype='int32')
 
     def reorder(BoundaryEdges self, int[:,:] vertices):
+        """
+
+        Updates:
+        --------
+            - edge_map.idx
+            - triangle
+            - vertices
+        """
         cdef:
             bint[:] check_consistancy
             int V0_NEW, V1_NEW, V0_OLD, V1_OLD
             int BNEW, BOLD
             int[:] triangle_new
+            int[:] idx_new
+            int E, Einf
             bint found
 
         if vertices.shape[0] != self.size:
-            raise ValueError('Expected {} interfaces, got {}'
+            raise ValueError('Expected {} edges, got {}'
                              .format(vertices.shape[0], self.size))
 
         if vertices.shape[1] != 2:
@@ -46,12 +56,21 @@ cdef class BoundaryEdges:
             V0_NEW = vertices[BNEW, 0]
             V1_NEW = vertices[BNEW, 1]
 
+            # Update V0V1 such as V1 > V0
             E = self.edge_map.search_edge_idx(V0_NEW, V1_NEW, &found)
             if not found or self.edge_map.location[E] != BOUNDARY_EDGE:
-                raise ValueError('Edge {} with vertices ({},{}) not found'
-                                 .format(BNEW, V0_NEW, V1_NEW))
-
+                raise ValueError(
+                    'Edge {} with vertices ({},{}) such as V1>V0 not found'
+                     .format(BNEW, V0_NEW, V1_NEW))
             BOLD = self.edge_map.idx[E]
+
+            # Update V0V1 such as V1 < V0
+            Einf = self.edge_map.search_edge_idx_inf(V0_NEW, V1_NEW, &found)
+            if not found or self.edge_map.location[Einf] != BOUNDARY_EDGE:
+                raise ValueError(
+                    'Edge {} with vertices ({},{}) such as V1<V0 not found'
+                    .format(BNEW, V0_NEW, V1_NEW))
+            assert self.edge_map.idx[Einf] == BOLD
 
             check_consistancy[BOLD] += 1
             if check_consistancy[BOLD] > 1:
@@ -74,23 +93,27 @@ cdef class BoundaryEdges:
                     .format(V0_NEW, V1_NEW, V0_OLD, V1_OLD))
 
             idx_new[E] = BNEW
+            idx_new[Einf] = BNEW
 
-        self.edge_map.idx = idx_new
-        self.triangle = triangle_new
-        self.vertices = vertices
+        self.edge_map.idx[:] = idx_new
+        self.triangle[:] = triangle_new
+        self.vertices[:,:] = vertices
 
-    def finalize(BoundaryEdges self):
-        """
-        Create next boundary edge
-        """
+    def build_next_boundary_edge(BoundaryEdges self):
         cdef:
-            int B, V0, V1, V2
+            int B, V0, V1, V0next, V1next
         for B in range(self.size):
             V0 = self.vertices[B, 0]
             V1 = self.vertices[B, 1]
             E = self.edge_map.search_next_boundary_edge(V0, V1)
+            V0next = self.vertices[E, 0]
+            V1next = self.vertices[E, 1]
+            if V0 == V1next or V1 != V0next:
+                raise RuntimeError(
+                    "Next boundary edge after ({}, {}) is not ({}, {})"
+                    .format(V0, V1, V0next, V1next))
             if E == -1:
-                raise ValueError(
+                raise RuntimeError(
                     "Can't find boundary edge connected by vertice {} to"
                     " boundary edge of vertices ({},{})".format(V1, V0, V1)
                 )

@@ -17,11 +17,21 @@ cdef class InternEdges:
         self.triangles = np.empty((size, 2), dtype='int32')
 
     def reorder(InternEdges self, int[:,:] vertices):
+        """
+
+        Updates:
+        --------
+            - edge_map.idx
+            - triangle
+            - vertices
+        """
         cdef:
             bint[:] check_consistancy
             int V0_NEW, V1_NEW, V0_OLD, V1_OLD
             int INEW, IOLD
             int[:,:] triangles_new
+            int[:] idx_new
+            int E, Einf
             bint found
 
         if vertices.shape[0] != self.size:
@@ -40,12 +50,21 @@ cdef class InternEdges:
             V0_NEW = vertices[INEW, 0]
             V1_NEW = vertices[INEW, 1]
 
+            # Update V0V1 such as V1 > V0
             E = self.edge_map.search_edge_idx(V0_NEW, V1_NEW, &found)
             if not found or self.edge_map.location[E] != INTERN_EDGE:
-                raise ValueError('Edge {} with vertices ({},{}) not found'
-                                 .format(INEW, V0_NEW, V1_NEW))
-
+                raise ValueError(
+                    'Edge {} with vertices ({},{}) such as V1>V0 not found'
+                    .format(INEW, V0_NEW, V1_NEW))
             IOLD = self.edge_map.idx[E]
+
+            # Update V0V1 such as Vl < V0
+            Einf = self.edge_map.search_edge_idx_inf(V0_NEW, V1_NEW, &found)
+            if not found or self.edge_map.location[Einf] != INTERN_EDGE:
+                raise ValueError(
+                    'Edge {} with vertices ({},{}) such as V1<V0 not found'
+                    .format(INEW, V0_NEW, V1_NEW))
+            assert self.edge_map.idx[Einf] == IOLD
 
             check_consistancy[IOLD] += 1
             if check_consistancy[IOLD] > 1:
@@ -69,10 +88,11 @@ cdef class InternEdges:
                     .format(V0_NEW, V1_NEW, V0_OLD, V1_OLD))
 
             idx_new[E] = INEW
+            idx_new[Einf] = INEW
 
-        self.edge_map.idx = idx_new
-        self.triangles = triangles_new
-        self.vertices = vertices
+        self.edge_map.idx[:] = idx_new
+        self.triangles[:] = triangles_new
+        self.vertices[:,:] = vertices
 
     def index_of(InternEdges self, int V0, int V1):
         """

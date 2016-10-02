@@ -247,6 +247,7 @@ class TestStep(unittest.TestCase):
     def test_reorder_intern_edges(self):
 
         intern_edges = self.intern_edges
+        edge_map = intern_edges.edge_map
 
         # Before reordering:
         #
@@ -268,24 +269,14 @@ class TestStep(unittest.TestCase):
             [6, 4],
         ], dtype='int32')
 
-        # After reordering:
-        triangles = np.array([
-            [4, 2],
-            [2, 0],
-            [1, 3],
-            [2, 1],
-            [5, 4],
-        ], dtype='int32')
-
         intern_edges.reorder(vertices)
 
-        assert_equal(intern_edges.vertices, vertices)
-        assert_equal(intern_edges.triangles, triangles)
-        self.assertEqual(intern_edges.index_of(3, 4), 0)
-        self.assertEqual(intern_edges.index_of(3, 1), 1)
-        self.assertEqual(intern_edges.index_of(2, 4), 2)
-        self.assertEqual(intern_edges.index_of(1, 4), 3)
-        self.assertEqual(intern_edges.index_of(6, 4), 4)
+        self.assert_memview_equal(edge_map.idx,
+                                  [0, 1, 1, 2, 3, 0, 2, 3, 2, 0, 4, 1, 1, 5,
+                                   4, 6, 2, 3, 0, 3, 5, 7, 4, 4, 6, 7])
+        self.assert_memview_equal(intern_edges.triangles,
+                                  [[4, 2], [2, 0], [1, 3], [2, 1], [5, 4]])
+        self.assert_memview_equal(intern_edges.vertices, vertices)
 
     def test_reorder_intern_edges_using_boundary_vertices(self):
 
@@ -336,6 +327,7 @@ class TestStep(unittest.TestCase):
     def test_reorder_boundary_edges(self):
 
         boundary_edges = self.boundary_edges
+        edge_map = boundary_edges.edge_map
 
         # Before reordering:
         #
@@ -353,40 +345,29 @@ class TestStep(unittest.TestCase):
 
         # After reordering:
         vertices = np.array([
-            [5, 4], # 5
-            [0, 1], # 0
-            [1, 2], # 2 *
-            [7, 6], # 7
-            [3, 0], # 1
-            [6, 3], # 4
-            [4, 7], # 6 *
-            [2, 5], # 3
-        ], dtype='int32')
-
-        # After reordering:
-        triangle = np.array([
-            3, # 5
-            0, # 0
-            1, # 2 *
-            5, # 7
-            0, # 1
-            4, # 4
-            5, # 6 *
-            3, # 3
+            [5, 4], # 5  0
+            [0, 1], # 0  1
+            [1, 2], # 2==2
+            [7, 6], # 7  3
+            [3, 0], # 1  4
+            [6, 3], # 4  5
+            [4, 7], # 6==6
+            [2, 5], # 3  7
         ], dtype='int32')
 
         boundary_edges.reorder(vertices)
 
-        assert_equal(boundary_edges.vertices, vertices)
-        assert_equal(boundary_edges.triangle, triangle)
-        self.assertEqual(boundary_edges.index_of(5, 4), 0)
-        self.assertEqual(boundary_edges.index_of(0, 1), 1)
-        self.assertEqual(boundary_edges.index_of(1, 2), 2)
-        self.assertEqual(boundary_edges.index_of(7, 6), 3)
-        self.assertEqual(boundary_edges.index_of(3, 0), 4)
-        self.assertEqual(boundary_edges.index_of(6, 3), 5)
-        self.assertEqual(boundary_edges.index_of(4, 7), 6)
-        self.assertEqual(boundary_edges.index_of(2, 5), 7)
+        self.assert_memview_equal(edge_map.idx,
+                                  [1, 4, 0, 2, 1, 1, 2, 7, 2, 3, 5, 0, 4, 0,
+                                   4, 6, 2, 1, 3, 7, 0, 3, 4, 5, 6, 3])
+        self.assert_memview_equal(boundary_edges.triangle,
+                                  [3, 0, 1, 5, 0, 4, 5, 3])
+        self.assert_memview_equal(boundary_edges.vertices, vertices)
+
+        boundary_edges.build_next_boundary_edge()
+
+        self.assert_memview_equal(boundary_edges.next_boundary_edge,
+                             [6, 2, 7, 5, 1, 4, 3, 0])
 
     def test_reorder_boundary_edges_using_intern_vertices(self):
 

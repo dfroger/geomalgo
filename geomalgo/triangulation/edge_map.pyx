@@ -46,6 +46,23 @@ cdef class EdgeMap:
             found[0] = False
             return 0
 
+    cdef int search_edge_idx_inf(EdgeMap self, int V0, int V1, bint* found):
+        cdef:
+            int E, E0, E1
+        if V0 < V1:
+            V0, V1 = V1, V0
+        if V1 >= self.NV:
+            found[0] = False
+            return 0
+        E0, E1 = self.bounds[2*V0+1], self.bounds[2*V0+2]
+        for E in range(E0, E1):
+            if self.edges[E] == V1:
+                found[0] = True
+                return E
+        else:
+            found[0] = False
+            return 0
+
     cdef int search_next_boundary_edge(EdgeMap self, int V0, int V1):
         """
         V5--V4--V3

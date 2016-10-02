@@ -105,6 +105,6 @@ def build_edges(int[:,:] trivtx, int NV, intern_edges_order=None,
     boundary_edges.edge_map = edge_map
     if boundary_edges_order is not None:
         boundary_edges.reorder(boundary_edges_order)
-    boundary_edges.finalize()
+    boundary_edges.build_next_boundary_edge()
 
     return intern_edges, boundary_edges
