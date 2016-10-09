@@ -48,3 +48,34 @@ Dev:
 - Add boundary edge normal
 - Add vector2D normal
 - Start documentation skeleton
+
+0.2.0 (2016-10-09)
+==================
+
+New features:
+- Install .pxd files
+- Add Segment2DCollection
+- Add Triangulation2D.get
+- Add EdgeMap.neighbours()
+- Add BoundaryEdges.reorder method
+- Add InternInterface.reorder function
+
+Changes:
+- Rename boundary edge references to labels
+- search_edge_idx instead of search_edge
+
+Fixes:
+- Fix clockwise triangle area
+- Fix triangulation cimport
+
+Documentation:
+- Examples for:
+    - Segment2D
+    - Triangle2D
+- API:
+    - Point2D
+
+Dev:
+- Upload Conda package to anaconda
+- Add dependency to matplotlib
+- Split edges.[pxd|pyx] into multiple files
