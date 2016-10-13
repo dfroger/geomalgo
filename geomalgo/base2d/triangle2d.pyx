@@ -4,7 +4,6 @@ from libc.stdlib cimport malloc, free
 from libc.math cimport fabs
 
 from .polygon2d cimport CPolygon2D
-from ..inclusion cimport polygon2d_winding_point2d
 
 cdef CTriangle2D* new_triangle2d():
     return <CTriangle2D*> malloc(sizeof(CTriangle2D))
