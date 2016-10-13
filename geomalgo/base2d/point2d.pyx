@@ -141,7 +141,7 @@ cdef class Point2D:
         theta = atan2(self.y, self.x);
         return PolarPoint(r, theta)
 
-    def plot(self, marker='o', markersize=6, color='b',  offset=(0, 0.2)):
+    def plot(self, name=None, marker='o', markersize=6, color='b',  offset=(0, 0.2)):
         """Plot point in a matplotlib figure
 
         Parameters
@@ -160,7 +160,9 @@ cdef class Point2D:
 
         """
         plt.plot(self.x, self.y, marker=marker, markersize=markersize, color=color)
-        if self.name is not None:
-            plt.text(self.x+offset[0], self.y+offset[1], self.name,
+        if name is None:
+            name = self.name
+        if name is not None:
+            plt.text(self.x+offset[0], self.y+offset[1], name,
                      color=color,
                      horizontalalignment='center')
