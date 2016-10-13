@@ -1,4 +1,4 @@
-from .point2d cimport CPoint2D, CVector2D, Point2D, Vector2D
+from .point2d cimport CPoint2D, CVector2D, Point2D, Vector2D, subtract_points2d
 
 cdef struct CSegment2D:
     CPoint2D* A
@@ -24,6 +24,9 @@ cdef void segment2d_middle(CPoint2D* M, CSegment2D* seg)
 cdef inline void segment2d_set(CSegment2D* AB, CPoint2D* A, CPoint2D* B):
     AB.A = A
     AB.B = B
+
+cdef inline void segment2d_compute_vector(CSegment2D* seg):
+    subtract_points2d(seg.AB, seg.B, seg.A)
 
 cdef class Segment2D:
 

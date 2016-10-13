@@ -40,11 +40,11 @@ cdef double segment2d_square_distance_point2d(CSegment2D* S, CPoint2D* P):
     c1 = dot_product2d(&w, S.AB)
 
     if c1 <= 0:
-         return c_point2d_square_distance(P, S.A)
+        return c_point2d_square_distance(P, S.A)
 
     c2 = dot_product2d(S.AB, S.AB)
     if c2 <= c1:
-         return c_point2d_square_distance(P, S.B)
+        return c_point2d_square_distance(P, S.B)
 
     b = c1 / c2
 

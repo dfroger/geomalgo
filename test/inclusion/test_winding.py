@@ -39,12 +39,12 @@ class TriangleWinding(unittest.TestCase):
 
     """
 
-    def assert_inside(self, A, B, C, P):
+    def assert_inside(self, A, B, C, P, edge_width=0.):
         triangle = Triangle2D(A, B, C)
-        polygon = Polygon2D.from_points2d([A,B,C])
+        #polygon = Polygon2D.from_points2d([A,B,C])
 
-        self.assertTrue(triangle.includes_point(P))
-        self.assertTrue(polygon.includes_point(P) )
+        self.assertTrue(triangle.includes_point(P, edge_width=edge_width))
+        #self.assertTrue(polygon.includes_point(P) )
 
     def assert_outside(self, A, B, C, P):
         triangle = Triangle2D(A, B, C)
@@ -67,6 +67,16 @@ class TriangleWinding(unittest.TestCase):
         P = Point2D(1., 1.)
         self.assert_outside(A, B, C, P)
 
+    def test_inside_on_edge(self):
+        # Example taken from:
+        # https://totologic.blogspot.fr/2014/01/accurate-point-in-triangle-test.html
+        A = Point2D(1/10, 1/9)
+        B = Point2D(100/8, 100/3)
+        C = Point2D(100/4, 100/9)
+        D = Point2D(-100/8, 100/6)
+        AB = Segment2D(A, C)
+        P = A + (B-A)*(3/7)
+        self.assert_inside(A, B, C, P, edge_width=1.E-03)
 
 if __name__ == '__main__':
     unittest.main()

@@ -3,6 +3,11 @@ import matplotlib.pyplot as plt
 from libc.stdlib cimport malloc, free
 from libc.math cimport fabs
 
+from .point2d cimport CPoint2D
+from .vector2d cimport CVector2D
+from .segment2d cimport (
+    CSegment2D, segment2d_square_distance_point2d, segment2d_compute_vector, segment2d_set
+)
 from .polygon2d cimport CPolygon2D
 
 cdef CTriangle2D* new_triangle2d():
@@ -12,13 +17,18 @@ cdef void del_triangle2d(CTriangle2D* ctri2d):
     if ctri2d is not NULL:
         free(ctri2d)
 
-cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P):
+cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P,
+                                      double edge_width):
     """
     inclusion.winding.polygon2d_winding_point2d specialized for triangle,
     just for optimisation.
     """
     cdef:
         int winding_number = 0
+        bint included
+        double edge_width_square
+        CSegment2D seg
+        CVector2D vec
 
     # [AB]
     if ctri2d.A.y <= P.y:
@@ -41,7 +51,32 @@ cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P):
     elif ctri2d.A.y <= P.y and c_is_left(ctri2d.C, ctri2d.A, P) < 0:
         winding_number -=  1
 
-    return winding_number != 0
+    included = winding_number != 0
+
+    if not included and edge_width != 0:
+        edge_width_square = edge_width**2
+        seg.AB = &vec
+
+        segment2d_set(&seg, ctri2d.A, ctri2d.B)
+        segment2d_compute_vector(&seg)
+        if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
+            return True
+
+        segment2d_set(&seg, ctri2d.B, ctri2d.C)
+        segment2d_compute_vector(&seg)
+        if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
+            return True
+
+        segment2d_set(&seg, ctri2d.C, ctri2d.A)
+        segment2d_compute_vector(&seg)
+        if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
+            return True
+
+        return False
+
+    else:
+        return included
+
 
 cdef void triangle2d_gradx_grady_det(CTriangle2D* tri, double signed_area,
                                      double gradx[3], double grady[3],
@@ -145,8 +180,9 @@ cdef class Triangle2D:
                                    self.gradx, self.grady, self.det)
 
 
-    def includes_point(Triangle2D self, Point2D point):
-        return triangle2d_includes_point2d(&self.ctri2d, point.cpoint2d)
+    def includes_point(Triangle2D self, Point2D point, double edge_width=0.):
+        return triangle2d_includes_point2d(&self.ctri2d, point.cpoint2d,
+                                           edge_width)
 
 
     def interpolate(Triangle2D self, double[:] data, Point2D P):

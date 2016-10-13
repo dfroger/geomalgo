@@ -64,9 +64,9 @@ class TestIsLeft(unittest.TestCase):
 
         A----B
         """
-        A = Point2D(0,0)
-        B = Point2D(1,0)
-        P = Point2D(0,1)
+        A = Point2D(0, 0)
+        B = Point2D(1, 0)
+        P = Point2D(0, 1)
         self.assertTrue(is_left(A,B,P))
 
     def test_is_right(self):
@@ -75,18 +75,18 @@ class TestIsLeft(unittest.TestCase):
 
         P
         """
-        A = Point2D(0,0)
-        B = Point2D(1,0)
-        P = Point2D(0,-1)
+        A = Point2D(0,  0)
+        B = Point2D(1,  0)
+        P = Point2D(0, -1)
         self.assertFalse(is_left(A,B,P))
 
     def test_on_line(self):
         """
         A----B----P
         """
-        A = Point2D(0,0)
-        B = Point2D(1,0)
-        P = Point2D(2,0)
+        A = Point2D(0, 0)
+        B = Point2D(1, 0)
+        P = Point2D(2, 0)
         with self.assertRaisesRegex(ValueError, "Point P in on line \(AB\)"):
             is_left(A,B,P)
 
