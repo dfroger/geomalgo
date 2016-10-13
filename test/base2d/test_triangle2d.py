@@ -4,6 +4,7 @@ import numpy as np
 
 from geomalgo import Point2D, Triangle2D
 
+
 class TestTriangle2D(unittest.TestCase):
     """
       1 C
@@ -42,6 +43,7 @@ class TestTriangle2D(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "Triangle is degenerated"):
             triangle = Triangle2D(A, B, C)
+
 
 class TestAreaAndCounterclockwise(unittest.TestCase):
 
@@ -95,6 +97,7 @@ class TestAreaAndCounterclockwise(unittest.TestCase):
         self.assertAlmostEqual(triangle.area, 0.5)
         self.assertTrue(triangle.counterclockwise)
 
+
 class TestCenter(unittest.TestCase):
 
     def test_normal(self):
@@ -109,6 +112,7 @@ class TestCenter(unittest.TestCase):
 
         self.assertAlmostEqual(C.x, 1.)
         self.assertAlmostEqual(C.y, 2.)
+
 
 class TestInterpolate(unittest.TestCase):
 
