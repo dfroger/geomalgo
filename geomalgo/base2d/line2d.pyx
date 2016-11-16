@@ -1,7 +1,9 @@
 from libc.stdlib cimport malloc, free
 
-from .point2d cimport subtract_points2d, point2d_plus_vector2d
-from .vector2d cimport CVector2D, dot_product2d, compute_norm2d
+from .point2d cimport (
+    subtract_points2d, point2d_plus_vector2d, c_point2d_distance
+)
+from .vector2d cimport CVector2D, dot_product2d
 
 cdef CLine2D* new_line2d():
     return <CLine2D*> malloc(sizeof(CLine2D))
@@ -20,24 +22,22 @@ cdef CLine2D* create_line2d(CPoint2D* A, CPoint2D* B):
     return line
 
 
-cdef double line2d_distance_point2d(CLine2D* AB, CPoint2D* P):
+cdef double line2d_distance_point2d(CLine2D* L, CPoint2D* P):
     cdef:
         CPoint2D Pb
         CVector2D v, w
         double c1, c2, b
 
-    subtract_points2d(&v, AB.B, AB.A)
-    subtract_points2d(&w, P, AB.A)
+    subtract_points2d(&v, L.B, L.A)
+    subtract_points2d(&w, P, L.A)
 
     c1 = dot_product2d(&w, &v)
     c2 = dot_product2d(&v, &v)
     b = c1 / c2
 
-    point2d_plus_vector2d(&Pb, AB.A, b, &v)
+    point2d_plus_vector2d(&Pb, L.A, b, &v)
 
-    subtract_points2d(&v, &Pb, P)
-
-    return compute_norm2d(&v)
+    return c_point2d_distance(&Pb, P)
 
 
 cdef class Line2D:

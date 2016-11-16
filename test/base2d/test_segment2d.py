@@ -262,5 +262,91 @@ class TestSegment2DCollection(unittest.TestCase):
 
         self.assertAlmostEqual(CD.length, 1)
 
+
+class TestPoint2dDistance(unittest.TestCase):
+
+    def test_horizontal_line(self):
+        """
+              P
+
+        A-----------B
+        """
+
+        A = Point2D(1, 2)
+        B = Point2D(3, 2)
+        AB = Segment2D(A, B)
+
+        P = Point2D(2, 5)
+        self.assertEqual(AB.point_distance(P), 3)
+
+        P = Point2D(-3, 5)
+        self.assertEqual(AB.point_distance(P), 5)
+
+        P = Point2D(7, 5)
+        self.assertEqual(AB.point_distance(P), 5)
+
+    def test_vertical_line(self):
+        """
+        B
+        |
+        |  B
+        |
+        A
+        """
+
+        A = Point2D(1, 2)
+        B = Point2D(1, 4)
+        AB = Segment2D(A, B)
+
+        P = Point2D(4, 3)
+        self.assertEqual(AB.point_distance(P), 3)
+
+        P = Point2D(4, -2)
+        self.assertEqual(AB.point_distance(P), 5)
+
+        P = Point2D(4, 8)
+        self.assertEqual(AB.point_distance(P), 5)
+
+
+    def test_on_horizontal_line(self):
+        """
+        A-----P-----B
+        """
+
+        A = Point2D(1, 2)
+        B = Point2D(3, 2)
+        AB = Segment2D(A, B)
+
+        P = Point2D(2, 2)
+        self.assertEqual(AB.point_distance(P), 0)
+
+        P = Point2D(-3, 2)
+        self.assertEqual(AB.point_distance(P), 4)
+
+        P = Point2D(7, 2)
+        self.assertEqual(AB.point_distance(P), 4)
+
+    def test_on_vertical_line(self):
+        """
+        B
+        |
+        B
+        |
+        A
+        """
+
+        A = Point2D(1, 2)
+        B = Point2D(1, 4)
+        AB = Segment2D(A, B)
+
+        P = Point2D(1, 3)
+        self.assertEqual(AB.point_distance(P), 0)
+
+        P = Point2D(1, -2)
+        self.assertEqual(AB.point_distance(P), 4)
+
+        P = Point2D(1, 8)
+        self.assertEqual(AB.point_distance(P), 4)
+
 if __name__ == '__main__':
     unittest.main()
