@@ -1,3 +1,7 @@
+from .base2d.line2d cimport (
+    CLine2D, new_line2d, del_line2d, create_line2d
+)
+
 from .base2d.point2d cimport (
     CPoint2D, new_point2d, del_point2d, subtract_points2d,
     point2d_plus_vector2d, c_is_left, c_point2d_distance, point2d_equal,
