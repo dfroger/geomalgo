@@ -32,6 +32,13 @@ class TestVector(unittest.TestCase):
         self.assertEqual(V.x, 5)
         self.assertEqual(V.y, 8)
 
+    def test_mult_scalar(self):
+        u = Vector2D(1,-2)
+
+        w = u * 3
+        self.assertEqual(w.x,  3)
+        self.assertEqual(w.y, -6)
+
     def test_cross_product(self):
         A = Vector2D(1,-2)
         B = Vector2D(3,4)

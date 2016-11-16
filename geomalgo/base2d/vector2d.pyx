@@ -56,13 +56,19 @@ cdef class Vector2D:
         self.cvector2d.y = y
 
     def dot(Vector2D self, Vector2D other):
-        """Compute dot prodcution between two vectors"""
+        """Compute dot product between two vectors"""
         cdef:
             Vector2D result = Vector2D.__new__(Vector2D)
         return dot_product2d(self.cvector2d, other.cvector2d)
 
     def normalize(self):
         normalize_vector2d(self.cvector2d)
+
+    def __mul__(Vector2D self, double x):
+        cdef:
+            Vector2D result = Vector2D.__new__(Vector2D)
+        vector2d_times_scalar(result.cvector2d, self.cvector2d, x)
+        return result
 
     def __xor__(Vector2D self, Vector2D other):
         """Compute cross product between two vectors"""

@@ -8,7 +8,10 @@ cdef CVector2D* new_vector2d()
 
 cdef void del_vector2d(CVector2D* V)
 
-# TODO: rename perpendicular_product2d as in geomalgo?
+cdef inline void vector2d_times_scalar(CVector2D *result, CVector2D *a, double scalar):
+    result.x = a.x * scalar
+    result.y = a.y * scalar
+
 cdef inline double cross_product2d(CVector2D *a, CVector2D *b):
     return a.x*b.y - a.y*b.x
 
