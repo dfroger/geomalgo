@@ -1,7 +1,7 @@
 import unittest
 from math import sqrt, pi
 
-from geomalgo import Point2D, is_left
+from geomalgo import Point2D, is_left, Vector2D
 
 class TestPoint2D(unittest.TestCase):
 
@@ -24,6 +24,13 @@ class TestPoint2D(unittest.TestCase):
         dist = A.distance(B)
         expected_dist = sqrt(2.)
         self.assertAlmostEqual(dist, expected_dist)
+
+    def test_add_vector(self):
+        A = Point2D(1, 2)
+        v = Vector2D(3, 1)
+        B = A + v
+        self.assertEqual(B.x, 4)
+        self.assertEqual(B.y, 3)
 
     def test_vector_from_point_sub_point(self):
         A = Point2D(1,2)

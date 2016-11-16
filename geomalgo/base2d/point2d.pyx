@@ -81,6 +81,12 @@ cdef class Point2D:
 
         return 'Point2D({self.x}, {self.y})'.format(self=self)
 
+    def __add__(Point2D self, Vector2D vec):
+        cdef:
+            Point2D result = Point2D.__new__(Point2D)
+        point2d_plus_vector2d(result.cpoint2d, self.cpoint2d, 1, vec.cvector2d)
+        return result
+
     def __sub__(Point2D self, Point2D other):
         """Compute vector between two points
 
