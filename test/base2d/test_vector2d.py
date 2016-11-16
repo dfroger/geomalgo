@@ -35,7 +35,7 @@ class TestVector(unittest.TestCase):
     def test_cross_product(self):
         A = Vector2D(1,-2)
         B = Vector2D(3,4)
-        x = A * B
+        x = A ^ B
         self.assertEqual(x, 10)
 
     def test_normalize(self):

@@ -64,7 +64,7 @@ cdef class Vector2D:
     def normalize(self):
         normalize_vector2d(self.cvector2d)
 
-    def __mul__(Vector2D self, Vector2D other):
+    def __xor__(Vector2D self, Vector2D other):
         """Compute cross product between two vectors"""
         return cross_product2d(self.cvector2d, other.cvector2d)
 
