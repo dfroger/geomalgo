@@ -1,13 +1,11 @@
-# craftr_module(geomalgo)
+# dfroger.geomalgo
 
-from craftr import *
-from craftr.ext.compiler import cython
+load_module('lang.cython.*')
 
 def cython_flags():
     flags = []
     def add_flag(name, default):
-        value = options.get_bool(name, default)
-        flags.append('-X {}={}'.format(name, value))
+        flags.append('-X {}={}'.format(name, getattr(options, name)))
 
     add_flag('boundscheck', False)
     add_flag('cdivision', True)
@@ -18,15 +16,14 @@ def cython_flags():
 
 def cython_defines():
     defines = []
-    if options.get_bool('profile'):
+    if options.profile:
         defines.append('CYTHON_TRACE_NOGIL=1')
     return defines
 
-cython.cythonc.compile_project(
-  sources = path.glob('geomalgo/**/*.pyx'),
-  python_bin = options.get('PYTHON', 'python'),
+cython_project(
+  sources = glob(['geomalgo/**/*.pyx']),
   cpp = False,
   additional_flags = cython_flags(),
-  defines = cython_defines()
+  defines = cython_defines(),
+  in_working_tree = True
 )
-
