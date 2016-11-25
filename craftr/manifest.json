@@ -1,0 +1,31 @@
+{
+  "name": "dfroger.geomalgo",
+  "version": "1.0.0",
+  "project_dir": "..",
+  "author": "Froger David",
+  "url": "https://github.com/dfroger/geomalgo",
+  "dependencies": {
+    "lang.cython": "*"
+  },
+  "options": {
+    "boundscheck": {
+      "type": "bool"
+    },
+    "cdivision": {
+      "type": "bool"
+    },
+    "wraparound": {
+      "type": "bool"
+    },
+    "initializedcheck": {
+      "type": "bool"
+    },
+    "profile": {
+      "type": "bool"
+    },
+    "linetrace": {
+      "type": "bool"
+    }
+  },
+  "loaders": []
+}
