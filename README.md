@@ -10,7 +10,7 @@ Cython implementation of http://geomalgorithms.com
 
 Install Python 3.5, Cython, and nose in a Conda environment:
 
-    $ conda create -n geomalgo python=3.5 cython numpy nose coverage
+    $ conda create -n geomalgo python=3.5 cython numpy nose coverage matplotlib
     $ source activate geomalgo
 
 ### Install build system
