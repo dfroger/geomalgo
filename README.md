@@ -26,6 +26,7 @@ Install Python 3.5, Cython, and nose in a Conda environment:
 
     # Build
     $ cd geomalgo
+    $ CXX=gcc craftr export
     $ craftr build
 
     # Test
