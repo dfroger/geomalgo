@@ -5,7 +5,7 @@
   "author": "Froger David",
   "url": "https://github.com/dfroger/geomalgo",
   "dependencies": {
-    "lang.cython": "*"
+    "craftr.lang.cython": "*"
   },
   "options": {
     "boundscheck": {
@@ -26,6 +26,5 @@
     "linetrace": {
       "type": "bool"
     }
-  },
-  "loaders": []
+  }
 }

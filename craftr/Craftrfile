@@ -1,6 +1,6 @@
 # dfroger.geomalgo
 
-load_module('lang.cython.*')
+load_module('craftr.lang.cython.*')
 
 def cython_flags():
     flags = []
