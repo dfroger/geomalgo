@@ -25,5 +25,14 @@ cython_project(
   cpp = False,
   additional_flags = cython_flags(),
   defines = cython_defines(),
-  in_working_tree = True
+  in_working_tree = True,
+  compile_kwargs = dict(
+      llvm_compile_additional_flags = [],
+      gcc_compile_additional_flags = [],
+      msvc_compile_additional_flags = []
+  ),
+  link_kwargs = dict(
+      gcc_link_additional_flags = [],
+      msvc_link_additional_flags = []
+  )
 )
