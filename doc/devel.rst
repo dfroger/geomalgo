@@ -26,3 +26,17 @@ Commit and tag:
     git commit -m 'Bump to verions X.Y.Z'
     git tag X.Y.Z
     git push --tags
+
+Change version number to X.Y.<Z+1>dev in files:
+
+- conda-recipe/meta.yaml
+- setup.py
+- geomalgo/__init__.py
+
+.. warning::
+
+    Changing version number to X.Y.<Z+1>dev is important, because on each commit,
+    conda packages are built on Travis, and uploaded to anaconda.org.
+
+    If version number remains to X.Y.Z, development package will erase tagged
+    package on anaconda.org
