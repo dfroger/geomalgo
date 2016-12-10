@@ -8,23 +8,11 @@
     "craftr.lang.cython": "*"
   },
   "options": {
-    "boundscheck": {
-      "type": "bool"
-    },
-    "cdivision": {
-      "type": "bool"
-    },
-    "wraparound": {
-      "type": "bool"
-    },
-    "initializedcheck": {
-      "type": "bool"
-    },
-    "profile": {
-      "type": "bool"
-    },
-    "linetrace": {
-      "type": "bool"
-    }
+    "boundscheck": "bool",
+    "cdivision": "bool",
+    "wraparound": "bool",
+    "initializedcheck": "bool",
+    "profile": "bool",
+    "linetrace": "bool"
   }
 }
