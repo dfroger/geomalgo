@@ -15,12 +15,7 @@ Install Python 3.5, Cython, and nose in a Conda environment:
 
 ### Install build system
 
-1. Install [Ninja](https://ninja-build.org)
-2. Install [Craftr 2.x](https://github.com/craftr-build/craftr) from Git
-
-        $ git clone https://github.com/craftr-build/craftr && cd craftr
-        $ source activate geomalgo
-        $ pip install -e .
+    $ conda install -n geomalgo -c conda-forge -c dfroger craftr
 
 ### Build & test
 
@@ -35,3 +30,6 @@ Install Python 3.5, Cython, and nose in a Conda environment:
     # Test coverage
     $ nosetests --with-coverage --cover-package=geomalgo
     $ coverage html
+
+    # Clean
+    ninja -C build -t clean
