@@ -20,16 +20,13 @@ Install Python 3.5, Cython, and nose in a Conda environment:
 ### Build & test
 
     # Build
-    $ cd geomalgo
-    $ CXX=gcc craftr export
-    $ craftr build
+    $ make configure
+    $ make
 
     # Test
-    $ nosetests
-
-    # Test coverage
-    $ nosetests --with-coverage --cover-package=geomalgo
-    $ coverage html
+    $ make test
+    $ make cover # test coverage
 
     # Clean
-    ninja -C build -t clean
+    make clean     # Clean build
+    make distclean # Clean build and configure
