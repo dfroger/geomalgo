@@ -38,6 +38,10 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
     'sphinx_gallery.gen_gallery',
+
+    # from http://matplotlib.org/sampledoc/extensions.html
+    # 'matplotlib.sphinxext.only_directives',
+    'matplotlib.sphinxext.plot_directive',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
