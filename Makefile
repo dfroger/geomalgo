@@ -2,18 +2,34 @@
 
 default: build
 
+# ======================== Dependencies installation =========================
+CONDA_PKGS = python=3.5 cython numpy nose coverage matplotlib sphinx-gallery craftr
+
+# Set up conda environment with geomalgo dependencies.
+env:
+	conda env create -f environment.yml
+
+# Create environment.yml file again.
+update-env:
+	conda remove --yes --all -n geomalgo-dev
+	conda create --yes -n geomalgo-dev -c conda-forge -c dfroger $(CONDA_PKGS)
+	conda env export -n geomalgo-dev > environment.yml
+
+# ============================ configure & build =============================
 configure:
 	CXX=gcc craftr export
 
 build:
 	craftr build
 
+# ================================== clean ===================================
 clean:
 	@if [ -d "build/" ]; then ninja -C build/ -t clean; fi
 
 distclean: clean
 	@rm -rf build/
 
+# ================================== tests ===================================
 test:
 	nosetests
 
