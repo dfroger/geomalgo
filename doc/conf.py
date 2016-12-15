@@ -314,8 +314,8 @@ napoleon_include_special_with_doc = True
 # Mayavi
 # ============================================================================
 
-from mayavi import mlab
-mlab.options.offscreen = True
+#from mayavi import mlab
+#mlab.options.offscreen = True
 
 # ============================================================================
 # Sphinx gallery
