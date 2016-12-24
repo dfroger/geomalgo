@@ -1,5 +1,3 @@
-from collections.abc import Mapping
-
 # An edge (V0,V1), with V1>V0 is stored in an array at index V0. (V0,V1) may
 # belong to 1 triangle (if it is a boundary edge), or 2 triangles (if it is an
 # internal edge). `next_edge` points to the next edge connected to V0, or has
