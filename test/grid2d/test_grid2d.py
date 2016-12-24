@@ -8,6 +8,7 @@ from geomalgo import (
 
 from geomalgo.data import step
 
+
 class TestCoordToIndex(unittest.TestCase):
 
     def test_normal(self):
@@ -112,8 +113,6 @@ class TestGrid2D(unittest.TestCase):
 
         self.assertAlmostEqual(grid.dx, 0.54)
         self.assertAlmostEqual(grid.dy, 0.55)
-
-
 
 
 if __name__ == '__main__':
