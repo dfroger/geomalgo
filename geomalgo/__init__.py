@@ -4,6 +4,7 @@ from .base1d import *
 from .base2d import *
 from .base3d import *
 from .cylindrical import *
+from .grid2d import *
 from .intersection import *
 from .polar import *
 from .triangulation import *
