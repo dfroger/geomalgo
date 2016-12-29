@@ -5,21 +5,10 @@ It supports finding which cell contains a given 2D point.
 
 """
 
-from libc.math cimport floor
-
 import numpy as np
 
 from ..base2d cimport Point2D
 from ..triangulation cimport Triangulation2D
-
-
-cpdef inline int coord_to_index(val, minval, delta):
-    """ Point coordinate to box index, in a given coordinate """
-    return <int> floor( (val-minval) / delta)
-
-
-cpdef inline int compute_index(int nx, int ix, int iy):
-    return iy*nx + ix
 
 
 cpdef (int, int) compute_row_col(int index, int nx):

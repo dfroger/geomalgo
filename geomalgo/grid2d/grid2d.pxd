@@ -1,4 +1,15 @@
+from libc.math cimport floor
+
 from ..base2d cimport CPoint2D
+
+cpdef inline int coord_to_index(val, minval, delta):
+    """ Point coordinate to box index, in a given coordinate """
+    return <int> floor( (val-minval) / delta)
+
+
+cpdef inline int compute_index(int nx, int ix, int iy):
+    return iy*nx + ix
+
 
 cdef class Grid2D:
     cdef public:
