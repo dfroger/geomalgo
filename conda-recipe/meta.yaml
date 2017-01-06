@@ -22,11 +22,13 @@ requirements:
     - matplotlib
 
 test:
+    source_files:
+        test
     requires:
         - nose
         - coverage
     commands:
-        - cd $SRC_DIR/test ; nosetests
+        - nosetests
 
 about:
   home: https://github.com/dfroger/geomalgo
