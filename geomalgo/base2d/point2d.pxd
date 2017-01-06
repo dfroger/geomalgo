@@ -28,8 +28,11 @@ cdef inline double c_is_left(CPoint2D* A, CPoint2D* B, CPoint2D* P):
     return (B.x - A.x) * (P.y - A.y) \
          - (P.x - A.x) * (B.y - A.y)
 
+cdef inline double c_point2d_square_distance(CPoint2D* A, CPoint2D* B):
+    return (B.x-A.x)**2 + (B.y-A.y)**2
+
 cdef inline double c_point2d_distance(CPoint2D* A, CPoint2D* B):
-    return sqrt((B.x-A.x)**2 + (B.y-A.y)**2)
+    return sqrt(c_point2d_square_distance(A, B))
 
 cdef inline bint point2d_equal(CPoint2D* A, CPoint2D* B):
     return A.x == B.x and A.y == B.y

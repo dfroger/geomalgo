@@ -4,8 +4,8 @@ from .base2d.line2d cimport (
 
 from .base2d.point2d cimport (
     CPoint2D, new_point2d, del_point2d, subtract_points2d,
-    point2d_plus_vector2d, c_is_left, c_point2d_distance, point2d_equal,
-    Point2D
+    point2d_plus_vector2d, c_is_left, c_point2d_square_distance,
+    c_point2d_distance, point2d_equal, Point2D
 )
 
 from .base2d.polygon2d cimport (
@@ -13,9 +13,10 @@ from .base2d.polygon2d cimport (
 )
 
 from .base2d.segment2d cimport (
-    CSegment2D, new_segment2d, del_segment2d, create_segment2d, segment2d_at,
-    segment2d_where, segment2d_middle, Segment2D, Segment2DCollection,
-    segment2d_set
+    CSegment2D, new_segment2d, del_segment2d, create_segment2d,
+    segment2d_square_distance_point2d, segment2d_distance_point2d,
+    segment2d_at, segment2d_where, segment2d_middle, Segment2D,
+    Segment2DCollection, segment2d_set
 )
 
 from .base2d.triangle2d cimport (

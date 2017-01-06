@@ -1,9 +1,11 @@
 import matplotlib.pyplot as plt
 
 from libc.stdlib cimport malloc, free
+from libc.math cimport sqrt
 
 from .point2d cimport (
-    subtract_points2d, CPoint2D, point2d_plus_vector2d, c_point2d_distance
+    subtract_points2d, CPoint2D, point2d_plus_vector2d,
+    c_point2d_square_distance, c_point2d_distance
 )
 from .vector2d cimport compute_norm2d, dot_product2d
 from ..inclusion.segment2d_point2d cimport segment2d_includes_collinear_point2d
@@ -27,7 +29,7 @@ cdef CSegment2D* create_segment2d(CPoint2D* A, CPoint2D* B):
     return seg
 
 
-cdef double segment2d_distance_point2d(CSegment2D* S, CPoint2D* P):
+cdef double segment2d_square_distance_point2d(CSegment2D* S, CPoint2D* P):
     cdef:
         CPoint2D Pb
         CVector2D w
@@ -38,17 +40,21 @@ cdef double segment2d_distance_point2d(CSegment2D* S, CPoint2D* P):
     c1 = dot_product2d(&w, S.AB)
 
     if c1 <= 0:
-         return c_point2d_distance(P, S.A)
+         return c_point2d_square_distance(P, S.A)
 
     c2 = dot_product2d(S.AB, S.AB)
     if c2 <= c1:
-         return c_point2d_distance(P, S.B)
+         return c_point2d_square_distance(P, S.B)
 
     b = c1 / c2
 
     point2d_plus_vector2d(&Pb, S.A, b, S.AB)
 
-    return c_point2d_distance(P, &Pb)
+    return c_point2d_square_distance(P, &Pb)
+
+
+cdef double segment2d_distance_point2d(CSegment2D* S, CPoint2D* P):
+    return sqrt(segment2d_square_distance_point2d(S, P))
 
 
 cdef segment2d_at(CPoint2D* result, CSegment2D S, double coord):
