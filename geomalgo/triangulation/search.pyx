@@ -10,9 +10,11 @@ check whether a triangle and a cell overlap.
 
 import numpy as np
 
-from ..base2d cimport CTriangle2D, CPoint2D, triangle2d_set
-from ..grid2d cimport Cell2D, Grid2D, compute_index
-from .triangulation2d cimport Triangulation2D
+from ..base2d cimport (
+    CTriangle2D, CPoint2D, triangle2d_set, triangle2d_includes_point2d,
+    triangle2d_on_edges
+)
+from ..grid2d cimport Cell2D, compute_index
 
 def build_triangle_to_cell(
     int[:] ix_min, int[:] ix_max,
@@ -45,19 +47,50 @@ def build_triangle_to_cell(
     for T in range(TG.NT):
         TG.c_get(T, &ABC)
 
+        # In the schema, grid is aligned with
+        # vertical and horitonzal triangle edges.
+        #
+        # triangles: s, t, u, v
+        # cells: a, b, c, d
+        #
+        # We want for example triangle t to be associated
+        # not just with cell a, but also with cell b.
+        # This way, if a point on edge pq is detected to
+        # be in cell b, it will be searched in triangle t.
+        #
+        # The same apply for triangle u and cells c and d, etc.
+        #
+        # This is done wy adding edge_width to triangle vertices
+        # coordiante when search the cell ranges of a triangle.
+        #
+        # However, for triangle s, we don't want ix_min to be -1, or
+        # for triangle v, we don't want ix_max to be 4, etc.
+        #                       iy
+        # +----+----+----+----+
+        # | \  | \  | \  | \  |
+        # |  \ |  \ |  \ |  \ | 2
+        # +----q----+----+----+
+        # |s\ t|  hole   |u\ v|
+        # |a \ | b    c  |  \d| 1
+        # +----p----+----+----+
+        # | \  | \  | \  | \  |
+        # |  \ |  \ |  \ |  \ | 0
+        # +----+----+----+----+
+        #   0     1   2    3     ix
+
         # Cell blocks south-west point
         P.x = min(A.x, B.x, C.x) - edge_width
         P.y = min(A.y, B.y, C.y) - edge_width
         grid.c_find_cell(cell, &P)
-        ix_min[T] = cell.ix
-        iy_min[T] = cell.iy
+        ix_min[T] = max(cell.ix, 0)
+        iy_min[T] = max(cell.iy, 0)
 
         # Cell blocks north-east point
         P.x = max(A.x, B.x, C.x) + edge_width
         P.y = max(A.y, B.y, C.y) + edge_width
         grid.c_find_cell(cell, &P)
-        ix_max[T] = cell.ix
-        iy_max[T] = cell.iy
+        ix_max[T] = min(cell.ix+1, grid.nx)
+        iy_max[T] = min(cell.iy+1, grid.ny)
 
 
 def build_cell_to_triangle(
@@ -76,8 +109,8 @@ def build_cell_to_triangle(
 
     # Count how much triangles each cell has.
     for T in range(NT):
-        for iy in range(iy_min[T], iy_max[T] + 1):
-            for ix in range(ix_min[T], ix_max[T] + 1):
+        for iy in range(iy_min[T], iy_max[T]):
+            for ix in range(ix_min[T], ix_max[T]):
                 cell_index = compute_index(nx, ix, iy)
                 count[cell_index] += 1
                 total += 1
@@ -95,8 +128,8 @@ def build_cell_to_triangle(
 
     # Set celltri
     for T in range(NT):
-        for iy in range(iy_min[T], iy_max[T] + 1):
-            for ix in range(ix_min[T], ix_max[T] + 1):
+        for iy in range(iy_min[T], iy_max[T]):
+            for ix in range(ix_min[T], ix_max[T]):
                 cell_index = compute_index(nx, ix, iy)
                 offset = offsets[cell_index]
                 celltri[offset] = T
@@ -104,6 +137,99 @@ def build_cell_to_triangle(
 
     return np.asarray(celltri), np.asarray(celltri_idx)
 
+
+cdef class TriangulationLocator:
+    """
+    Note: Use TG.ix_min and others to store intermediate results (allocate
+    them it not already).
+
+    """
+
+    def __init__(TriangulationLocator self, Triangulation2D TG,
+                 int nx, int ny, double edge_width):
+
+        # TODO: default values for nx, ny and edge_width
+        self.TG = TG
+        self.edge_width = edge_width
+        self.edge_width_square = edge_width**2
+
+        TG.ensure_allocated_search_array()
+        self.grid = Grid2D.from_triangulation(TG, nx, ny)
+
+        build_triangle_to_cell(TG.ix_min, TG.ix_max,
+                               TG.iy_min, TG.iy_max,
+                               TG, self.grid, edge_width)
+
+        self.celltri, self.celltri_idx = build_cell_to_triangle(
+                                             TG.ix_min, TG.ix_max,
+                                             TG.iy_min, TG.iy_max,
+                                             nx, ny)
+
+    def search_points(TriangulationLocator self,
+                      double[:] xpoints, double[:] ypoints,
+                      int[:] triangles):
+        cdef:
+            int IP, IT, IT0, IT1, T, cell_index
+            int NP = xpoints.shape[0]
+            Cell2D cell = Cell2D()
+            CTriangle2D ABC
+            CPoint2D A, B, C, P
+
+        triangle2d_set(&ABC, &A, &B, &C)
+
+        for IP in range(NP):
+            # Extract point.
+            P.x = xpoints[IP]
+            P.y = ypoints[IP]
+
+            # Find cell.
+            self.grid.c_find_cell(cell, &P)
+
+            # Check if cell is in grid.
+            if not 0 <= cell.ix < self.grid.nx or \
+               not 0 <= cell.iy < self.grid.ny:
+                triangles[IP] = -1
+                continue
+
+            cell_index = compute_index(self.grid.nx, cell.ix, cell.iy)
+
+            # Loop on cell triangles.
+            edge_width = 0  # don't check triangles edges for now.
+            IT0 = self.celltri_idx[cell_index]
+            IT1 = self.celltri_idx[cell_index+1]
+            for IT in range(IT0, IT1):
+                T = self.celltri[IT]
+                self.TG.c_get(T, &ABC)
+
+                # Check if triangle contains point.
+                if triangle2d_includes_point2d(&ABC, &P, self.edge_width_square):
+                    triangles[IP] = T
+                    break
+
+            else:
+                # Not found inside triangles, check if point is on triangle edges.
+                for IT in range(IT0, IT1):
+                    T = self.celltri[IT]
+                    self.TG.c_get(T, &ABC)
+
+                    if triangle2d_on_edges(&ABC, &P, edge_width) != -1:
+                        triangles[IP] = T
+                        break
+
+                else:
+                    # Point is not on triangulation
+                    triangles[IP] = -1
+
+    def cell_to_triangles(TriangulationLocator self, int ix, int iy):
+        cdef:
+            int IT, IT0, IT1
+
+        cell_index = compute_index(self.grid.nx, ix, iy)
+
+        IT0 = self.celltri_idx[cell_index]
+        IT1 = self.celltri_idx[cell_index+1]
+
+        return {self.celltri[IT] for IT in range(IT0, IT1)}
 
 
 # **************************************************

@@ -36,19 +36,12 @@ cdef class Grid2D:
         self.dy = (ymax - ymin) / ny
 
     @staticmethod
-    def from_triangulation(Triangulation2D TG, int nx, int ny,
-                           double edge_width):
+    def from_triangulation(Triangulation2D TG, int nx, int ny):
         x = np.asarray(TG.x)
         y = np.asarray(TG.y)
 
         xmin, xmax = x.min(), x.max()
         ymin, ymax = y.min(), y.max()
-
-        xmin -= edge_width
-        ymin -= edge_width
-
-        xmax += edge_width
-        ymax += edge_width
 
         return Grid2D(xmin, xmax, nx, ymin, ymax, ny)
 

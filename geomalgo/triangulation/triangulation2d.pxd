@@ -9,4 +9,8 @@ cdef class Triangulation2D:
         double[:] y
         int[:,:] trivtx
 
+        # Used by TriangulationLocator
+        bint buffer_initialized
+        int[:] ix_min, ix_max, iy_min, iy_max
+
     cdef c_get(Triangulation2D self, int I, CTriangle2D* T)

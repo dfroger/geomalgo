@@ -1,3 +1,5 @@
+import numpy as np
+
 from ..base2d cimport Triangle2D, Point2D
 
 cdef class Triangulation2D:
@@ -14,6 +16,7 @@ cdef class Triangulation2D:
         self.y = y
         self.trivtx = trivtx
 
+        self.buffer_initialized = False
 
     cdef c_get(Triangulation2D self, int triangle_index, CTriangle2D* triangle):
         """
@@ -53,3 +56,11 @@ cdef class Triangulation2D:
         triangle.index = triangle_index
         triangle.recompute()
         return triangle
+
+    def ensure_allocated_search_array(self):
+
+        if not self.buffer_initialized:
+            self.ix_min = np.empty(self.NT, dtype='int32')
+            self.ix_max = np.empty(self.NT, dtype='int32')
+            self.iy_min = np.empty(self.NT, dtype='int32')
+            self.iy_max = np.empty(self.NT, dtype='int32')

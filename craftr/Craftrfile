@@ -7,10 +7,10 @@ def cython_flags():
     def add_flag(name, default):
         flags.append('-X {}={}'.format(name, getattr(options, name)))
 
-    add_flag('boundscheck', False)
-    add_flag('cdivision', True)
+    add_flag('boundscheck', True)
+    add_flag('cdivision', False)
     add_flag('wraparound', False)
-    add_flag('initializedcheck', False)
+    add_flag('initializedcheck', True)
     add_flag('profile', False)
     return flags
 
