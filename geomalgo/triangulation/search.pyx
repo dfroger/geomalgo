@@ -3,7 +3,7 @@ For a given cell, find all triangle that overlap the cells.
 
 Each triangle is associated with a range of cells from ix_min to ix_max and
 from iy_min to iy_max. Some cells may not overlap with the triangle, but this
-make is simpler and less error prone. To optimize, we whould need a method to
+make is simpler and less error prone. To optimize, we would need a method to
 check whether a triangle and a cell overlap.
 
 """
@@ -18,7 +18,7 @@ def build_triangle_to_cell(
     int[:] ix_min, int[:] ix_max,
     int[:] iy_min, int[:] iy_max,
     Triangulation2D TG, Grid2D grid,
-    double triangle_border):
+    double edge_width):
 
     """
     Parameters
@@ -46,15 +46,15 @@ def build_triangle_to_cell(
         TG.c_get(T, &ABC)
 
         # Cell blocks south-west point
-        P.x = min(A.x, B.x, C.x) - triangle_border
-        P.y = min(A.y, B.y, C.y) - triangle_border
+        P.x = min(A.x, B.x, C.x) - edge_width
+        P.y = min(A.y, B.y, C.y) - edge_width
         grid.c_find_cell(cell, &P)
         ix_min[T] = cell.ix
         iy_min[T] = cell.iy
 
         # Cell blocks north-east point
-        P.x = max(A.x, B.x, C.x) + triangle_border
-        P.y = max(A.y, B.y, C.y) + triangle_border
+        P.x = max(A.x, B.x, C.x) + edge_width
+        P.y = max(A.y, B.y, C.y) + edge_width
         grid.c_find_cell(cell, &P)
         ix_max[T] = cell.ix
         iy_max[T] = cell.iy
@@ -71,7 +71,7 @@ def build_cell_to_triangle(
         int[:] cell_triangles_idx
         int[:] count = np.zeros(nx*ny, dtype='int32')
         int T, NT = ix_min.shape[0]
-        int ix, iy
+        int ix, iy, cell_index, offset
         int total = 0
 
     # Count how much triangles each cell has.
@@ -98,7 +98,8 @@ def build_cell_to_triangle(
         for iy in range(iy_min[T], iy_max[T] + 1):
             for ix in range(ix_min[T], ix_max[T] + 1):
                 cell_index = compute_index(nx, ix, iy)
-                celltri[offsets[cell_index]] = T
+                offset = offsets[cell_index]
+                celltri[offset] = T
                 offsets[cell_index] += 1
 
     return np.asarray(celltri), np.asarray(celltri_idx)

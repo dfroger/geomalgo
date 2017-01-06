@@ -17,8 +17,8 @@ cdef void del_triangle2d(CTriangle2D* ctri2d):
     if ctri2d is not NULL:
         free(ctri2d)
 
-cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P,
-                                      double edge_width):
+cdef bint triangle2d_includes_point2d(CTriangle2D* ABC, CPoint2D* P,
+                                      double edge_width_square):
     """
     inclusion.winding.polygon2d_winding_point2d specialized for triangle,
     just for optimisation.
@@ -26,56 +26,62 @@ cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P,
     cdef:
         int winding_number = 0
         bint included
-        double edge_width_square
-        CSegment2D seg
-        CVector2D vec
 
     # [AB]
-    if ctri2d.A.y <= P.y:
-        if ctri2d.B.y > P.y and c_is_left(ctri2d.A, ctri2d.B, P) > 0:
+    if ABC.A.y <= P.y:
+        if ABC.B.y > P.y and c_is_left(ABC.A, ABC.B, P) > 0:
             winding_number +=  1
-    elif ctri2d.B.y <= P.y and c_is_left(ctri2d.A, ctri2d.B, P) < 0:
+    elif ABC.B.y <= P.y and c_is_left(ABC.A, ABC.B, P) < 0:
         winding_number -=  1
 
     # [BC]
-    if ctri2d.B.y <= P.y:
-        if ctri2d.C.y > P.y and c_is_left(ctri2d.B, ctri2d.C, P) > 0:
+    if ABC.B.y <= P.y:
+        if ABC.C.y > P.y and c_is_left(ABC.B, ABC.C, P) > 0:
             winding_number +=  1
-    elif ctri2d.C.y <= P.y and c_is_left(ctri2d.B, ctri2d.C, P) < 0:
+    elif ABC.C.y <= P.y and c_is_left(ABC.B, ABC.C, P) < 0:
         winding_number -=  1
 
     # [CA]
-    if ctri2d.C.y <= P.y:
-        if ctri2d.A.y  > P.y and c_is_left(ctri2d.C, ctri2d.A, P) > 0:
+    if ABC.C.y <= P.y:
+        if ABC.A.y  > P.y and c_is_left(ABC.C, ABC.A, P) > 0:
             winding_number +=  1
-    elif ctri2d.A.y <= P.y and c_is_left(ctri2d.C, ctri2d.A, P) < 0:
+    elif ABC.A.y <= P.y and c_is_left(ABC.C, ABC.A, P) < 0:
         winding_number -=  1
 
     included = winding_number != 0
 
-    if not included and edge_width != 0:
-        edge_width_square = edge_width**2
-        seg.AB = &vec
-
-        segment2d_set(&seg, ctri2d.A, ctri2d.B)
-        segment2d_compute_vector(&seg)
-        if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
-            return True
-
-        segment2d_set(&seg, ctri2d.B, ctri2d.C)
-        segment2d_compute_vector(&seg)
-        if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
-            return True
-
-        segment2d_set(&seg, ctri2d.C, ctri2d.A)
-        segment2d_compute_vector(&seg)
-        if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
-            return True
-
-        return False
-
+    if not included and edge_width_square != 0:
+        return triangle2d_on_edges(ABC, P, edge_width_square) != -1
     else:
         return included
+
+cdef int triangle2d_on_edges(CTriangle2D* ABC, CPoint2D* P,
+                             double edge_width_square):
+    """
+    Return which triangle edge point P is on (0, 1 or 2), or -1
+    """
+    cdef:
+        CSegment2D seg
+        CVector2D vec
+
+    seg.AB = &vec
+
+    segment2d_set(&seg, ABC.A, ABC.B)
+    segment2d_compute_vector(&seg)
+    if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
+        return 0
+
+    segment2d_set(&seg, ABC.B, ABC.C)
+    segment2d_compute_vector(&seg)
+    if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
+        return 1
+
+    segment2d_set(&seg, ABC.C, ABC.A)
+    segment2d_compute_vector(&seg)
+    if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
+        return 2
+
+    return -1
 
 
 cdef void triangle2d_gradx_grady_det(CTriangle2D* tri, double signed_area,
@@ -180,9 +186,10 @@ cdef class Triangle2D:
                                    self.gradx, self.grady, self.det)
 
 
-    def includes_point(Triangle2D self, Point2D point, double edge_width=0.):
+    def includes_point(Triangle2D self, Point2D point,
+                       double edge_width=0.):
         return triangle2d_includes_point2d(&self.ctri2d, point.cpoint2d,
-                                           edge_width)
+                                           edge_width**2)
 
 
     def interpolate(Triangle2D self, double[:] data, Point2D P):

@@ -37,18 +37,18 @@ cdef class Grid2D:
 
     @staticmethod
     def from_triangulation(Triangulation2D TG, int nx, int ny,
-                           double triangle_border):
+                           double edge_width):
         x = np.asarray(TG.x)
         y = np.asarray(TG.y)
 
         xmin, xmax = x.min(), x.max()
         ymin, ymax = y.min(), y.max()
 
-        xmin -= triangle_border
-        ymin -= triangle_border
+        xmin -= edge_width
+        ymin -= edge_width
 
-        xmax += triangle_border
-        ymax += triangle_border
+        xmax += edge_width
+        ymax += edge_width
 
         return Grid2D(xmin, xmax, nx, ymin, ymax, ny)
 

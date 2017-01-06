@@ -12,7 +12,10 @@ cdef CTriangle2D* new_triangle2d()
 cdef void del_triangle2d(CTriangle2D* ctri2d)
 
 cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P,
-                                      double edge_width)
+                                      double edge_width_square)
+
+cdef int triangle2d_on_edges(CTriangle2D* ABC, CPoint2D* P,
+                             double edge_width_square)
 
 cdef inline double triangle2d_signed_area(CTriangle2D* T):
     return 0.5 * c_is_left(T.A, T.B, T.C)
