@@ -9,6 +9,8 @@ cdef class Triangulation2D:
         double[:] y
         int[:,:] trivtx
 
+        double[:] xcenter
+        double[:] ycenter
         # Used by TriangulationLocator
         int[:] ix_min, ix_max, iy_min, iy_max
 

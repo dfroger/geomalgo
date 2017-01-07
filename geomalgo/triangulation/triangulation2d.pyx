@@ -1,6 +1,8 @@
 import numpy as np
 
-from ..base2d cimport Triangle2D, Point2D
+from ..base2d cimport (
+    CTriangle2D, CPoint2D, Triangle2D, Point2D, triangle2d_set,
+    triangle2d_center)
 
 cdef class Triangulation2D:
 
@@ -15,6 +17,9 @@ cdef class Triangulation2D:
         self.x = x
         self.y = y
         self.trivtx = trivtx
+
+        self.xcenter = None
+        self.ycenter = None
 
         self.ix_min = None
         self.ix_max = None
@@ -69,3 +74,25 @@ cdef class Triangulation2D:
         self.ix_max = np.empty(self.NT, dtype='int32')
         self.iy_min = np.empty(self.NT, dtype='int32')
         self.iy_max = np.empty(self.NT, dtype='int32')
+
+    def compute_centers(Triangulation2D self):
+        cdef:
+            int T
+            CTriangle2D ABC
+            CPoint2D A, B, C, center
+
+        if self.xcenter is not None:
+            return
+
+        self.xcenter = np.empty(self.NT, dtype='d')
+        self.ycenter = np.empty(self.NT, dtype='d')
+
+        triangle2d_set(&ABC, &A, &B, &C)
+
+        for T in range(self.NT):
+            self.c_get(T, &ABC)
+
+            # Compute triangle center.
+            triangle2d_center(&ABC, &center)
+            self.xcenter[T] = center.x
+            self.ycenter[T] = center.y
