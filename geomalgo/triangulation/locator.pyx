@@ -165,15 +165,18 @@ cdef class TriangulationLocator:
                                              TG.iy_min, TG.iy_max,
                                              nx, ny)
 
-    def search_points(TriangulationLocator self,
-                      double[:] xpoints, double[:] ypoints,
-                      int[:] triangles):
+    cpdef int search_points(TriangulationLocator self,
+                            double[:] xpoints, double[:] ypoints,
+                            int[:] triangles):
         cdef:
             int IP, IT, IT0, IT1, T, cell_index
             int NP = xpoints.shape[0]
             Cell2D cell = Cell2D()
             CTriangle2D ABC
             CPoint2D A, B, C, P
+
+            # Number of points out of the triangulation
+            int nout = 0
 
         triangle2d_set(&ABC, &A, &B, &C)
 
@@ -189,6 +192,7 @@ cdef class TriangulationLocator:
             if not 0 <= cell.ix < self.grid.nx or \
                not 0 <= cell.iy < self.grid.ny:
                 triangles[IP] = -1
+                nout += 1
                 continue
 
             cell_index = compute_index(self.grid.nx, cell.ix, cell.iy)
@@ -218,10 +222,14 @@ cdef class TriangulationLocator:
 
                 else:
                     # Point is not on triangulation
+                    nout += 1
                     triangles[IP] = -1
+
+        return nout
 
     def cell_to_triangles(TriangulationLocator self, int ix, int iy):
         cdef:
+            int cell_index
             int IT, IT0, IT1
 
         cell_index = compute_index(self.grid.nx, ix, iy)

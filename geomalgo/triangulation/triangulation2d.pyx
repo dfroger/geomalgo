@@ -103,8 +103,9 @@ cdef class Triangulation2D:
         cdef:
             int T
             CTriangle2D ABC
-            CPoint2D A, B, C, center
+            CPoint2D A, B, C
 
+        #Check if the function as already been called
         if self.xcenter is not None:
             return
 

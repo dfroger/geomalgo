@@ -119,8 +119,9 @@ class TestTriangulationLocator(unittest.TestCase):
                                           nx, ny, edge_width)
 
         triangles = np.empty(NP, dtype='int32')
-        locator.search_points(xcenter, ycenter, triangles)
+        nout = locator.search_points(xcenter, ycenter, triangles)
 
+        self.assertEqual(nout, 0)
         assert_equal(triangles, np.arange(NP))
 
     def test_hole_aligned(self):
@@ -221,7 +222,8 @@ class TestTriangulationLocator(unittest.TestCase):
                                           nx, ny, edge_width)
 
         triangles = np.full(NP, fill_value=-2, dtype='int32')
-        locator.search_points(x, y, triangles)
+        nout = locator.search_points(x, y, triangles)
+        self.assertEqual(nout, NP)
 
         assert_equal(triangles, np.full(NP, fill_value=-1, dtype='int32'))
 
