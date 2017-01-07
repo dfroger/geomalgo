@@ -2,7 +2,7 @@ import numpy as np
 
 from ..base2d cimport (
     CTriangle2D, CPoint2D, Triangle2D, Point2D, triangle2d_set,
-    triangle2d_center)
+    triangle2d_center, triangle2d_signed_area)
 
 cdef class Triangulation2D:
 
@@ -20,6 +20,8 @@ cdef class Triangulation2D:
 
         self.xcenter = None
         self.ycenter = None
+
+        self.signed_area = None
 
         self.ix_min = None
         self.ix_max = None
@@ -96,3 +98,22 @@ cdef class Triangulation2D:
             triangle2d_center(&ABC, &center)
             self.xcenter[T] = center.x
             self.ycenter[T] = center.y
+
+    def compute_signed_area(self):
+        cdef:
+            int T
+            CTriangle2D ABC
+            CPoint2D A, B, C, center
+
+        if self.xcenter is not None:
+            return
+
+        self.signed_area = np.empty(self.NT, dtype='d')
+
+        triangle2d_set(&ABC, &A, &B, &C)
+
+        for T in range(self.NT):
+            self.c_get(T, &ABC)
+
+            # Compute triangle area.
+            self.signed_area[T] = triangle2d_signed_area(&ABC)
