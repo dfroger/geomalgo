@@ -153,7 +153,7 @@ cdef class TriangulationLocator:
         self.edge_width = edge_width
         self.edge_width_square = edge_width**2
 
-        TG.ensure_allocated_search_array()
+        TG.allocate_locator()
         self.grid = Grid2D.from_triangulation(TG, nx, ny)
 
         build_triangle_to_cell(TG.ix_min, TG.ix_max,

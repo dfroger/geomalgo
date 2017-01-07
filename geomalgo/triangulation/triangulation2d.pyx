@@ -16,7 +16,10 @@ cdef class Triangulation2D:
         self.y = y
         self.trivtx = trivtx
 
-        self.buffer_initialized = False
+        self.ix_min = None
+        self.ix_max = None
+        self.iy_min = None
+        self.iy_max = None
 
     cdef c_get(Triangulation2D self, int triangle_index, CTriangle2D* triangle):
         """
@@ -57,10 +60,12 @@ cdef class Triangulation2D:
         triangle.recompute()
         return triangle
 
-    def ensure_allocated_search_array(self):
+    def allocate_locator(self):
+        # Check if the function as already been called
+        if self.ix_min is not None:
+            return
 
-        if not self.buffer_initialized:
-            self.ix_min = np.empty(self.NT, dtype='int32')
-            self.ix_max = np.empty(self.NT, dtype='int32')
-            self.iy_min = np.empty(self.NT, dtype='int32')
-            self.iy_max = np.empty(self.NT, dtype='int32')
+        self.ix_min = np.empty(self.NT, dtype='int32')
+        self.ix_max = np.empty(self.NT, dtype='int32')
+        self.iy_min = np.empty(self.NT, dtype='int32')
+        self.iy_max = np.empty(self.NT, dtype='int32')
