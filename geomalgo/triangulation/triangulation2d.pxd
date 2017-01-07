@@ -16,4 +16,7 @@ cdef class Triangulation2D:
         # Used by TriangulationLocator
         int[:] ix_min, ix_max, iy_min, iy_max
 
+        # Used by TriangleInterpolator
+        double[:,:] gradx, grady, det
+
     cdef c_get(Triangulation2D self, int I, CTriangle2D* T)

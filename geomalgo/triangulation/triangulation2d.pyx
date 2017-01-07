@@ -1,8 +1,10 @@
 import numpy as np
 
+from libc.math cimport fabs
+
 from ..base2d cimport (
     CTriangle2D, CPoint2D, Triangle2D, Point2D, triangle2d_set,
-    triangle2d_center, triangle2d_signed_area)
+    triangle2d_center, triangle2d_signed_area, triangle2d_gradx_grady_det)
 
 cdef class Triangulation2D:
 
@@ -22,6 +24,10 @@ cdef class Triangulation2D:
         self.ycenter = None
 
         self.signed_area = None
+
+        self.gradx = None
+        self.grady = None
+        self.det   = None
 
         self.ix_min = None
         self.ix_max = None
@@ -106,7 +112,7 @@ cdef class Triangulation2D:
             CPoint2D A, B, C
 
         #Check if the function as already been called
-        if self.xcenter is not None:
+        if self.signed_area is not None:
             return
 
         self.signed_area = np.empty(self.NT, dtype='d')
@@ -118,3 +124,29 @@ cdef class Triangulation2D:
 
             # Compute triangle area.
             self.signed_area[T] = triangle2d_signed_area(&ABC)
+
+    def compute_interpolator(self):
+        cdef:
+            int T
+            CTriangle2D ABC
+            CPoint2D A, B, C
+
+        self.compute_signed_area()
+
+        #Check if the function as already been called
+        if self.gradx is not None:
+            return
+
+        self.gradx = np.empty((self.NT,3), dtype='d')
+        self.grady = np.empty((self.NT,3), dtype='d')
+        self.det   = np.empty((self.NT,3), dtype='d')
+
+        triangle2d_set(&ABC, &A, &B, &C)
+
+        for T in range(self.NT):
+            self.c_get(T, &ABC)
+
+            # Compute gradx, grady, det (for interpolations).
+            triangle2d_gradx_grady_det(&ABC, fabs(self.signed_area[T]),
+                                       &self.gradx[T,0], &self.grady[T,0],
+                                       &self.det[T,0])

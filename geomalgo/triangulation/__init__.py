@@ -6,9 +6,10 @@ from .build_edges import build_edges
 from .locator import (
     build_triangle_to_cell, build_cell_to_triangle, TriangulationLocator,
 )
+from .interpolator import TriangulationInterpolator
 
 __all__ = [
     'Triangulation2D', 'EdgeToTriangles', 'BoundaryEdges', 'InternEdges',
     'build_edges', 'build_triangle_to_cell', 'build_cell_to_triangle',
-    'TriangulationLocator',
+    'TriangulationLocator', 'TriangulationInterpolator',
 ]
