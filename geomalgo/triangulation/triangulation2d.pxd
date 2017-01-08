@@ -13,6 +13,16 @@ cdef class Triangulation2D:
         double[:] ycenter
         double[:] signed_area
 
+        # stats
+        double xmin
+        double xmax
+
+        double ymin
+        double ymax
+
+        double edge_min
+        double edge_max
+
         # Used by TriangulationLocator
         int[:] ix_min, ix_max, iy_min, iy_max
 

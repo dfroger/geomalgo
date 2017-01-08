@@ -5,7 +5,8 @@ from libc.math cimport fabs
 
 from ..base2d cimport (
     CTriangle2D, CPoint2D, Triangle2D, Point2D, triangle2d_set,
-    triangle2d_center, triangle2d_signed_area, triangle2d_gradx_grady_det)
+    triangle2d_center, triangle2d_signed_area, triangle2d_gradx_grady_det,
+    c_point2d_distance)
 
 cdef class Triangulation2D:
 
@@ -24,6 +25,15 @@ cdef class Triangulation2D:
         self.ycenter = None
 
         self.signed_area = None
+
+        self.xmin = 0.
+        self.xmax = 0.
+
+        self.ymin = 0.
+        self.ymax = 0.
+
+        self.edge_min = 0.
+        self.edge_max = 0.
 
         self.gradx = None
         self.grady = None
@@ -72,6 +82,44 @@ cdef class Triangulation2D:
         triangle.index = triangle_index
         triangle.recompute()
         return triangle
+
+    def compute_stat(self):
+        cdef:
+            int V, T
+            CTriangle2D ABC
+            CPoint2D A, B, C
+            double ab, bc, ca
+
+        # Check if the function has alread been called
+        if self.edge_max != 0.:
+            return
+
+        triangle2d_set(&ABC, &A, &B, &C)
+
+        self.xmin = self.x[0]
+        self.xmax = self.x[0]
+
+        self.ymin = self.y[0]
+        self.ymax = self.y[0]
+
+        for V in range(1, self.NV):
+            self.xmin = min(self.xmin, self.x[V])
+            self.xmax = max(self.xmax, self.x[V])
+
+            self.ymin = min(self.ymin, self.y[V])
+            self.ymax = max(self.ymax, self.y[V])
+
+        # Initialize edge_min and edge_max
+        self.c_get(0, &ABC)
+        self.edge_min = self.edge_max = c_point2d_distance(&A, &B)
+
+        for T in range(self.NT):
+            self.c_get(T, &ABC)
+            ab = c_point2d_distance(&A, &B)
+            bc = c_point2d_distance(&B, &C)
+            ca = c_point2d_distance(&C, &A)
+            self.edge_min = min(self.edge_min, ab, bc, ca)
+            self.edge_max = max(self.edge_max, ab, bc, ca)
 
     def allocate_locator(self):
         # Check if the function as already been called

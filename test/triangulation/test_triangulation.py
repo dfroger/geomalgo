@@ -1,4 +1,5 @@
 import unittest
+from math import sqrt
 
 from numpy.testing import assert_allclose
 
@@ -59,6 +60,19 @@ class TestTriangulation(unittest.TestCase):
     def test_to_matplotlib(self):
         TG = ga.Triangulation2D(STEP.x, STEP.y, STEP.trivtx)
         tri = TG.to_matplotlib()
+
+    def test_stat(self):
+        TG = ga.Triangulation2D(STEP.x, STEP.y, STEP.trivtx)
+        TG.compute_stat()
+
+        self.assertEqual(TG.xmin, 0)
+        self.assertEqual(TG.xmax, 2.5)
+
+        self.assertEqual(TG.ymin, 10)
+        self.assertEqual(TG.ymax, 12)
+
+        self.assertAlmostEqual(TG.edge_min, 1)
+        self.assertAlmostEqual(TG.edge_max, sqrt(3.25))
 
 if __name__ == '__main__':
     unittest.main()
