@@ -146,9 +146,20 @@ cdef class TriangulationLocator:
     """
 
     def __init__(TriangulationLocator self, Triangulation2D TG,
-                 int nx, int ny, double edge_width):
+                 int nx=0, int ny=0, double edge_width=-1):
 
-        # TODO: default values for nx, ny and edge_width
+        if nx==0 or ny==0 or edge_width < 0:
+            TG.compute_stat()
+
+        if nx == 0:
+            nx = max(1, int((TG.xmax - TG.xmin) / (TG.edge_max * 10)))
+
+        if ny == 0:
+            ny = max(1, int((TG.ymax - TG.ymin) / (TG.edge_max * 10)))
+
+        if edge_width < 0:
+            edge_width = TG.edge_min * 1.E-07
+
         self.TG = TG
         self.edge_width = edge_width
         self.edge_width_square = edge_width**2

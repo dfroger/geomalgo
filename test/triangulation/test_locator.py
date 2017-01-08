@@ -112,11 +112,7 @@ class TestTriangulationLocator(unittest.TestCase):
         ycenter = np.average(HOLE.y[HOLE.trivtx], axis=1)
         NP = len(xcenter)
 
-        nx, ny = 5, 5
-        edge_width = 1.E-07
-
-        locator = ga.TriangulationLocator(HOLE.triangulation,
-                                          nx, ny, edge_width)
+        locator = ga.TriangulationLocator(HOLE.triangulation, nx=5, ny=5)
 
         triangles = np.empty(NP, dtype='int32')
         nout = locator.search_points(xcenter, ycenter, triangles)
@@ -153,11 +149,7 @@ class TestTriangulationLocator(unittest.TestCase):
                        0     1     2     3     4     5       -> grid.ix
                     0     1     2     3     4     5     6    -> x
         """
-        nx, ny = 6, 5
-        edge_width = 1.E-07
-
-        locator = ga.TriangulationLocator(HOLE.triangulation,
-                                          nx, ny, edge_width)
+        locator = ga.TriangulationLocator(HOLE.triangulation, nx=6, ny=5)
 
         # top bottom cell
         self.assertEqual(locator.cell_to_triangles(0, 0),
@@ -215,11 +207,7 @@ class TestTriangulationLocator(unittest.TestCase):
         x = np.array([P.x for P in points])
         y = np.array([P.x for P in points])
 
-        nx, ny = 5, 5
-        edge_width = 1.E-07
-
-        locator = ga.TriangulationLocator(HOLE.triangulation,
-                                          nx, ny, edge_width)
+        locator = ga.TriangulationLocator(HOLE.triangulation, nx=5, ny=5)
 
         triangles = np.full(NP, fill_value=-2, dtype='int32')
         nout = locator.search_points(x, y, triangles)

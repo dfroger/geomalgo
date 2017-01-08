@@ -16,7 +16,7 @@ class TestTriangulationInterpolator(unittest.TestCase):
 
         # Create triangulation and a locator.
         TG = ga.Triangulation2D(HOLE.x, HOLE.y, HOLE.trivtx)
-        locator = ga.TriangulationLocator(TG, 5, 5, 1.E-07)
+        locator = ga.TriangulationLocator(TG)
 
         # Create interpolator to triangle centers.
         interpolator = ga.TriangulationInterpolator(TG, locator, TG.NT)
