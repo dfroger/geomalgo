@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.tri
 
 from libc.math cimport fabs
 
@@ -8,8 +9,7 @@ from ..base2d cimport (
 
 cdef class Triangulation2D:
 
-
-    def __init__(self, double[:] x, double[:] y, int[:,:] trivtx):
+    def __init__(Triangulation2D self, double[:] x, double[:] y, int[:,:] trivtx):
         self.NV = x.shape[0]
         self.NT = trivtx.shape[0]
 
@@ -105,7 +105,7 @@ cdef class Triangulation2D:
             self.xcenter[T] = center.x
             self.ycenter[T] = center.y
 
-    def compute_signed_area(self):
+    def compute_signed_area(Triangulation2D self):
         cdef:
             int T
             CTriangle2D ABC
@@ -125,7 +125,7 @@ cdef class Triangulation2D:
             # Compute triangle area.
             self.signed_area[T] = triangle2d_signed_area(&ABC)
 
-    def compute_interpolator(self):
+    def compute_interpolator(Triangulation2D self):
         cdef:
             int T
             CTriangle2D ABC
@@ -150,3 +150,9 @@ cdef class Triangulation2D:
             triangle2d_gradx_grady_det(&ABC, fabs(self.signed_area[T]),
                                        &self.gradx[T,0], &self.grady[T,0],
                                        &self.det[T,0])
+
+    def to_numpy(Triangulation2D self):
+        return np.asarray(self.x), np.asarray(self.y), np.asarray(self.trivtx)
+
+    def to_matplotlib(Triangulation2D self):
+        return matplotlib.tri.Triangulation(self.x, self.y, self.trivtx)
