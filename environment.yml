@@ -73,5 +73,3 @@ dependencies:
 - pip:
   - craftr-build==2.0.0.dev5
   - ninja-syntax==1.6.0
-prefix: /data/miniconda3/envs/geomalgo-dev
-
