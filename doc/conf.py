@@ -348,5 +348,5 @@ sphinx_gallery_conf = {
         'matplotlib': 'http://matplotlib.org',
         'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
     },
-    'find_mayavi_figures': True,
+#   'find_mayavi_figures': True,
 }
