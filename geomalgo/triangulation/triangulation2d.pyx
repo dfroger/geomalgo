@@ -6,7 +6,7 @@ from libc.math cimport fabs
 from ..base2d cimport (
     CTriangle2D, CPoint2D, Triangle2D, Point2D, triangle2d_set,
     triangle2d_center, triangle2d_signed_area, triangle2d_gradx_grady_det,
-    c_point2d_distance)
+    point2d_distance)
 
 cdef class Triangulation2D:
 
@@ -44,7 +44,7 @@ cdef class Triangulation2D:
         self.iy_min = None
         self.iy_max = None
 
-    cdef c_get(Triangulation2D self, int triangle_index, CTriangle2D* triangle):
+    cdef get(Triangulation2D self, int triangle_index, CTriangle2D* triangle):
         """
         Set 2D triangle point coordinates from its index in a triangulation
 
@@ -78,7 +78,7 @@ cdef class Triangulation2D:
 
         triangle.alloc_new()
 
-        self.c_get(triangle_index, &triangle.ctri2d)
+        self.get(triangle_index, &triangle.ctri2d)
         triangle.index = triangle_index
         triangle.recompute()
         return triangle
@@ -110,14 +110,14 @@ cdef class Triangulation2D:
             self.ymax = max(self.ymax, self.y[V])
 
         # Initialize edge_min and edge_max
-        self.c_get(0, &ABC)
-        self.edge_min = self.edge_max = c_point2d_distance(&A, &B)
+        self.get(0, &ABC)
+        self.edge_min = self.edge_max = point2d_distance(&A, &B)
 
         for T in range(self.NT):
-            self.c_get(T, &ABC)
-            ab = c_point2d_distance(&A, &B)
-            bc = c_point2d_distance(&B, &C)
-            ca = c_point2d_distance(&C, &A)
+            self.get(T, &ABC)
+            ab = point2d_distance(&A, &B)
+            bc = point2d_distance(&B, &C)
+            ca = point2d_distance(&C, &A)
             self.edge_min = min(self.edge_min, ab, bc, ca)
             self.edge_max = max(self.edge_max, ab, bc, ca)
 
@@ -146,7 +146,7 @@ cdef class Triangulation2D:
         triangle2d_set(&ABC, &A, &B, &C)
 
         for T in range(self.NT):
-            self.c_get(T, &ABC)
+            self.get(T, &ABC)
 
             # Compute triangle center.
             triangle2d_center(&ABC, &center)
@@ -168,7 +168,7 @@ cdef class Triangulation2D:
         triangle2d_set(&ABC, &A, &B, &C)
 
         for T in range(self.NT):
-            self.c_get(T, &ABC)
+            self.get(T, &ABC)
 
             # Compute triangle area.
             self.signed_area[T] = triangle2d_signed_area(&ABC)
@@ -192,7 +192,7 @@ cdef class Triangulation2D:
         triangle2d_set(&ABC, &A, &B, &C)
 
         for T in range(self.NT):
-            self.c_get(T, &ABC)
+            self.get(T, &ABC)
 
             # Compute gradx, grady, det (for interpolations).
             triangle2d_gradx_grady_det(&ABC, fabs(self.signed_area[T]),

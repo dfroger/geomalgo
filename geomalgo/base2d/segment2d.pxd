@@ -63,8 +63,8 @@ cdef class Segment2DCollection:
         double[:,:] x
         double[:,:] y
 
-    cdef c_get(Segment2DCollection self, int segment_index,
-               CSegment2D* segment)
+    cdef get(Segment2DCollection self, int segment_index,
+             CSegment2D* segment)
 
-    cdef c_set(Segment2DCollection self, int segment_index,
-               CPoint2D* A, CPoint2D * B)
+    cdef set(Segment2DCollection self, int segment_index,
+             CPoint2D* A, CPoint2D * B)

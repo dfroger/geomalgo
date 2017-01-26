@@ -42,23 +42,23 @@ cdef bint triangle2d_includes_point2d(CTriangle2D* ABC, CPoint2D* P,
 
     # [AB]
     if ABC.A.y <= P.y:
-        if ABC.B.y > P.y and c_is_left(ABC.A, ABC.B, P) > 0:
+        if ABC.B.y > P.y and is_left(ABC.A, ABC.B, P) > 0:
             winding_number +=  1
-    elif ABC.B.y <= P.y and c_is_left(ABC.A, ABC.B, P) < 0:
+    elif ABC.B.y <= P.y and is_left(ABC.A, ABC.B, P) < 0:
         winding_number -=  1
 
     # [BC]
     if ABC.B.y <= P.y:
-        if ABC.C.y > P.y and c_is_left(ABC.B, ABC.C, P) > 0:
+        if ABC.C.y > P.y and is_left(ABC.B, ABC.C, P) > 0:
             winding_number +=  1
-    elif ABC.C.y <= P.y and c_is_left(ABC.B, ABC.C, P) < 0:
+    elif ABC.C.y <= P.y and is_left(ABC.B, ABC.C, P) < 0:
         winding_number -=  1
 
     # [CA]
     if ABC.C.y <= P.y:
-        if ABC.A.y  > P.y and c_is_left(ABC.C, ABC.A, P) > 0:
+        if ABC.A.y  > P.y and is_left(ABC.C, ABC.A, P) > 0:
             winding_number +=  1
-    elif ABC.A.y <= P.y and c_is_left(ABC.C, ABC.A, P) < 0:
+    elif ABC.A.y <= P.y and is_left(ABC.C, ABC.A, P) < 0:
         winding_number -=  1
 
     included = winding_number != 0

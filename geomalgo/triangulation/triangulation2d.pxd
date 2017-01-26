@@ -29,4 +29,4 @@ cdef class Triangulation2D:
         # Used by TriangleInterpolator
         double[:,:] gradx, grady, det
 
-    cdef c_get(Triangulation2D self, int I, CTriangle2D* T)
+    cdef get(Triangulation2D self, int I, CTriangle2D* T)

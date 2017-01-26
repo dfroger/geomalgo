@@ -1,7 +1,7 @@
 from libc.stdlib cimport malloc, free
 
 from .point2d cimport (
-    subtract_points2d, point2d_plus_vector2d, c_point2d_distance
+    subtract_points2d, point2d_plus_vector2d, point2d_distance
 )
 from .vector2d cimport CVector2D, dot_product2d
 
@@ -48,7 +48,7 @@ cdef double line2d_distance_point2d(CLine2D* L, CPoint2D* P):
 
     point2d_plus_vector2d(&Pb, L.A, b, &v)
 
-    return c_point2d_distance(&Pb, P)
+    return point2d_distance(&Pb, P)
 
 
 # ============================================================================

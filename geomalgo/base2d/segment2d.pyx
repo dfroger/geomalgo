@@ -11,7 +11,7 @@ from libc.math cimport sqrt
 
 from .point2d cimport (
     subtract_points2d, CPoint2D, point2d_plus_vector2d,
-    c_point2d_square_distance, c_point2d_distance
+    point2d_square_distance, point2d_distance
 )
 from .vector2d cimport compute_norm2d, dot_product2d
 from ..inclusion.segment2d_point2d cimport segment2d_includes_collinear_point2d
@@ -53,17 +53,17 @@ cdef double segment2d_square_distance_point2d(CSegment2D* AB, CPoint2D* P):
     c1 = dot_product2d(&w, AB.AB)
 
     if c1 <= 0:
-        return c_point2d_square_distance(P, AB.A)
+        return point2d_square_distance(P, AB.A)
 
     c2 = dot_product2d(AB.AB, AB.AB)
     if c2 <= c1:
-        return c_point2d_square_distance(P, AB.B)
+        return point2d_square_distance(P, AB.B)
 
     b = c1 / c2
 
     point2d_plus_vector2d(&Pb, AB.A, b, AB.AB)
 
-    return c_point2d_square_distance(P, &Pb)
+    return point2d_square_distance(P, &Pb)
 
 
 cdef void segment2d_at(CPoint2D* P, CSegment2D* AB, double alpha):
@@ -213,15 +213,15 @@ cdef class Segment2DCollection:
         self.x = x
         self.y = y
 
-    cdef c_get(Segment2DCollection self, int segment_index,
-               CSegment2D* segment):
+    cdef get(Segment2DCollection self, int segment_index,
+             CSegment2D* segment):
         segment.A.x = self.x[segment_index, 0]
         segment.A.y = self.y[segment_index, 0]
 
         segment.B.x = self.x[segment_index, 1]
         segment.B.y = self.y[segment_index, 1]
 
-    cdef c_set(Segment2DCollection self, int segment_index,
+    cdef set(Segment2DCollection self, int segment_index,
                CPoint2D* A, CPoint2D * B):
 
         self.x[segment_index, 0] = A.x
@@ -234,6 +234,6 @@ cdef class Segment2DCollection:
         cdef:
             Segment2D segment = Segment2D.__new__(Segment2D)
         segment.alloc_new()
-        self.c_get(segment_index, &segment.csegment2d)
+        self.get(segment_index, &segment.csegment2d)
         segment.recompute()
         return segment

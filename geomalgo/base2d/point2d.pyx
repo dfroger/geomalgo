@@ -36,17 +36,6 @@ cdef void point2d_plus_vector2d(CPoint2D* result, CPoint2D* start,
     result.x = start.x + factor*vector.x
     result.y = start.y + factor*vector.y
 
-def is_left(Point2D A, Point2D B, Point2D P, comparer=math.isclose):
-    """Test if a point P is left|on|right of an infinite line (AB).
-    """
-
-    res = c_is_left(A.cpoint2d, B.cpoint2d, P.cpoint2d)
-
-    if comparer(res, 0.):
-        raise ValueError("Point P in on line (AB)")
-
-    return res > 0.
-
 
 # ============================================================================
 # Python API
@@ -132,7 +121,7 @@ cdef class Point2D:
             Distance between the two points
 
         """
-        return c_point2d_distance(self.cpoint2d, other.cpoint2d)
+        return point2d_distance(self.cpoint2d, other.cpoint2d)
 
     def to_polar(self):
         """Compute coordinates in polar system
@@ -149,6 +138,17 @@ cdef class Point2D:
         r = sqrt(self.x**2 + self.y**2)
         theta = atan2(self.y, self.x);
         return PolarPoint(r, theta)
+
+    def is_left(Point2D self, Point2D A, Point2D B, comparer=math.isclose):
+        """Test if point is left|on|right of an infinite line (AB).
+        """
+
+        res = is_left(A.cpoint2d, B.cpoint2d, self.cpoint2d)
+
+        if comparer(res, 0.):
+            raise ValueError("Point in on line (AB)")
+
+        return res > 0.
 
     def plot(self, name=None, marker='o', markersize=6, color='b',  offset=(0, 0.2)):
         """Plot point in a matplotlib figure

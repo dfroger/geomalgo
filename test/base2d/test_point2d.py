@@ -1,7 +1,7 @@
 import unittest
 from math import sqrt, pi
 
-from geomalgo import Point2D, is_left, Vector2D
+from geomalgo import Point2D, Vector2D
 
 class TestPoint2D(unittest.TestCase):
 
@@ -67,7 +67,7 @@ class TestIsLeft(unittest.TestCase):
         A = Point2D(0, 0)
         B = Point2D(1, 0)
         P = Point2D(0, 1)
-        self.assertTrue(is_left(A,B,P))
+        self.assertTrue(P.is_left(A,B))
 
     def test_is_right(self):
         """
@@ -78,7 +78,7 @@ class TestIsLeft(unittest.TestCase):
         A = Point2D(0,  0)
         B = Point2D(1,  0)
         P = Point2D(0, -1)
-        self.assertFalse(is_left(A,B,P))
+        self.assertFalse(P.is_left(A,B))
 
     def test_on_line(self):
         """
@@ -87,8 +87,8 @@ class TestIsLeft(unittest.TestCase):
         A = Point2D(0, 0)
         B = Point2D(1, 0)
         P = Point2D(2, 0)
-        with self.assertRaisesRegex(ValueError, "Point P in on line \(AB\)"):
-            is_left(A,B,P)
+        with self.assertRaisesRegex(ValueError, "Point in on line \(AB\)"):
+            P.is_left(A,B)
 
 
 class TestEquality(unittest.TestCase):

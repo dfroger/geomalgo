@@ -52,12 +52,12 @@ Computational functions
     ``B`` must be already allocated.
 
 
-.. c:function:: double c_point2d_distance(CPoint2D* A, CPoint2D* B)
+.. c:function:: double point2d_distance(CPoint2D* A, CPoint2D* B)
 
     Compute the distance between points :math:`A` and :math:`B`.
 
 
-.. c:function:: double c_point2d_square_distance(CPoint2D* A, CPoint2D* B)
+.. c:function:: double point2d_square_distance(CPoint2D* A, CPoint2D* B)
 
     Compute the square of distance between to points :math:`A` and :math:`B`.
 
@@ -65,7 +65,7 @@ Computational functions
     performance, computing the square root can be avoided.
 
 
-.. c:function:: double c_is_left(CPoint2D* A, CPoint2D* B, CPoint2D* P)
+.. c:function:: double is_left(CPoint2D* A, CPoint2D* B, CPoint2D* P)
 
     Test if the point :math:`P` is left, right, or of an infinite
     line :math:`(AB)`.

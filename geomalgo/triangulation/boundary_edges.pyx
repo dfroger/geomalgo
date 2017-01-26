@@ -1,7 +1,7 @@
 import numpy as np
 
 from ..base2d.point2d cimport (
-    CPoint2D, c_point2d_distance
+    CPoint2D, point2d_distance
 )
 
 from ..base2d.vector2d cimport (
@@ -175,7 +175,7 @@ cdef class BoundaryEdges:
             P1.x = x[V1]
             P1.y = y[V1]
 
-            self.length[B] = c_point2d_distance(&P0, &P1)
+            self.length[B] = point2d_distance(&P0, &P1)
 
     def compute_normal(BoundaryEdges self, double[:] x, double[:] y):
         cdef:

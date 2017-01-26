@@ -1,6 +1,6 @@
 from libc.math cimport fabs
 
-from .point2d cimport CPoint2D, Point2D, c_is_left
+from .point2d cimport CPoint2D, Point2D, is_left
 
 
 # ============================================================================
@@ -41,11 +41,11 @@ cdef int triangle2d_on_edges(CTriangle2D* ABC, CPoint2D* P,
 
 
 cdef inline double triangle2d_signed_area(CTriangle2D* T):
-    return 0.5 * c_is_left(T.A, T.B, T.C)
+    return 0.5 * is_left(T.A, T.B, T.C)
 
 
 cdef inline double triangle2d_area(CTriangle2D* T):
-    return fabs(0.5 * c_is_left(T.A, T.B, T.C))
+    return fabs(0.5 * is_left(T.A, T.B, T.C))
 
 
 cdef inline void triangle2d_center(CTriangle2D* T, CPoint2D* C):

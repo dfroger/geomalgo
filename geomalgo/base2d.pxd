@@ -4,8 +4,8 @@ from .base2d.line2d cimport (
 
 from .base2d.point2d cimport (
     CPoint2D, new_point2d, del_point2d, subtract_points2d,
-    point2d_plus_vector2d, c_is_left, c_point2d_square_distance,
-    c_point2d_distance, point2d_equal, Point2D
+    point2d_plus_vector2d, is_left, point2d_square_distance,
+    point2d_distance, point2d_equal, Point2D
 )
 
 from .base2d.polygon2d cimport (

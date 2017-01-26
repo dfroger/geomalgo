@@ -1,4 +1,4 @@
-from ..base2d cimport CPoint2D, CPolygon2D, c_is_left, new_point2d
+from ..base2d cimport CPoint2D, CPolygon2D, is_left, new_point2d
 
 cdef int polygon2d_winding_point2d(CPolygon2D* PG, CPoint2D* P):
     """
@@ -50,14 +50,14 @@ cdef int polygon2d_winding_point2d(CPolygon2D* PG, CPoint2D* P):
             if P.y < B.y:
                 # A.y <= P.y < B.y: Upward crossing.
                 # Now, test if P is left AB
-                if c_is_left(&A, &B, P) > 0:
+                if is_left(&A, &B, P) > 0:
                     winding_number += 1
 
         else:
             if B.y <= P.y:
                 # B.y <= P.y < A.y: Downward crossing
                 # Now, test if P is right AB
-                if c_is_left(&A, &B, P) < 0:
+                if is_left(&A, &B, P) < 0:
                      winding_number -= 1
 
     return winding_number

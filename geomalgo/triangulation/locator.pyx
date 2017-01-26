@@ -45,7 +45,7 @@ def build_triangle_to_cell(
     triangle2d_set(&ABC, &A, &B, &C)
 
     for T in range(TG.NT):
-        TG.c_get(T, &ABC)
+        TG.get(T, &ABC)
 
         # In the schema, grid is aligned with
         # vertical and horitonzal triangle edges.
@@ -214,7 +214,7 @@ cdef class TriangulationLocator:
             IT1 = self.celltri_idx[cell_index+1]
             for IT in range(IT0, IT1):
                 T = self.celltri[IT]
-                self.TG.c_get(T, &ABC)
+                self.TG.get(T, &ABC)
 
                 # Check if triangle contains point.
                 if triangle2d_includes_point2d(&ABC, &P, self.edge_width_square):
@@ -225,7 +225,7 @@ cdef class TriangulationLocator:
                 # Not found inside triangles, check if point is on triangle edges.
                 for IT in range(IT0, IT1):
                     T = self.celltri[IT]
-                    self.TG.c_get(T, &ABC)
+                    self.TG.get(T, &ABC)
 
                     if triangle2d_on_edges(&ABC, &P, edge_width) != -1:
                         triangles[IP] = T
