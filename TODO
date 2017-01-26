@@ -1,7 +1,3 @@
-rename:
-    cdef inline void add_vector2d(CVector2D *t, CVector2D *AB, CVector2D *v):
-    cdef inline void add_vector2d(CVector2D *AC, CVector2D *AB, CVector2D *BC):
-
 Package Ninja and Craftr with Conda.
 
 code coverage
