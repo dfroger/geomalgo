@@ -69,44 +69,23 @@ cdef double segment2d_square_distance_point2d(CSegment2D* AB, CPoint2D* P):
 
 
 cdef segment2d_at(CPoint2D* P, CSegment2D AB, double alpha):
-    """
-    A     P
-    +-----+-----> AB
-
-    P = A + alpha*AB
-
-    Note
-    ----
-
-    This can be derived from 1D interpolation formuale:
-
-        a   x       b
-        +---+-------+
-
-        alpha = (x-a) / (b-a)
-
-        fx = (1-alpha)*fa + alpha*fb
-           = fa + alpha*(fb-fa)
-
-    So:
-        px = xa + alpha*(xb-xa)
-        py = ya + alpha*(yb-ya)
-
-    However, we keep simple and use 'point2d_plus_vector2d' function instead
-    of generic inteporlation functions.
-    """
+    # This can be derived from 1D interpolation formuale:
+    #
+    #     a   x       b
+    #     +---+-------+
+    #
+    #     alpha = (x-a) / (b-a)
+    #
+    #     fx = (1-alpha)*fa + alpha*fb
+    #        = fa + alpha*(fb-fa)
+    #
+    # So:
+    #     px = xa + alpha*(xb-xa)
+    #     py = ya + alpha*(yb-ya)
     point2d_plus_vector2d(P, AB.A, alpha, AB.AB)
 
 
 cdef double segment2d_where(CSegment2D* seg, CPoint2D* P):
-    """
-    Compute coordinate of Point p in segment AB
-
-    Assume point in on segment
-
-    A----P-------B
-    """
-
     if seg.AB.x != 0.:
         return (P.x - seg.A.x) / seg.AB.x
     else:

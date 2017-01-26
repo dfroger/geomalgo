@@ -54,28 +54,13 @@ def is_left(Point2D A, Point2D B, Point2D P, comparer=math.isclose):
 
 
 cdef class Point2D:
-    """
-    A point in 2D space
-
-    Parameters
-    ----------
-    x: float
-        First coordinate
-
-    y: float
-        Second coordinate
-
-    """
-
     property x:
-        """First coodinate"""
         def __get__(self):
             return self.cpoint2d.x
         def __set__(self, double x):
             self.cpoint2d.x = x
 
     property y:
-        """Second coodinate"""
         def __get__(self):
             return self.cpoint2d.y
         def __set__(self, double y):

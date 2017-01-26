@@ -32,10 +32,10 @@ cdef void del_triangle2d(CTriangle2D* ctri2d):
 
 cdef bint triangle2d_includes_point2d(CTriangle2D* ABC, CPoint2D* P,
                                       double edge_width_square):
-    """
-    inclusion.winding.polygon2d_winding_point2d specialized for triangle,
-    just for optimisation.
-    """
+
+    # inclusion.winding.polygon2d_winding_point2d specialized for triangle,
+    # just for optimisation.
+
     cdef:
         int winding_number = 0
         bint included
