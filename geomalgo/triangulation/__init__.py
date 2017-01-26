@@ -16,6 +16,6 @@ __all__ = [
 
 # not in __all__
 from .util import (
-    compute_bounds, compute_edge_min_max, compute_centers,
+    compute_bounding_box, compute_edge_min_max, compute_centers,
     compute_signed_area, compute_interpolator
 )

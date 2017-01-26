@@ -3,6 +3,8 @@ from libc.math cimport fabs
 
 from .triangulation2d cimport Triangulation2D
 
+from ..base2d import BoundingBox
+
 from ..base2d cimport (
     CTriangle2D, CPoint2D, triangle2d_set, triangle2d_center,
     triangle2d_signed_area, triangle2d_gradx_grady_det, point2d_distance)
@@ -30,7 +32,7 @@ def compute_centers(Triangulation2D TG):
     return np.asarray(xcenter), np.asarray(ycenter)
 
 
-def compute_bounds(Triangulation2D TG):
+def compute_bounding_box(Triangulation2D TG):
     cdef:
         int V
         double xmin, xmax
@@ -47,7 +49,7 @@ def compute_bounds(Triangulation2D TG):
         ymin = min(ymin, TG.y[V])
         ymax = max(ymax, TG.y[V])
 
-    return xmin, xmax, ymin, ymax
+    return BoundingBox(xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax)
 
 
 def compute_edge_min_max(Triangulation2D TG):

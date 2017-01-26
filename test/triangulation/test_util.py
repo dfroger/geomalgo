@@ -33,15 +33,15 @@ class TestUtil(unittest.TestCase):
 
         assert_allclose(signed_area, [-0.5, -0.75, 0.5, 0.75, 0.5, 0.5])
 
-    def test_compute_bounds(self):
+    def test_compute_bounding_box(self):
         TG = ga.Triangulation2D(STEP.x, STEP.y, STEP.trivtx)
-        xmin, xmax, ymin, ymax = ga.triangulation.compute_bounds(TG)
+        bb = ga.triangulation.compute_bounding_box(TG)
 
-        self.assertEqual(xmin, 0)
-        self.assertEqual(xmax, 2.5)
+        self.assertEqual(bb.xmin, 0)
+        self.assertEqual(bb.xmax, 2.5)
 
-        self.assertEqual(ymin, 10)
-        self.assertEqual(ymax, 12)
+        self.assertEqual(bb.ymin, 10)
+        self.assertEqual(bb.ymax, 12)
 
     def test_compute_edge_min_max(self):
         TG = ga.Triangulation2D(STEP.x, STEP.y, STEP.trivtx)
