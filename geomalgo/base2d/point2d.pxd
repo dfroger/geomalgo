@@ -28,8 +28,8 @@ cdef inline bint point2d_equal(CPoint2D* A, CPoint2D* B):
 # ============================================================================
 
 
-cdef void subtract_points2d(CVector2D * u, const CPoint2D * B,
-                            const CPoint2D * A)
+cdef void subtract_points2d(CVector2D* AB, const CPoint2D* B,
+                            const CPoint2D* A)
 
 cdef void point2d_plus_vector2d(CPoint2D* result, CPoint2D* start,
                                 double factor, CVector2D* vector)

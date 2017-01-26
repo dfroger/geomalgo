@@ -28,11 +28,11 @@ cdef void del_segment2d(CSegment2D* csegment2d):
 
 cdef CSegment2D* create_segment2d(CPoint2D* A, CPoint2D* B):
     cdef:
-        CSegment2D* seg = new_segment2d()
-    seg.A = A
-    seg.B = B
-    subtract_points2d(seg.AB, seg.B, seg.A)
-    return seg
+        CSegment2D* AB = new_segment2d()
+    AB.A = A
+    AB.B = B
+    subtract_points2d(AB.AB, AB.B, AB.A)
+    return AB
 
 
 # ============================================================================
@@ -40,40 +40,40 @@ cdef CSegment2D* create_segment2d(CPoint2D* A, CPoint2D* B):
 # ============================================================================
 
 
-cdef double segment2d_distance_point2d(CSegment2D* S, CPoint2D* P):
-    return sqrt(segment2d_square_distance_point2d(S, P))
+cdef double segment2d_distance_point2d(CSegment2D* AB, CPoint2D* P):
+    return sqrt(segment2d_square_distance_point2d(AB, P))
 
 
-cdef double segment2d_square_distance_point2d(CSegment2D* S, CPoint2D* P):
+cdef double segment2d_square_distance_point2d(CSegment2D* AB, CPoint2D* P):
     cdef:
         CPoint2D Pb
         CVector2D w
         double c1, c2, b
 
-    subtract_points2d(&w, P, S.A)
+    subtract_points2d(&w, P, AB.A)
 
-    c1 = dot_product2d(&w, S.AB)
+    c1 = dot_product2d(&w, AB.AB)
 
     if c1 <= 0:
-        return c_point2d_square_distance(P, S.A)
+        return c_point2d_square_distance(P, AB.A)
 
-    c2 = dot_product2d(S.AB, S.AB)
+    c2 = dot_product2d(AB.AB, AB.AB)
     if c2 <= c1:
-        return c_point2d_square_distance(P, S.B)
+        return c_point2d_square_distance(P, AB.B)
 
     b = c1 / c2
 
-    point2d_plus_vector2d(&Pb, S.A, b, S.AB)
+    point2d_plus_vector2d(&Pb, AB.A, b, AB.AB)
 
     return c_point2d_square_distance(P, &Pb)
 
 
-cdef segment2d_at(CPoint2D* result, CSegment2D S, double coord):
+cdef segment2d_at(CPoint2D* P, CSegment2D AB, double alpha):
     """
     A     P
     +-----+-----> AB
 
-    P = A + coord*AB
+    P = A + alpha*AB
 
     Note
     ----
@@ -95,7 +95,7 @@ cdef segment2d_at(CPoint2D* result, CSegment2D S, double coord):
     However, we keep simple and use 'point2d_plus_vector2d' function instead
     of generic inteporlation functions.
     """
-    point2d_plus_vector2d(result, S.A, coord, S.AB)
+    point2d_plus_vector2d(P, AB.A, alpha, AB.AB)
 
 
 cdef double segment2d_where(CSegment2D* seg, CPoint2D* P):
@@ -113,9 +113,9 @@ cdef double segment2d_where(CSegment2D* seg, CPoint2D* P):
         return (P.y - seg.A.y) / seg.AB.y
 
 
-cdef void segment2d_middle(CPoint2D* M, CSegment2D* seg):
-    M.x = 0.5*(seg.A.x + seg.B.x)
-    M.y = 0.5*(seg.A.y + seg.B.y)
+cdef void segment2d_middle(CPoint2D* M, CSegment2D* AB):
+    M.x = 0.5*(AB.A.x + AB.B.x)
+    M.y = 0.5*(AB.A.y + AB.B.y)
 
 
 # ============================================================================

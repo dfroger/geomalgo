@@ -27,15 +27,15 @@ cdef CSegment2D* create_segment2d(CPoint2D* A, CPoint2D* B)
 # ============================================================================
 
 
-cdef double segment2d_square_distance_point2d(CSegment2D* S, CPoint2D* P)
+cdef double segment2d_distance_point2d(CSegment2D* AB, CPoint2D* P)
 
-cdef double segment2d_distance_point2d(CSegment2D* S, CPoint2D* P)
+cdef double segment2d_square_distance_point2d(CSegment2D* AB, CPoint2D* P)
 
-cdef segment2d_at(CPoint2D* result, CSegment2D S, double coord)
+cdef segment2d_at(CPoint2D* P, CSegment2D AB, double alpha)
 
 cdef double segment2d_where(CSegment2D* AB, CPoint2D* P)
 
-cdef void segment2d_middle(CPoint2D* M, CSegment2D* seg)
+cdef void segment2d_middle(CPoint2D* M, CSegment2D* AB)
 
 cdef inline void segment2d_compute_vector(CSegment2D* seg):
     subtract_points2d(seg.AB, seg.B, seg.A)

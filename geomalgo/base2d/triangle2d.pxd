@@ -32,7 +32,7 @@ cdef inline void triangle2d_set(CTriangle2D* ABC,
 # ============================================================================
 
 
-cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P,
+cdef bint triangle2d_includes_point2d(CTriangle2D* ABC, CPoint2D* P,
                                       double edge_width_square)
 
 
