@@ -7,6 +7,12 @@ from libc.math cimport sqrt, atan2
 
 from ..polar cimport PolarPoint
 
+
+# ============================================================================
+# Structures
+# ============================================================================
+
+
 cdef CPoint2D* new_point2d():
     return <CPoint2D*> malloc(sizeof(CPoint2D))
 
@@ -14,10 +20,16 @@ cdef void del_point2d(CPoint2D* cpoint2d):
     if cpoint2d is not NULL:
         free(cpoint2d)
 
-cdef void subtract_points2d(CVector2D * u, const CPoint2D * B,
+
+# ============================================================================
+# computational functions
+# ============================================================================
+
+
+cdef void subtract_points2d(CVector2D* AB, const CPoint2D* B,
                             const CPoint2D * A):
-    u.x = B.x - A.x
-    u.y = B.y - A.y
+    AB.x = B.x - A.x
+    AB.y = B.y - A.y
 
 cdef void point2d_plus_vector2d(CPoint2D* result, CPoint2D* start,
                                 double factor, CVector2D* vector):
@@ -35,29 +47,20 @@ def is_left(Point2D A, Point2D B, Point2D P, comparer=math.isclose):
 
     return res > 0.
 
+
+# ============================================================================
+# Python API
+# ============================================================================
+
+
 cdef class Point2D:
-    """
-    A point in 2D space
-
-    Parameters
-    ----------
-    x: float
-        First coordinate
-
-    y: float
-        Second coordinate
-
-    """
-
     property x:
-        """First coodinate"""
         def __get__(self):
             return self.cpoint2d.x
         def __set__(self, double x):
             self.cpoint2d.x = x
 
     property y:
-        """Second coodinate"""
         def __get__(self):
             return self.cpoint2d.y
         def __set__(self, double y):

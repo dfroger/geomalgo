@@ -1,5 +1,11 @@
 from libc.math cimport sqrt
 
+
+# ============================================================================
+# Structures
+# ============================================================================
+
+
 cdef struct CVector2D:
     double x
     double y
@@ -8,37 +14,55 @@ cdef CVector2D* new_vector2d()
 
 cdef void del_vector2d(CVector2D* V)
 
-cdef inline void vector2d_times_scalar(CVector2D *result, CVector2D *a, double scalar):
-    result.x = a.x * scalar
-    result.y = a.y * scalar
 
-cdef inline double cross_product2d(CVector2D *a, CVector2D *b):
-    return a.x*b.y - a.y*b.x
+# ===========================================================================
+# Computational functions
+# ============================================================================
 
-cdef inline void subtract_vector2d(CVector2D *c, CVector2D *b, CVector2D *a):
-    c.x = b.x - a.x
-    c.y = b.y - a.y
 
-cdef inline void add_vector2d(CVector2D *c, CVector2D *b, CVector2D *a):
-    c.x = a.x + b.x
-    c.y = a.y + b.y
+cdef inline void vector2d_times_scalar(CVector2D *t, double alpha, CVector2D *u):
+    t.x = alpha * u.x
+    t.y = alpha * u.y
 
-cdef inline double dot_product2d(CVector2D *a, CVector2D *b):
-    return a.x*b.x + a.y*b.y
 
-cdef inline double compute_norm2d(CVector2D *a):
-    return sqrt(a.x*a.x + a.y*a.y)
+cdef inline void subtract_vector2d(CVector2D *AB, CVector2D *AC, CVector2D *BC):
+    AB.x = AC.x - BC.x
+    AB.y = AC.y - BC.y
 
-cdef inline void normalize_vector2d(CVector2D *a):
+
+cdef inline void add_vector2d(CVector2D *AC, CVector2D *AB, CVector2D *BC):
+    AC.x = AB.x + BC.x
+    AC.y = AB.y + BC.y
+
+
+cdef inline double cross_product2d(CVector2D *u, CVector2D *v):
+    return u.x*v.y - u.y*v.x
+
+
+cdef inline double dot_product2d(CVector2D *u, CVector2D *v):
+    return u.x*v.x + u.y*v.y
+
+
+cdef inline double compute_norm2d(CVector2D *u):
+    return sqrt(u.x*u.x + u.y*u.y)
+
+
+cdef inline void normalize_vector2d(CVector2D *u):
     cdef:
-        double norm = compute_norm2d(a)
-    a.x /= norm
-    a.y /= norm
+        double norm = compute_norm2d(u)
+    u.x /= norm
+    u.y /= norm
 
-cdef inline void compute_normal2d(CVector2D *vec, double vec_norm,
-                                  CVector2D *normal):
-    normal.x =  vec.y / vec_norm
-    normal.y = -vec.x / vec_norm
+
+cdef inline void compute_normal2d(CVector2D *n, CVector2D *u, double norm):
+    n.x =  u.y / norm
+    n.y = -u.x / norm
+
+
+# ============================================================================
+# Python API
+# ============================================================================
+
 
 cdef class Vector2D:
     cdef:

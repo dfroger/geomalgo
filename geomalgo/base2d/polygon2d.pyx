@@ -5,12 +5,25 @@ from ..inclusion cimport polygon2d_winding_point2d
 
 import numpy as np
 
+
+# ============================================================================
+# Structures
+# ============================================================================
+
+
 cdef CPolygon2D* new_polygon2d():
     return <CPolygon2D*> malloc(sizeof(CPolygon2D))
+
 
 cdef void del_polygon2d(CPolygon2D* cpolygon2d):
     if cpolygon2d is not NULL:
         free(cpolygon2d)
+
+
+# ============================================================================
+# Python API
+# ============================================================================
+
 
 cdef class Polygon2D:
 

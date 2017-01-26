@@ -6,23 +6,36 @@ from libc.math cimport fabs
 from .point2d cimport CPoint2D
 from .vector2d cimport CVector2D
 from .segment2d cimport (
-    CSegment2D, segment2d_square_distance_point2d, segment2d_compute_vector, segment2d_set
+    CSegment2D, segment2d_square_distance_point2d, segment2d_set
 )
 from .polygon2d cimport CPolygon2D
 
+
+# ============================================================================
+# Structures
+# ============================================================================
+
+
 cdef CTriangle2D* new_triangle2d():
     return <CTriangle2D*> malloc(sizeof(CTriangle2D))
+
 
 cdef void del_triangle2d(CTriangle2D* ctri2d):
     if ctri2d is not NULL:
         free(ctri2d)
 
+
+# ============================================================================
+# Computational functions
+# ============================================================================
+
+
 cdef bint triangle2d_includes_point2d(CTriangle2D* ABC, CPoint2D* P,
                                       double edge_width_square):
-    """
-    inclusion.winding.polygon2d_winding_point2d specialized for triangle,
-    just for optimisation.
-    """
+
+    # inclusion.winding.polygon2d_winding_point2d specialized for triangle,
+    # just for optimisation.
+
     cdef:
         int winding_number = 0
         bint included
@@ -55,6 +68,7 @@ cdef bint triangle2d_includes_point2d(CTriangle2D* ABC, CPoint2D* P,
     else:
         return included
 
+
 cdef int triangle2d_on_edges(CTriangle2D* ABC, CPoint2D* P,
                              double edge_width_square):
     """
@@ -67,17 +81,14 @@ cdef int triangle2d_on_edges(CTriangle2D* ABC, CPoint2D* P,
     seg.AB = &vec
 
     segment2d_set(&seg, ABC.A, ABC.B)
-    segment2d_compute_vector(&seg)
     if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
         return 0
 
     segment2d_set(&seg, ABC.B, ABC.C)
-    segment2d_compute_vector(&seg)
     if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
         return 1
 
     segment2d_set(&seg, ABC.C, ABC.A)
-    segment2d_compute_vector(&seg)
     if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
         return 2
 
@@ -104,6 +115,12 @@ cdef void triangle2d_gradx_grady_det(CTriangle2D* tri, double signed_area,
     det[0] = (xb*yc - xc*yb) * alpha
     det[1] = (xc*ya - xa*yc) * alpha
     det[2] = (xa*yb - xb*ya) * alpha
+
+
+# ============================================================================
+# Python API
+# ============================================================================
+
 
 cdef class Triangle2D:
 

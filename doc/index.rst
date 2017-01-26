@@ -29,8 +29,8 @@ Documentation
 .. toctree::
     :maxdepth: 1
 
-    auto_examples/index
-    modules/index
+    python/index
+    cython/index
     devel
 
 Development and contact

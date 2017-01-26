@@ -1,11 +1,23 @@
 from libc.stdlib cimport malloc, free
 
+
+# ============================================================================
+# Structures
+# ============================================================================
+
+
 cdef CVector2D* new_vector2d():
     return <CVector2D*> malloc(sizeof(CVector2D))
 
 cdef void del_vector2d(CVector2D* V):
     if V is not NULL:
         free(V)
+
+
+# ============================================================================
+# Python API
+# ============================================================================
+
 
 cdef class Vector2D:
 
@@ -41,7 +53,7 @@ cdef class Vector2D:
         def __get__(self):
             cdef:
                 Vector2D normal = Vector2D.__new__(Vector2D)
-            compute_normal2d(self.cvector2d, self.norm, normal.cvector2d)
+            compute_normal2d(normal.cvector2d, self.cvector2d, self.norm)
             return normal
 
     def __cinit__(self):
@@ -64,10 +76,10 @@ cdef class Vector2D:
     def normalize(self):
         normalize_vector2d(self.cvector2d)
 
-    def __mul__(Vector2D self, double x):
+    def __mul__(Vector2D self, double alpha):
         cdef:
             Vector2D result = Vector2D.__new__(Vector2D)
-        vector2d_times_scalar(result.cvector2d, self.cvector2d, x)
+        vector2d_times_scalar(result.cvector2d, alpha, self.cvector2d)
         return result
 
     def __xor__(Vector2D self, Vector2D other):
