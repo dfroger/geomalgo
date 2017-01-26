@@ -6,7 +6,7 @@ from libc.math cimport fabs
 from .point2d cimport CPoint2D
 from .vector2d cimport CVector2D
 from .segment2d cimport (
-    CSegment2D, segment2d_square_distance_point2d, segment2d_compute_vector, segment2d_set
+    CSegment2D, segment2d_square_distance_point2d, segment2d_set
 )
 from .polygon2d cimport CPolygon2D
 
@@ -81,17 +81,14 @@ cdef int triangle2d_on_edges(CTriangle2D* ABC, CPoint2D* P,
     seg.AB = &vec
 
     segment2d_set(&seg, ABC.A, ABC.B)
-    segment2d_compute_vector(&seg)
     if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
         return 0
 
     segment2d_set(&seg, ABC.B, ABC.C)
-    segment2d_compute_vector(&seg)
     if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
         return 1
 
     segment2d_set(&seg, ABC.C, ABC.A)
-    segment2d_compute_vector(&seg)
     if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
         return 2
 

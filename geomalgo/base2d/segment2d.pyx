@@ -29,9 +29,7 @@ cdef void del_segment2d(CSegment2D* csegment2d):
 cdef CSegment2D* create_segment2d(CPoint2D* A, CPoint2D* B):
     cdef:
         CSegment2D* AB = new_segment2d()
-    AB.A = A
-    AB.B = B
-    subtract_points2d(AB.AB, AB.B, AB.A)
+    segment2d_set(AB, A, B)
     return AB
 
 
