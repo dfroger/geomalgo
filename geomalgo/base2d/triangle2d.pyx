@@ -19,6 +19,7 @@ from .polygon2d cimport CPolygon2D
 cdef CTriangle2D* new_triangle2d():
     return <CTriangle2D*> malloc(sizeof(CTriangle2D))
 
+
 cdef void del_triangle2d(CTriangle2D* ctri2d):
     if ctri2d is not NULL:
         free(ctri2d)

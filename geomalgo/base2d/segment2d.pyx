@@ -40,6 +40,10 @@ cdef CSegment2D* create_segment2d(CPoint2D* A, CPoint2D* B):
 # ============================================================================
 
 
+cdef double segment2d_distance_point2d(CSegment2D* S, CPoint2D* P):
+    return sqrt(segment2d_square_distance_point2d(S, P))
+
+
 cdef double segment2d_square_distance_point2d(CSegment2D* S, CPoint2D* P):
     cdef:
         CPoint2D Pb
@@ -62,10 +66,6 @@ cdef double segment2d_square_distance_point2d(CSegment2D* S, CPoint2D* P):
     point2d_plus_vector2d(&Pb, S.A, b, S.AB)
 
     return c_point2d_square_distance(P, &Pb)
-
-
-cdef double segment2d_distance_point2d(CSegment2D* S, CPoint2D* P):
-    return sqrt(segment2d_square_distance_point2d(S, P))
 
 
 cdef segment2d_at(CPoint2D* result, CSegment2D S, double coord):
