@@ -1,11 +1,23 @@
 from libc.stdlib cimport malloc, free
 
+
+# ============================================================================
+# Structures
+# ============================================================================
+
+
 cdef CVector2D* new_vector2d():
     return <CVector2D*> malloc(sizeof(CVector2D))
 
 cdef void del_vector2d(CVector2D* V):
     if V is not NULL:
         free(V)
+
+
+# ============================================================================
+# Python API
+# ============================================================================
+
 
 cdef class Vector2D:
 

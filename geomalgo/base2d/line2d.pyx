@@ -5,6 +5,12 @@ from .point2d cimport (
 )
 from .vector2d cimport CVector2D, dot_product2d
 
+
+# ============================================================================
+# Structures
+# ============================================================================
+
+
 cdef CLine2D* new_line2d():
     return <CLine2D*> malloc(sizeof(CLine2D))
 
@@ -20,6 +26,11 @@ cdef CLine2D* create_line2d(CPoint2D* A, CPoint2D* B):
     line.A = A
     line.B = B
     return line
+
+
+# ============================================================================
+# Computational functions
+# ============================================================================
 
 
 cdef double line2d_distance_point2d(CLine2D* L, CPoint2D* P):
@@ -38,6 +49,11 @@ cdef double line2d_distance_point2d(CLine2D* L, CPoint2D* P):
     point2d_plus_vector2d(&Pb, L.A, b, &v)
 
     return c_point2d_distance(&Pb, P)
+
+
+# ============================================================================
+# Python API
+# ============================================================================
 
 
 cdef class Line2D:

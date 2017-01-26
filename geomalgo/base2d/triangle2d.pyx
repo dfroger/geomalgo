@@ -10,12 +10,24 @@ from .segment2d cimport (
 )
 from .polygon2d cimport CPolygon2D
 
+
+# ============================================================================
+# Structures
+# ============================================================================
+
+
 cdef CTriangle2D* new_triangle2d():
     return <CTriangle2D*> malloc(sizeof(CTriangle2D))
 
 cdef void del_triangle2d(CTriangle2D* ctri2d):
     if ctri2d is not NULL:
         free(ctri2d)
+
+
+# ============================================================================
+# Computational functions
+# ============================================================================
+
 
 cdef bint triangle2d_includes_point2d(CTriangle2D* ABC, CPoint2D* P,
                                       double edge_width_square):
@@ -54,6 +66,7 @@ cdef bint triangle2d_includes_point2d(CTriangle2D* ABC, CPoint2D* P,
         return triangle2d_on_edges(ABC, P, edge_width_square) != -1
     else:
         return included
+
 
 cdef int triangle2d_on_edges(CTriangle2D* ABC, CPoint2D* P,
                              double edge_width_square):
@@ -104,6 +117,12 @@ cdef void triangle2d_gradx_grady_det(CTriangle2D* tri, double signed_area,
     det[0] = (xb*yc - xc*yb) * alpha
     det[1] = (xc*ya - xa*yc) * alpha
     det[2] = (xa*yb - xb*ya) * alpha
+
+
+# ============================================================================
+# Python API
+# ============================================================================
+
 
 cdef class Triangle2D:
 

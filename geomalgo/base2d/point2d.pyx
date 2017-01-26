@@ -7,12 +7,24 @@ from libc.math cimport sqrt, atan2
 
 from ..polar cimport PolarPoint
 
+
+# ============================================================================
+# Structures
+# ============================================================================
+
+
 cdef CPoint2D* new_point2d():
     return <CPoint2D*> malloc(sizeof(CPoint2D))
 
 cdef void del_point2d(CPoint2D* cpoint2d):
     if cpoint2d is not NULL:
         free(cpoint2d)
+
+
+# ============================================================================
+# computational functions
+# ============================================================================
+
 
 cdef void subtract_points2d(CVector2D * u, const CPoint2D * B,
                             const CPoint2D * A):
@@ -34,6 +46,12 @@ def is_left(Point2D A, Point2D B, Point2D P, comparer=math.isclose):
         raise ValueError("Point P in on line (AB)")
 
     return res > 0.
+
+
+# ============================================================================
+# Python API
+# ============================================================================
+
 
 cdef class Point2D:
     """

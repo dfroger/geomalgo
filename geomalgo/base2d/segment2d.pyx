@@ -3,6 +3,12 @@ import matplotlib.pyplot as plt
 from libc.stdlib cimport malloc, free
 from libc.math cimport sqrt
 
+
+# ============================================================================
+# Structures
+# ============================================================================
+
+
 from .point2d cimport (
     subtract_points2d, CPoint2D, point2d_plus_vector2d,
     c_point2d_square_distance, c_point2d_distance
@@ -27,6 +33,11 @@ cdef CSegment2D* create_segment2d(CPoint2D* A, CPoint2D* B):
     seg.B = B
     subtract_points2d(seg.AB, seg.B, seg.A)
     return seg
+
+
+# ============================================================================
+# Computational functions
+# ============================================================================
 
 
 cdef double segment2d_square_distance_point2d(CSegment2D* S, CPoint2D* P):
@@ -105,6 +116,11 @@ cdef double segment2d_where(CSegment2D* seg, CPoint2D* P):
 cdef void segment2d_middle(CPoint2D* M, CSegment2D* seg):
     M.x = 0.5*(seg.A.x + seg.B.x)
     M.y = 0.5*(seg.A.y + seg.B.y)
+
+
+# ============================================================================
+# Python API
+# ============================================================================
 
 
 cdef class Segment2D:

@@ -2,16 +2,30 @@ from libc.math cimport sqrt
 
 from .vector2d cimport CVector2D, Vector2D
 
+
+# ============================================================================
+# Structures
+# ============================================================================
+
+
 cdef struct CPoint2D:
     double x
     double y
 
+
 cdef CPoint2D* new_point2d()
+
 
 cdef void del_point2d(CPoint2D* cpoint2d)
 
 cdef void subtract_points2d(CVector2D * u, const CPoint2D * B,
                             const CPoint2D * A)
+
+
+# ============================================================================
+# Computational functions
+# ============================================================================
+
 
 cdef void point2d_plus_vector2d(CPoint2D* result, CPoint2D* start,
                                 double factor, CVector2D* vector)
@@ -36,6 +50,12 @@ cdef inline double c_point2d_distance(CPoint2D* A, CPoint2D* B):
 
 cdef inline bint point2d_equal(CPoint2D* A, CPoint2D* B):
     return A.x == B.x and A.y == B.y
+
+
+# ============================================================================
+# Python API
+# ============================================================================
+
 
 cdef class Point2D:
     cdef public:

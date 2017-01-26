@@ -2,6 +2,12 @@ from libc.math cimport fabs
 
 from .point2d cimport CPoint2D, Point2D, c_is_left
 
+
+# ============================================================================
+# Structures
+# ============================================================================
+
+
 cdef struct CTriangle2D:
     CPoint2D* A
     CPoint2D* B
@@ -10,6 +16,12 @@ cdef struct CTriangle2D:
 cdef CTriangle2D* new_triangle2d()
 
 cdef void del_triangle2d(CTriangle2D* ctri2d)
+
+
+# ============================================================================
+# Computational functions
+# ============================================================================
+
 
 cdef bint triangle2d_includes_point2d(CTriangle2D* ctri2d, CPoint2D* P,
                                       double edge_width_square)
@@ -49,6 +61,12 @@ cdef inline double triangle2d_counterclockwise(CTriangle2D* T):
 cdef void triangle2d_gradx_grady_det(CTriangle2D* T, double signed_area,
                                      double gradx[3], double grady[3],
                                      double det[3])
+
+
+# ============================================================================
+# Python API
+# ============================================================================
+
 
 cdef class Triangle2D:
     cdef public:

@@ -1,5 +1,11 @@
 from libc.math cimport sqrt
 
+
+# ============================================================================
+# Structures
+# ============================================================================
+
+
 cdef struct CVector2D:
     double x
     double y
@@ -7,6 +13,12 @@ cdef struct CVector2D:
 cdef CVector2D* new_vector2d()
 
 cdef void del_vector2d(CVector2D* V)
+
+
+# ===========================================================================
+# Computational functions
+# ============================================================================
+
 
 cdef inline void vector2d_times_scalar(CVector2D *result, CVector2D *a, double scalar):
     result.x = a.x * scalar
@@ -39,6 +51,12 @@ cdef inline void compute_normal2d(CVector2D *vec, double vec_norm,
                                   CVector2D *normal):
     normal.x =  vec.y / vec_norm
     normal.y = -vec.x / vec_norm
+
+
+# ============================================================================
+# Python API
+# ============================================================================
+
 
 cdef class Vector2D:
     cdef:
