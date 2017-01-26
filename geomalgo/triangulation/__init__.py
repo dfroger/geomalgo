@@ -13,3 +13,9 @@ __all__ = [
     'build_edges', 'build_triangle_to_cell', 'build_cell_to_triangle',
     'TriangulationLocator', 'TriangulationInterpolator',
 ]
+
+# not in __all__
+from .util import (
+    compute_bounds, compute_edge_min_max, compute_centers,
+    compute_signed_area, compute_interpolator
+)

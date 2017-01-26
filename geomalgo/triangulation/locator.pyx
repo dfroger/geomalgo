@@ -164,7 +164,13 @@ cdef class TriangulationLocator:
         self.edge_width = edge_width
         self.edge_width_square = edge_width**2
 
-        TG.allocate_locator()
+        # TODO: optional args, as can be shared by multiple
+        # TriangulationLocator
+        self.ix_min = np.empty(self.NT, dtype='int32')
+        self.ix_max = np.empty(self.NT, dtype='int32')
+        self.iy_min = np.empty(self.NT, dtype='int32')
+        self.iy_max = np.empty(self.NT, dtype='int32')
+
         self.grid = Grid2D.from_triangulation(TG, nx, ny)
 
         build_triangle_to_cell(TG.ix_min, TG.ix_max,
