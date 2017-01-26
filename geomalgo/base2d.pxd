@@ -1,3 +1,7 @@
+from .base2d.boundingbox cimport (
+    BoundingBox
+)
+
 from .base2d.line2d cimport (
     CLine2D, new_line2d, del_line2d, create_line2d
 )

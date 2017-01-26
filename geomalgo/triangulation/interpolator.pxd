@@ -14,6 +14,10 @@ cdef class TriangulationInterpolator:
 
         int NP
 
+        double[:,:] gradx
+        double[:,:] grady
+        double[:,:] det
+
         # Point localization.
         int[:] triangles
 

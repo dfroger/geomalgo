@@ -11,29 +11,20 @@ check whether a triangle and a cell overlap.
 import numpy as np
 
 from ..base2d cimport (
-    CTriangle2D, CPoint2D, triangle2d_set, triangle2d_includes_point2d,
-    triangle2d_on_edges
+    BoundingBox, CTriangle2D, CPoint2D, triangle2d_set,
+    triangle2d_includes_point2d, triangle2d_on_edges
 )
 from ..grid2d cimport Cell2D, compute_index
+from .util import compute_bounding_box, compute_edge_min_max
 
-def build_triangle_to_cell(
-    int[:] ix_min, int[:] ix_max,
-    int[:] iy_min, int[:] iy_max,
-    Triangulation2D TG, Grid2D grid,
-    double edge_width):
 
-    """
-    Parameters
-    ----------
-    trivtx: int[NT, 3]
-        Triangle vertices.
+DEF IX_MIN = 0
+DEF IX_MAX = 1
+DEF IY_MIN = 2
+DEF IY_MAX = 3
 
-    iy_min: int[NT]
-        Cells block of a triangle
-
-    ix_min: int[NT]
-        Cells block of a triangle
-    """
+def build_triangle_to_cell(int[:,:] bounds, Triangulation2D TG, Grid2D grid,
+                           double edge_width):
 
     cdef:
         int T
@@ -82,35 +73,32 @@ def build_triangle_to_cell(
         P.x = min(A.x, B.x, C.x) - edge_width
         P.y = min(A.y, B.y, C.y) - edge_width
         grid.c_find_cell(cell, &P)
-        ix_min[T] = max(cell.ix, 0)
-        iy_min[T] = max(cell.iy, 0)
+        bounds[T,IX_MIN] = max(cell.ix, 0)
+        bounds[T,IY_MIN] = max(cell.iy, 0)
 
         # Cell blocks north-east point
         P.x = max(A.x, B.x, C.x) + edge_width
         P.y = max(A.y, B.y, C.y) + edge_width
         grid.c_find_cell(cell, &P)
-        ix_max[T] = min(cell.ix+1, grid.nx)
-        iy_max[T] = min(cell.iy+1, grid.ny)
+        bounds[T,IX_MAX] = min(cell.ix+1, grid.nx)
+        bounds[T,IY_MAX] = min(cell.iy+1, grid.ny)
 
 
-def build_cell_to_triangle(
-    int[:] ix_min, int[:] ix_max,
-    int[:] iy_min, int[:] iy_max,
-    int nx, int ny):
+def build_cell_to_triangle(int[:,:] bounds, int nx, int ny):
 
     cdef:
         #Number of triangles of a cell.
         int[:] celltri
         int[:] cell_triangles_idx
         int[:] count = np.zeros(nx*ny, dtype='int32')
-        int T, NT = ix_min.shape[0]
+        int T, NT = bounds.shape[0]
         int ix, iy, cell_index, offset
         int total = 0
 
     # Count how much triangles each cell has.
     for T in range(NT):
-        for iy in range(iy_min[T], iy_max[T]):
-            for ix in range(ix_min[T], ix_max[T]):
+        for iy in range(bounds[T,IY_MIN], bounds[T,IY_MAX]):
+            for ix in range(bounds[T,IX_MIN], bounds[T,IX_MAX]):
                 cell_index = compute_index(nx, ix, iy)
                 count[cell_index] += 1
                 total += 1
@@ -128,8 +116,8 @@ def build_cell_to_triangle(
 
     # Set celltri
     for T in range(NT):
-        for iy in range(iy_min[T], iy_max[T]):
-            for ix in range(ix_min[T], ix_max[T]):
+        for iy in range(bounds[T,IY_MIN], bounds[T,IY_MAX]):
+            for ix in range(bounds[T,IX_MIN], bounds[T,IX_MAX]):
                 cell_index = compute_index(nx, ix, iy)
                 offset = offsets[cell_index]
                 celltri[offset] = T
@@ -139,42 +127,43 @@ def build_cell_to_triangle(
 
 
 cdef class TriangulationLocator:
-    """
-    Note: Use TG.ix_min and others to store intermediate results (allocate
-    them it not already).
-
-    """
-
     def __init__(TriangulationLocator self, Triangulation2D TG,
-                 int nx=0, int ny=0, double edge_width=-1):
+                 int nx=0, int ny=0, double edge_width=-1,
+                 int[:,:] bounds=None):
 
-        if nx==0 or ny==0 or edge_width < 0:
-            TG.compute_stat()
+        cdef:
+            double edge_min, edge_max
+
+        if 0 in (nx, ny):
+            bb = compute_bounding_box(TG)
+
+        if 0 in (nx, ny) or edge_width < 0:
+            edge_min, edge_max = compute_edge_min_max(TG)
 
         if nx == 0:
-            nx = max(1, int((TG.xmax - TG.xmin) / (TG.edge_max * 10)))
+            nx = max(1, int((bb.xmax - bb.xmin) / (edge_max * 10)))
 
         if ny == 0:
-            ny = max(1, int((TG.ymax - TG.ymin) / (TG.edge_max * 10)))
+            ny = max(1, int((bb.ymax - bb.ymin) / (edge_max * 10)))
 
         if edge_width < 0:
-            edge_width = TG.edge_min * 1.E-07
+            edge_width = edge_min * 1.E-07
 
         self.TG = TG
         self.edge_width = edge_width
         self.edge_width_square = edge_width**2
 
-        TG.allocate_locator()
+        if bounds is None:
+            bounds = np.empty((TG.NT, 4), dtype='int32')
+        else:
+            assert bounds.shape == (TG.NT, 4)
+            bounds = bounds
+
         self.grid = Grid2D.from_triangulation(TG, nx, ny)
 
-        build_triangle_to_cell(TG.ix_min, TG.ix_max,
-                               TG.iy_min, TG.iy_max,
-                               TG, self.grid, edge_width)
+        build_triangle_to_cell(bounds, TG, self.grid, edge_width)
 
-        self.celltri, self.celltri_idx = build_cell_to_triangle(
-                                             TG.ix_min, TG.ix_max,
-                                             TG.iy_min, TG.iy_max,
-                                             nx, ny)
+        self.celltri, self.celltri_idx = build_cell_to_triangle(bounds, nx, ny)
 
     cpdef int search_points(TriangulationLocator self,
                             double[:] xpoints, double[:] ypoints,
