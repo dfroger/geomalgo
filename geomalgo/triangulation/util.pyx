@@ -3,10 +3,8 @@ from libc.math cimport fabs
 
 from .triangulation2d cimport Triangulation2D
 
-from ..base2d import BoundingBox
-
 from ..base2d cimport (
-    CTriangle2D, CPoint2D, triangle2d_set, triangle2d_center,
+    BoundingBox, CTriangle2D, CPoint2D, triangle2d_set, triangle2d_center,
     triangle2d_signed_area, triangle2d_gradx_grady_det, point2d_distance)
 
 

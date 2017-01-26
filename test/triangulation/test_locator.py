@@ -49,18 +49,14 @@ class TestTriangleToCell(unittest.TestCase):
         TG = ga.Triangulation2D(x, y, trivtx)
         grid = ga.Grid2D(0, 24, 4, 10, 25, 3)
 
-        ix_min = np.zeros(4, dtype='int32')
-        ix_max = np.zeros(4, dtype='int32')
-        iy_min = np.zeros(4, dtype='int32')
-        iy_max = np.zeros(4, dtype='int32')
+        bounds = np.zeros((4,4), dtype='int32')
 
-        ga.build_triangle_to_cell(ix_min, ix_max, iy_min, iy_max,
-                               TG, grid, 0.01)
+        ga.build_triangle_to_cell(bounds, TG, grid, 0.01)
 
-        assert_equal(ix_min, [1, 0, 0, 1])
-        assert_equal(ix_max, [3, 2, 2, 3])
-        assert_equal(iy_min, [1, 1, 0, 0])
-        assert_equal(iy_max, [3, 3, 2, 2])
+        assert_equal(bounds, [[1, 3, 1, 3],
+                              [0, 2, 1, 3],
+                              [0, 2, 0, 2],
+                              [1, 3, 0, 2]])
 
 
 class TestBuildCellToTriangle(unittest.TestCase):
@@ -70,16 +66,14 @@ class TestBuildCellToTriangle(unittest.TestCase):
         same geometry as TestTriangleToCell.test_four_cells
         """
 
-        ix_min = np.array([1, 0, 0, 1], dtype='int32')
-        ix_max = np.array([3, 2, 2, 3], dtype='int32')
-        iy_min = np.array([1, 1, 0, 0], dtype='int32')
-        iy_max = np.array([3, 3, 2, 2], dtype='int32')
+        bounds = np.array([[1, 3, 1, 3],
+                           [0, 2, 1, 3],
+                           [0, 2, 0, 2],
+                           [1, 3, 0, 2]], dtype='int32')
 
         nx, ny = 4, 3
 
-        celltri, celltri_idx = ga.build_cell_to_triangle(ix_min, ix_max,
-                                                         iy_min, iy_max,
-                                                         nx, ny)
+        celltri, celltri_idx = ga.build_cell_to_triangle(bounds, nx, ny)
 
         assert_equal(celltri, [
             2,           # cell  0     0: 1
