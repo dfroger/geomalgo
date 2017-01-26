@@ -193,7 +193,7 @@ cdef class BoundaryEdges:
             vec.y = y[V1] - y[V0]
 
             vec_norm = compute_norm2d(&vec)
-            compute_normal2d(&vec, vec_norm, &normal)
+            compute_normal2d(&normal, &vec, vec_norm)
 
             self.normal[B, 0] = normal.x
             self.normal[B, 1] = normal.y
