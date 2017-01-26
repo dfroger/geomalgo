@@ -66,7 +66,7 @@ cdef double segment2d_square_distance_point2d(CSegment2D* AB, CPoint2D* P):
     return c_point2d_square_distance(P, &Pb)
 
 
-cdef segment2d_at(CPoint2D* P, CSegment2D AB, double alpha):
+cdef void segment2d_at(CPoint2D* P, CSegment2D* AB, double alpha):
     # This can be derived from 1D interpolation formuale:
     #
     #     a   x       b
@@ -157,7 +157,7 @@ cdef class Segment2D:
     def at(Segment2D self, double coord):
         cdef:
             Point2D result = Point2D.__new__(Point2D)
-        segment2d_at(result.cpoint2d, self.csegment2d, coord)
+        segment2d_at(result.cpoint2d, &self.csegment2d, coord)
         return result
 
     def where(Segment2D self, Point2D P):

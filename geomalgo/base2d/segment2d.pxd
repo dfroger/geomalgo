@@ -32,7 +32,7 @@ cdef double segment2d_distance_point2d(CSegment2D* AB, CPoint2D* P)
 
 cdef double segment2d_square_distance_point2d(CSegment2D* AB, CPoint2D* P)
 
-cdef segment2d_at(CPoint2D* P, CSegment2D AB, double alpha)
+cdef void segment2d_at(CPoint2D* P, CSegment2D* AB, double alpha)
 
 cdef double segment2d_where(CSegment2D* AB, CPoint2D* P)
 
