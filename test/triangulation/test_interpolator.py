@@ -20,14 +20,14 @@ class TestTriangulationInterpolator(unittest.TestCase):
 
         # Create interpolator to triangle centers.
         interpolator = ga.TriangulationInterpolator(TG, locator, TG.NT)
-        TG.compute_centers()
-        nout = interpolator.set_points(TG.xcenter, TG.ycenter)
+        xcenter, ycenter = ga.triangulation.compute_centers(TG)
+        nout = interpolator.set_points(xcenter, ycenter)
         self.assertEqual(nout, 0)
 
         # Compute data on mesh vertices, and expected data on triangle
         # centers.
         vertdata = linear_function(TG.x, TG.y)
-        expected_pointdata = linear_function(TG.xcenter, TG.ycenter)
+        expected_pointdata = linear_function(xcenter, ycenter)
 
         # Interpolate data.
         pointdata = np.empty(TG.NT, dtype='d')

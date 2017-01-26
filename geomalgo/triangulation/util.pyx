@@ -91,7 +91,7 @@ def compute_signed_area(Triangulation2D TG):
     return np.asarray(signed_area)
 
 
-def compute_interpolator(Triangulation2D TG, double[:] signed_area):
+def compute_interpolator(Triangulation2D TG, double[:] signed_area=None):
     # Compute gradx, grady, det (for interpolations).
 
     cdef:
@@ -101,6 +101,9 @@ def compute_interpolator(Triangulation2D TG, double[:] signed_area):
         double[:,:] gradx = np.empty((TG.NT,3), dtype='d')
         double[:,:] grady = np.empty((TG.NT,3), dtype='d')
         double[:,:] det   = np.empty((TG.NT,3), dtype='d')
+
+    if signed_area is None:
+        signed_area = compute_signed_area(TG)
 
     triangle2d_set(&ABC, &A, &B, &C)
 

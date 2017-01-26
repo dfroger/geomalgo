@@ -1,12 +1,21 @@
 import numpy as np
 
+from .util import compute_interpolator
+
 cdef class TriangulationInterpolator:
 
     def __init__(TriangulationInterpolator self,
                  Triangulation2D TG,
-                 TriangulationLocator locator, int NP):
+                 TriangulationLocator locator, int NP,
+                 double[:,:] gradx=None, double[:,:] grady=None,
+                 double[:,:] det=None):
 
-        TG.compute_interpolator()
+        if None in (gradx, grady, det):
+            self.gradx, self.grady, self.det = compute_interpolator(TG)
+        else:
+            self.gradx = gradx
+            self.grady = grady
+            self.det   = det
 
         self.locator = locator
         self.TG = TG
@@ -27,9 +36,9 @@ cdef class TriangulationInterpolator:
             int nout # Number of points out of the domain
             double x, y
             # Shorter names
-            double[:,:] gradx = self.TG.gradx
-            double[:,:] grady = self.TG.grady
-            double[:,:] det   = self.TG.det
+            double[:,:] gradx = self.gradx
+            double[:,:] grady = self.grady
+            double[:,:] det   = self.det
 
         assert xpoints.shape[0] == self.NP
         assert ypoints.shape[0] == self.NP
