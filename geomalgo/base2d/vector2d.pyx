@@ -76,10 +76,10 @@ cdef class Vector2D:
     def normalize(self):
         normalize_vector2d(self.cvector2d)
 
-    def __mul__(Vector2D self, double x):
+    def __mul__(Vector2D self, double alpha):
         cdef:
             Vector2D result = Vector2D.__new__(Vector2D)
-        vector2d_times_scalar(result.cvector2d, self.cvector2d, x)
+        vector2d_times_scalar(result.cvector2d, alpha, self.cvector2d)
         return result
 
     def __xor__(Vector2D self, Vector2D other):
