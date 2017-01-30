@@ -1,5 +1,6 @@
+*******
 Point2D
-=======
+*******
 
 The Point2D class represents points in two-dimensional space.
 
@@ -21,7 +22,11 @@ Comute distance between two points:
 
    .. py:attribute:: x: float
 
+       First point coordiante
+
    .. py:attribute:: y: float
+
+       First point coordiante
 
    .. py:method:: distance(self, other)
 

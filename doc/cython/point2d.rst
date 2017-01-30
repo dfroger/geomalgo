@@ -1,11 +1,12 @@
+*******
 Point2D
-=======
+*******
 
 The Cython API for points in two-dimensional points provide a simple CPoint2D
 strucutre and some computational functions.
 
 Structures
-----------
+==========
 
 .. c:type:: CPoint2D
 
@@ -35,7 +36,7 @@ Structures
 
 
 Computational functions
------------------------
+=======================
 
 
 .. c:function:: void subtract_points2d(CVector2D* AB, const CPoint2D* B, const CPoint2D* A)
@@ -78,4 +79,4 @@ Computational functions
 
 
 Python and Cython API relation
-------------------------------
+==============================

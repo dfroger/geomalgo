@@ -1,9 +1,10 @@
+********
 Vector2D
-========
+********
 
 
 Structures
-----------
+==========
 
 
 .. c:type:: CVector2D
@@ -24,7 +25,7 @@ Structures
 
 
 Computational functions
------------------------
+=======================
 
 .. c:function:: void vector2d_times_scalar(CVector2D *t, double alpha, CVector2D *u)
 
@@ -67,7 +68,7 @@ Computational functions
 .. c:function:: void normalize_vector2d(CVector2D *u)
 
     Normalize vector :math:`\mathbf{u}` so that its
-    norm :math:`|\mathbf{u}| = 1`.
+    norm :math:`|\mathbf{u}|` is `1`.
 
 
 .. c:function:: void compute_normal2d(CVector2D *n, CVector2D *u, double norm)

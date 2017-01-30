@@ -37,11 +37,12 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
-    'sphinx_gallery.gen_gallery',
 
     # from http://matplotlib.org/sampledoc/extensions.html
     # 'matplotlib.sphinxext.only_directives',
     'matplotlib.sphinxext.plot_directive',
+
+    'nbsphinx',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -88,7 +89,8 @@ language = None
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This patterns also effect to html_static_path and html_extra_path
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store',
+                    '**.ipynb_checkpoints']
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -316,37 +318,3 @@ napoleon_include_special_with_doc = True
 
 #from mayavi import mlab
 #mlab.options.offscreen = True
-
-# ============================================================================
-# Sphinx gallery
-# ============================================================================
-
-sphinx_gallery_conf = {
-    'filename_pattern' : '/example_',
-
-    # path to your examples scripts
-    'examples_dirs'  : [
-        '../examples/',
-    ],
-
-    # path where to save gallery generated examples
-    'gallery_dirs'   : [
-        'auto_examples',
-    ],
-
-    # path to store the module using example template
-    'mod_example_dir': 'modules/generated',
-
-    # Your documented modules.
-    'doc_module'     : ('geomalgo'),
-
-    'reference_url': {
-         # The module you locally document uses a None
-        'geomalgo': None,
-
-        # External python modules use their documentation websites
-        'matplotlib': 'http://matplotlib.org',
-        'numpy': 'http://docs.scipy.org/doc/numpy-1.9.1',
-    },
-#   'find_mayavi_figures': True,
-}

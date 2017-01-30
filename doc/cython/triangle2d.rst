@@ -1,9 +1,10 @@
+**********
 Triangle2d
-==========
+**********
 
 
 Structures
-----------
+==========
 
 
 .. c:type:: CTriangle2D
@@ -41,7 +42,7 @@ Structures
 
 
 Computational functions
------------------------
+=======================
 
 .. c:function:: bint triangle2d_includes_point2d(CTriangle2D* ABC, CPoint2D* P, double edge_width_square)
 

@@ -1,9 +1,10 @@
+*********
 Segment2D
-=========
+*********
 
 
 Structures
-----------
+==========
 
 
 .. c:type:: CSegment2D
@@ -48,7 +49,7 @@ Structures
 
 
 Computational functions
------------------------
+=======================
 
 
 .. c:function:: double segment2d_distance_point2d(CSegment2D* AB, CPoint2D* P)

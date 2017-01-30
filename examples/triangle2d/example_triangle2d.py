@@ -6,8 +6,6 @@ Triangle2D
 Create a triangle
 """
 
-import math
-
 import numpy as np
 import matplotlib.pylab as plt
 

@@ -1,5 +1,6 @@
+##########
 Cython API
-**********
+##########
 
 .. toctree::
     :maxdepth: 1
