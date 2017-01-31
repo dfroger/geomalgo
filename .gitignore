@@ -12,3 +12,5 @@ craftrc.py
 doc/_build/
 doc/modules/generated/
 doc/auto_examples/
+
+.ipynb_checkpoints/
