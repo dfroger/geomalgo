@@ -29,6 +29,7 @@ Documentation
 .. toctree::
     :maxdepth: 1
 
+    tuto/index
     python/index
     cython/index
     devel
