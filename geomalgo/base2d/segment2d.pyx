@@ -182,9 +182,9 @@ cdef class Segment2D:
 
         if return_coords:
             if n == 0:
-                return None, None, ()
+                return None, None, (None, None, None, None)
             elif n == 1:
-                return I0, None, (coords[0], coords[1])
+                return I0, None, (coords[0], coords[1], None, None)
             elif n == 2:
                 return I0, I1, (coords[0], coords[1], coords[2], coords[3])
         else:
