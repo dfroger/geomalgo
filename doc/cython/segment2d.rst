@@ -41,12 +41,6 @@ Structures
     Set members ``A`` and ``B``, and compute member ``AB``.
 
 
-.. c:function:: CSegment2D* create_segment2d(CPoint2D* A, CPoint2D* B)
-
-    Allocate a new CSegment2D.
-
-    Set members ``A`` and ``B``, and compute member ``AB``.
-
 
 Computational functions
 =======================

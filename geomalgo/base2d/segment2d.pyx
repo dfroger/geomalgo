@@ -26,13 +26,6 @@ cdef void del_segment2d(CSegment2D* csegment2d):
         free(csegment2d)
 
 
-cdef CSegment2D* create_segment2d(CPoint2D* A, CPoint2D* B):
-    cdef:
-        CSegment2D* AB = new_segment2d()
-    segment2d_set(AB, A, B)
-    return AB
-
-
 # ============================================================================
 # Computational functions
 # ============================================================================

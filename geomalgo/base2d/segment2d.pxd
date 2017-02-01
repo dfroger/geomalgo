@@ -20,8 +20,6 @@ cdef inline void segment2d_set(CSegment2D* AB, CPoint2D* A, CPoint2D* B):
     AB.B = B
     subtract_points2d(AB.AB, AB.B, AB.A)
 
-cdef CSegment2D* create_segment2d(CPoint2D* A, CPoint2D* B)
-
 
 # ============================================================================
 # Computational functions
