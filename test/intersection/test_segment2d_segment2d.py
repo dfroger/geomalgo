@@ -29,9 +29,10 @@ class TestSegment(unittest.TestCase):
         self.assertAlmostEqual(I0.y, 3.)
         self.assertIsNone(I1)
 
-        self.assertEqual(len(coords), 2)
         self.assertAlmostEqual(coords[0], 2./3.)
         self.assertAlmostEqual(coords[1], 3./4.)
+        self.assertIsNone(coords[2])
+        self.assertIsNone(coords[3])
 
     def test_parallel(self):
         """
@@ -58,7 +59,10 @@ class TestSegment(unittest.TestCase):
         self.assertIsNone(I0)
         self.assertIsNone(I1)
 
-        self.assertEqual(len(coords), 0)
+        self.assertIsNone(coords[0])
+        self.assertIsNone(coords[1])
+        self.assertIsNone(coords[2])
+        self.assertIsNone(coords[3])
 
     def test_equal(self):
         """
@@ -112,7 +116,10 @@ class TestSegment(unittest.TestCase):
         self.assertIsNone(I0)
         self.assertIsNone(I1)
 
-        self.assertEqual(len(coords), 0)
+        self.assertIsNone(coords[0])
+        self.assertIsNone(coords[1])
+        self.assertIsNone(coords[2])
+        self.assertIsNone(coords[3])
 
     def test_colinear_intersect_one_point(self):
         """
@@ -135,9 +142,10 @@ class TestSegment(unittest.TestCase):
         self.assertAlmostEqual(I0.y, 3)
         self.assertIsNone(I1)
 
-        self.assertEqual(len(coords), 2)
         self.assertAlmostEqual(coords[0], 1)
         self.assertAlmostEqual(coords[1], 0)
+        self.assertIsNone(coords[2])
+        self.assertIsNone(coords[3])
 
     def test_colinear_overlap_segment(self):
         """
@@ -161,7 +169,6 @@ class TestSegment(unittest.TestCase):
         self.assertAlmostEqual(I1.x, Q.x)
         self.assertAlmostEqual(I1.y, Q.y)
 
-        self.assertEqual(len(coords), 4)
         self.assertAlmostEqual(coords[0], 0.5)
         self.assertAlmostEqual(coords[1], 0)
         self.assertAlmostEqual(coords[2], 1)
@@ -191,7 +198,10 @@ class TestSegment(unittest.TestCase):
         self.assertIsNone(I0)
         self.assertIsNone(I1)
 
-        self.assertEqual(len(coords), 0)
+        self.assertIsNone(coords[0])
+        self.assertIsNone(coords[1])
+        self.assertIsNone(coords[2])
+        self.assertIsNone(coords[3])
 
         # CASE11
         I0, I1, coords = RS.intersect_segment(PQ, return_coords=True)
@@ -199,7 +209,10 @@ class TestSegment(unittest.TestCase):
         self.assertIsNone(I0)
         self.assertIsNone(I1)
 
-        self.assertEqual(len(coords), 0)
+        self.assertIsNone(coords[0])
+        self.assertIsNone(coords[1])
+        self.assertIsNone(coords[2])
+        self.assertIsNone(coords[3])
 
     def test_extremity(self):
         """
@@ -225,9 +238,10 @@ class TestSegment(unittest.TestCase):
         self.assertAlmostEqual(I0.y, 3.)
         self.assertIsNone(I1)
 
-        self.assertEqual(len(coords), 2)
         self.assertAlmostEqual(coords[0], 1)
         self.assertAlmostEqual(coords[1], 1)
+        self.assertIsNone(coords[2])
+        self.assertIsNone(coords[3])
 
     def test_same_point(self):
         """
@@ -250,9 +264,10 @@ class TestSegment(unittest.TestCase):
         self.assertAlmostEqual(I0.y, 1)
         self.assertIsNone(I1)
 
-        self.assertEqual(len(coords), 2)
         self.assertAlmostEqual(coords[0], 0)
         self.assertAlmostEqual(coords[1], 0)
+        self.assertIsNone(coords[2])
+        self.assertIsNone(coords[3])
 
     def test_distinct_point(self):
         """
@@ -273,7 +288,10 @@ class TestSegment(unittest.TestCase):
         self.assertIsNone(I0)
         self.assertIsNone(I1)
 
-        self.assertEqual(len(coords), 0)
+        self.assertIsNone(coords[0])
+        self.assertIsNone(coords[1])
+        self.assertIsNone(coords[2])
+        self.assertIsNone(coords[3])
 
     def test_collinear_point_not_in_segment(self):
         """
@@ -294,7 +312,10 @@ class TestSegment(unittest.TestCase):
         self.assertIsNone(I0)
         self.assertIsNone(I1)
 
-        self.assertEqual(len(coords), 0)
+        self.assertIsNone(coords[0])
+        self.assertIsNone(coords[1])
+        self.assertIsNone(coords[2])
+        self.assertIsNone(coords[3])
 
         # CASE05
         I0, I1, coords = RS.intersect_segment(PQ, return_coords=True)
@@ -302,7 +323,10 @@ class TestSegment(unittest.TestCase):
         self.assertIsNone(I0)
         self.assertIsNone(I1)
 
-        self.assertEqual(len(coords), 0)
+        self.assertIsNone(coords[0])
+        self.assertIsNone(coords[1])
+        self.assertIsNone(coords[2])
+        self.assertIsNone(coords[3])
 
     def test_collinear_point_in_segment(self):
         """
@@ -324,9 +348,10 @@ class TestSegment(unittest.TestCase):
         self.assertAlmostEqual(I0.y, 1)
         self.assertIsNone(I1)
 
-        self.assertEqual(len(coords), 2)
         self.assertAlmostEqual(coords[0], 0)
         self.assertAlmostEqual(coords[1], 0.5)
+        self.assertIsNone(coords[2])
+        self.assertIsNone(coords[3])
 
         # CASE06
         I0, I1, coords = RS.intersect_segment(PQ, return_coords=True)
@@ -335,9 +360,10 @@ class TestSegment(unittest.TestCase):
         self.assertAlmostEqual(I0.y, 1)
         self.assertIsNone(I1)
 
-        self.assertEqual(len(coords), 2)
         self.assertAlmostEqual(coords[0], 0.5)
         self.assertAlmostEqual(coords[1], 0)
+        self.assertIsNone(coords[2])
+        self.assertIsNone(coords[3])
 
 if __name__ == '__main__':
     unittest.main()
