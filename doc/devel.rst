@@ -7,9 +7,8 @@ Documentation
 
 .. code-block:: bash
 
-    conda install sphinx pillow matplotlib
-    conda install -n fk -c menpo mayavi
-    pip install sphinx-gallery sphinxcontrib-napoleon
+    conda install matplotlib jupyter nbsphinx sphinx_rtd_theme sphinx-gallery
+    pip install wurlitzer
 
 Release
 -------
