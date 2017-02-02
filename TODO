@@ -1,3 +1,8 @@
+triangulation/locator.pyx: search_points
+
+edge_width et edge_width_square wrong use
+
+
 Package Ninja and Craftr with Conda.
 
 code coverage
