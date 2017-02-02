@@ -3,6 +3,43 @@ triangulation/locator.pyx: search_points
 edge_width et edge_width_square wrong use
 
 
+change:
+    cdef class Triangulation2D:
+        cdef get(Triangulation2D self, int I, CTriangle2D* T)
+
+to:
+    cdef get(Triangulation2D self, CTriangle2D* T, int I)
+
+doc:
+    small and numerous object need a Cython API
+    Triangulation2D is a big object:
+        - no need for Cython API, except for dealing with its small parts
+          (iterator)
+        - no assumption how it should be organized:
+          - simple class with only x, y, trivtx
+          - comutational functions
+
+doc:
+    SoA vs AoS
+    make simple things, hoping for compiler optimization
+
+doc:
+    Cython API for speed
+    Python API for large object, doc, prototyping, learning...
+    easy to switch from one to another
+
+doc:
+    openmp and openmpi example
+
+doc:
+    C+Python VS C++
+
+doc:
+    1 loop vs multiple loops
+
+doc:
+    triangle2d_set, TG.get VS iterator
+
 Package Ninja and Craftr with Conda.
 
 code coverage
