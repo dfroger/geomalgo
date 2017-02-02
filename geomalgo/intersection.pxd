@@ -1,0 +1,2 @@
+from .intersection.intersection3d cimport c_intersec3d_triangle_segment
+from .intersection.segment2d_segment2d cimport intersect_segment2d_segment2d
