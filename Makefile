@@ -25,6 +25,7 @@ build:
 # ================================== clean ===================================
 clean:
 	@if [ -d "build/" ]; then ninja -C build/ -t clean; fi
+	rm -rf ~/.cache/ipython/cython
 
 distclean: clean
 	@rm -rf build/
