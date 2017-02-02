@@ -98,7 +98,7 @@ class TestTriangulationLocator(unittest.TestCase):
 
     def test_tri_center(self):
         """
-        Check that center of triangles of found in their triangles
+        Check that center of triangles are found in their triangles
         """
 
         # Triangle centers.

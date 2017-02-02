@@ -19,7 +19,7 @@ from .base2d.polygon2d cimport (
 from .base2d.segment2d cimport (
     CSegment2D, new_segment2d, del_segment2d,
     segment2d_square_distance_point2d, segment2d_distance_point2d,
-    segment2d_at, segment2d_where, segment2d_middle, Segment2D,
+    segment2d_where, segment2d_middle, Segment2D,
     Segment2DCollection, segment2d_set
 )
 

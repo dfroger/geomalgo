@@ -31,11 +31,13 @@ cdef void del_segment2d(CSegment2D* csegment2d):
 # ============================================================================
 
 
-cdef double segment2d_distance_point2d(CSegment2D* AB, CPoint2D* P):
-    return sqrt(segment2d_square_distance_point2d(AB, P))
+cdef double segment2d_distance_point2d(CSegment2D* AB, CVector2D* u,
+                                       CPoint2D* P):
+    return sqrt(segment2d_square_distance_point2d(AB, u, P))
 
 
-cdef double segment2d_square_distance_point2d(CSegment2D* AB, CPoint2D* P):
+cdef double segment2d_square_distance_point2d(CSegment2D* AB, CVector2D* u,
+                                              CPoint2D* P):
     cdef:
         CPoint2D Pb
         CVector2D w
@@ -43,44 +45,27 @@ cdef double segment2d_square_distance_point2d(CSegment2D* AB, CPoint2D* P):
 
     subtract_points2d(&w, P, AB.A)
 
-    c1 = dot_product2d(&w, AB.AB)
+    c1 = dot_product2d(&w, u)
 
     if c1 <= 0:
         return point2d_square_distance(P, AB.A)
 
-    c2 = dot_product2d(AB.AB, AB.AB)
+    c2 = dot_product2d(u, u)
     if c2 <= c1:
         return point2d_square_distance(P, AB.B)
 
     b = c1 / c2
 
-    point2d_plus_vector2d(&Pb, AB.A, b, AB.AB)
+    point2d_plus_vector2d(&Pb, AB.A, b, u)
 
     return point2d_square_distance(P, &Pb)
 
 
-cdef void segment2d_at(CPoint2D* P, CSegment2D* AB, double alpha):
-    # This can be derived from 1D interpolation formuale:
-    #
-    #     a   x       b
-    #     +---+-------+
-    #
-    #     alpha = (x-a) / (b-a)
-    #
-    #     fx = (1-alpha)*fa + alpha*fb
-    #        = fa + alpha*(fb-fa)
-    #
-    # So:
-    #     px = xa + alpha*(xb-xa)
-    #     py = ya + alpha*(yb-ya)
-    point2d_plus_vector2d(P, AB.A, alpha, AB.AB)
-
-
-cdef double segment2d_where(CSegment2D* seg, CPoint2D* P):
-    if seg.AB.x != 0.:
-        return (P.x - seg.A.x) / seg.AB.x
+cdef double segment2d_where(CPoint2D* A, CVector2D* AB, CPoint2D* P):
+    if AB.x != 0.:
+        return (P.x - A.x) / AB.x
     else:
-        return (P.y - seg.A.y) / seg.AB.y
+        return (P.y - A.y) / AB.y
 
 
 cdef void segment2d_middle(CPoint2D* M, CSegment2D* AB):
@@ -114,12 +99,11 @@ cdef class Segment2D:
     def __init__(self, Point2D A, Point2D B):
         self.A = A
         self.B = B
-        self.AB = Vector2D.__new__(Vector2D)
+        self.u = Vector2D.__new__(Vector2D)
 
         # C points to Python.
         self.csegment2d.A = A.cpoint2d
         self.csegment2d.B = B.cpoint2d
-        self.csegment2d.AB = self.AB.cvector2d
 
         self.recompute()
 
@@ -127,12 +111,11 @@ cdef class Segment2D:
         # TODO: put in __new__ and adapt __init__
         self.A = Point2D.__new__(Point2D)
         self.B = Point2D.__new__(Point2D)
-        self.AB = Vector2D.__new__(Vector2D)
+        self.u = Vector2D.__new__(Vector2D)
 
         # C points to Python.
         self.csegment2d.A = self.A.cpoint2d
         self.csegment2d.B = self.B.cpoint2d
-        self.csegment2d.AB = self.AB.cvector2d
 
     def __str__(self):
         return "Segment2D(({self.A.x},{self.A.y}),({self.B.x},{self.B.y}))" \
@@ -140,21 +123,22 @@ cdef class Segment2D:
 
     def recompute(Segment2D self):
         """Must be called manually if any point coordinate changed"""
-        subtract_points2d(self.csegment2d.AB,
+        subtract_points2d(self.u.cvector2d,
                           self.csegment2d.B, self.csegment2d.A)
-        self.length = compute_norm2d(self.csegment2d.AB)
+        self.length = compute_norm2d(self.u.cvector2d)
 
     def point_distance(Segment2D self, Point2D P):
-        return segment2d_distance_point2d(&self.csegment2d, P.cpoint2d)
+        return segment2d_distance_point2d(&self.csegment2d, self.u.cvector2d, P.cpoint2d)
 
     def at(Segment2D self, double coord):
         cdef:
             Point2D result = Point2D.__new__(Point2D)
-        segment2d_at(result.cpoint2d, &self.csegment2d, coord)
+        point2d_plus_vector2d(result.cpoint2d, self.A.cpoint2d, coord,
+                              self.u.cvector2d)
         return result
 
     def where(Segment2D self, Point2D P):
-        return segment2d_where(&self.csegment2d, P.cpoint2d)
+        return segment2d_where(self.A.cpoint2d, self.u.cvector2d, P.cpoint2d)
 
     def includes_collinear_point(Segment2D self, Point2D P):
         return segment2d_includes_collinear_point2d(&self.csegment2d, P.cpoint2d)

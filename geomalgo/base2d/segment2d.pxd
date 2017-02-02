@@ -9,7 +9,6 @@ from .point2d cimport CPoint2D, CVector2D, Point2D, Vector2D, subtract_points2d
 cdef struct CSegment2D:
     CPoint2D* A
     CPoint2D* B
-    CVector2D* AB
 
 cdef CSegment2D* new_segment2d()
 
@@ -18,7 +17,6 @@ cdef void del_segment2d(CSegment2D* csegment2d)
 cdef inline void segment2d_set(CSegment2D* AB, CPoint2D* A, CPoint2D* B):
     AB.A = A
     AB.B = B
-    subtract_points2d(AB.AB, AB.B, AB.A)
 
 
 # ============================================================================
@@ -26,13 +24,13 @@ cdef inline void segment2d_set(CSegment2D* AB, CPoint2D* A, CPoint2D* B):
 # ============================================================================
 
 
-cdef double segment2d_distance_point2d(CSegment2D* AB, CPoint2D* P)
+cdef double segment2d_distance_point2d(CSegment2D* AB, CVector2D* u,
+                                       CPoint2D* P)
 
-cdef double segment2d_square_distance_point2d(CSegment2D* AB, CPoint2D* P)
+cdef double segment2d_square_distance_point2d(CSegment2D* AB, CVector2D* u,
+                                              CPoint2D* P)
 
-cdef void segment2d_at(CPoint2D* P, CSegment2D* AB, double alpha)
-
-cdef double segment2d_where(CSegment2D* AB, CPoint2D* P)
+cdef double segment2d_where(CPoint2D* A, CVector2D* AB, CPoint2D* P)
 
 cdef void segment2d_middle(CPoint2D* M, CSegment2D* AB)
 
@@ -45,7 +43,7 @@ cdef void segment2d_middle(CPoint2D* M, CSegment2D* AB)
 cdef class Segment2D:
 
     cdef readonly:
-        Vector2D AB
+        Vector2D u
         double length
 
     cdef:

@@ -17,28 +17,33 @@ Structures
 
         :math:`B` is the second segment point.
 
-    .. c:member:: CVector2D* AB
 
-        :math:`AB` is the vector from :math:`A` to :math:`B`.
+.. note::
+
+    :c:type:`CSegment2D` represents a segment by two points. A segment may
+    also be represented by a point and a vector. There is no C structure
+    that represent a segment this way. If needed by a function, a
+    :c:type:`Point2D` and a :c:type:`Vector2D` must be passed explicitly.
+    See for example :c:type:`segment2d_where`.
 
 
 .. c:function:: CSegment2D* new_segment2d()
 
     Allocate a new CSegment2D.
 
-    This do **not** allocate members ``A``, ``B``, and ``AB``.
+    This do **not** allocate members ``A``, ``B``.
 
 
 .. c:function:: void del_segment2d(CSegment2D* csegment2d)
 
     Delete a CSegment2D.
 
-    This do **not** delete members ``A``, ``B``, and ``AB``.
+    This do **not** delete members ``A``, ``B``.
 
 
 .. c:function:: void segment2d_set(CSegment2D* AB, CPoint2D* A, CPoint2D* B)
 
-    Set members ``A`` and ``B``, and compute member ``AB``.
+    Set members ``A`` and ``B``.
 
 
 
@@ -46,27 +51,24 @@ Computational functions
 =======================
 
 
-.. c:function:: double segment2d_distance_point2d(CSegment2D* AB, CPoint2D* P)
+.. c:function:: double segment2d_distance_point2d(CSegment2D* AB, CVector2D* u, CPoint2D* P)
 
     Compute distance of a point :math:`P` to the segment :math:`[AB]`.
 
+    :math:`\mathbf{u}` is the vector from :math:`A` to :math:`A`.
 
-.. c:function:: double segment2d_square_distance_point2d(CSegment2D* AB, CPoint2D* P)
+
+.. c:function:: double segment2d_square_distance_point2d(CSegment2D* AB, CVector2D* u, CPoint2D* P)
 
     Compute distance of a point :math:`P` to the segment :math:`[AB]`.
+
+    :math:`\mathbf{u}` is the vector from :math:`A` to :math:`A`.
 
     Sometime, the knowledge of the square distance is enough, and for
     performance, computing the square root can be avoided.
 
 
-.. c:function:: void segment2d_at(CPoint2D* P, CSegment2D* AB, double alpha)
-
-    Compute point :math:`P` such as :math:`P = A + \alpha \mathbf{AB}`.
-
-    Variable ``P`` must be already allocated.
-
-
-.. c:function:: double segment2d_where(CSegment2D* AB, CPoint2D* P)
+.. c:function:: double segment2d_where(CPoint2D* A, CVector2D* AB, CPoint2D* P)
 
     Compute :math:`\alpha` such as :math:`P = A + \alpha \mathbf{AB}`.
 

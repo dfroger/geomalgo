@@ -17,8 +17,8 @@ class TestSegment2D(unittest.TestCase):
         segment = Segment2D(A,B)
         self.assertEqual(segment.B.y, 4)
 
-        self.assertEqual(segment.AB.x, 2)
-        self.assertEqual(segment.AB.y, 2)
+        self.assertEqual(segment.u.x, 2)
+        self.assertEqual(segment.u.y, 2)
         self.assertAlmostEqual(segment.length, 2*sqrt(2))
 
         M = segment.compute_middle()
@@ -32,8 +32,8 @@ class TestSegment2D(unittest.TestCase):
         self.assertEqual(segment.B.y, 5)
 
         segment.recompute()
-        self.assertEqual(segment.AB.x, 2)
-        self.assertEqual(segment.AB.y, 3)
+        self.assertEqual(segment.u.x, 2)
+        self.assertEqual(segment.u.y, 3)
         self.assertAlmostEqual(segment.length, sqrt(13))
 
         M = segment.compute_middle()
@@ -47,8 +47,8 @@ class TestSegment2D(unittest.TestCase):
         self.assertEqual(segment.B.y, -2)
 
         segment.recompute()
-        self.assertEqual(segment.AB.x, -2)
-        self.assertEqual(segment.AB.y, -4)
+        self.assertEqual(segment.u.x, -2)
+        self.assertEqual(segment.u.y, -4)
         self.assertAlmostEqual(segment.length, 2*sqrt(5))
 
         M = segment.compute_middle()

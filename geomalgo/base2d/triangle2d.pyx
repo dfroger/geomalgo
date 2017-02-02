@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from libc.stdlib cimport malloc, free
 from libc.math cimport fabs
 
-from .point2d cimport CPoint2D
+from .point2d cimport CPoint2D, subtract_points2d
 from .vector2d cimport CVector2D
 from .segment2d cimport (
     CSegment2D, segment2d_square_distance_point2d, segment2d_set
@@ -76,20 +76,21 @@ cdef int triangle2d_on_edges(CTriangle2D* ABC, CPoint2D* P,
     """
     cdef:
         CSegment2D seg
-        CVector2D vec
-
-    seg.AB = &vec
+        CVector2D u
 
     segment2d_set(&seg, ABC.A, ABC.B)
-    if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
+    subtract_points2d(&u, ABC.B, ABC.A)
+    if segment2d_square_distance_point2d(&seg, &u, P) <= edge_width_square:
         return 0
 
     segment2d_set(&seg, ABC.B, ABC.C)
-    if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
+    subtract_points2d(&u, ABC.C, ABC.B)
+    if segment2d_square_distance_point2d(&seg, &u, P) <= edge_width_square:
         return 1
 
     segment2d_set(&seg, ABC.C, ABC.A)
-    if segment2d_square_distance_point2d(&seg, P) <= edge_width_square:
+    subtract_points2d(&u, ABC.A, ABC.C)
+    if segment2d_square_distance_point2d(&seg, &u, P) <= edge_width_square:
         return 2
 
     return -1
