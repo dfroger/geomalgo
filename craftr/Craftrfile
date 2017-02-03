@@ -12,6 +12,7 @@ def cython_flags():
     add_flag('wraparound', False)
     add_flag('initializedcheck', True)
     add_flag('profile', False)
+    add_flag('linetrace', False)
     return flags
 
 def cython_defines():
