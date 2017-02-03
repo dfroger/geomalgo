@@ -39,3 +39,8 @@ test:
 cover:
 	nosetests --with-coverage --cover-package=geomalgo
 	coverage html
+
+# ================================ notebooks =================================
+
+nb:
+	PYTHONPATH=$(PWD) CFLAGS='-Wno-unused-function -Wno-unused-variable' jupyter notebook --brower=firefox
