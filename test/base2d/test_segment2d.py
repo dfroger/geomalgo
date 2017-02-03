@@ -55,6 +55,14 @@ class TestSegment2D(unittest.TestCase):
         self.assertAlmostEqual(M.x, 0)
         self.assertAlmostEqual(M.y, 0)
 
+    def test_from_tuple(self):
+        segment = Segment2D((1, 2), (3, 4))
+        self.assertEqual(segment.A.x, 1)
+        self.assertEqual(segment.A.y, 2)
+
+        self.assertEqual(segment.B.x, 3)
+        self.assertEqual(segment.B.y, 4)
+
 class TestIncludesPoint(unittest.TestCase):
 
     def test_horizontal_segment(self):

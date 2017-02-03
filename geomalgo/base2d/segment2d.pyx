@@ -96,14 +96,17 @@ cdef class Segment2D:
             # C points to Python.
             self.csegment2d.B = B.cpoint2d
 
-    def __init__(self, Point2D A, Point2D B):
-        self.A = A
-        self.B = B
+    def __init__(self, A, B):
+        def create_point(P):
+            return P if isinstance(P, Point2D) else Point2D(*P)
+
+        self.A = create_point(A)
+        self.B = create_point(B)
         self.u = Vector2D.__new__(Vector2D)
 
         # C points to Python.
-        self.csegment2d.A = A.cpoint2d
-        self.csegment2d.B = B.cpoint2d
+        self.csegment2d.A = self.A.cpoint2d
+        self.csegment2d.B = self.B.cpoint2d
 
         self.recompute()
 

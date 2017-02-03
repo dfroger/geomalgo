@@ -1,12 +1,10 @@
 triangulation/locator.pyx: search_points
-
-edge_width et edge_width_square wrong use
+    edge_width et edge_width_square wrong use
 
 
 change:
     cdef class Triangulation2D:
         cdef get(Triangulation2D self, int I, CTriangle2D* T)
-
 to:
     cdef get(Triangulation2D self, CTriangle2D* T, int I)
 
