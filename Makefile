@@ -30,6 +30,8 @@ clean:
 distclean: clean
 	@rm -rf build/
 
+rebuild: distclean configure build
+
 # ================================== tests ===================================
 test:
 	nosetests

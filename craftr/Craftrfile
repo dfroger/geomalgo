@@ -29,7 +29,7 @@ cython_project(
   in_working_tree = True,
   compile_kwargs = dict(
       llvm_compile_additional_flags = [],
-      gcc_compile_additional_flags = [],
+      gcc_compile_additional_flags = ['-Wno-unused-function', '-Wno-unused-variable'],
       msvc_compile_additional_flags = []
   ),
   link_kwargs = dict(
