@@ -247,19 +247,13 @@ class TestSegment2DCollection(unittest.TestCase):
             1      2
         """
 
-        x = np.array([
-            [1, 2], # AB
-            [1, 2], # CD
-            [1, 2], # EF
-        ], dtype='d')
+        xa = np.array([1, 1, 1], dtype='d')
+        xb = np.array([2, 2, 2], dtype='d')
 
-        y = np.array([
-            [10, 10], # AB
-            [11, 11], # CD
-            [12, 12], # EF
-        ], dtype='d')
+        ya = np.array([10, 11, 12], dtype='d')
+        yb = np.array([10, 11, 12], dtype='d')
 
-        collection = Segment2DCollection(x, y)
+        collection = Segment2DCollection(xa, xb, ya, yb)
         CD = collection[1]
 
         self.assertEqual(CD.A.x,  1)

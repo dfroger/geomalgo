@@ -189,26 +189,35 @@ cdef class Segment2D:
 
 cdef class Segment2DCollection:
 
-    def __init__(self, double[:,:] x, double[:,:] y):
-        self.x = x
-        self.y = y
+    def __init__(self, double[:] xa, double[:] xb, double[:] ya, double[:] yb):
+        self.size = xa.shape[0]
+        assert xb.shape[0] == self.size
+        assert ya.shape[0] == self.size
+        assert yb.shape[0] == self.size
 
-    cdef get(Segment2DCollection self, int segment_index,
-             CSegment2D* segment):
-        segment.A.x = self.x[segment_index, 0]
-        segment.A.y = self.y[segment_index, 0]
+        self.xa = xa
+        self.xb = xb
 
-        segment.B.x = self.x[segment_index, 1]
-        segment.B.y = self.y[segment_index, 1]
+        self.ya = ya
+        self.yb = yb
 
-    cdef set(Segment2DCollection self, int segment_index,
-               CPoint2D* A, CPoint2D * B):
 
-        self.x[segment_index, 0] = A.x
-        self.x[segment_index, 1] = B.x
+    cdef void get(Segment2DCollection self, int segment_index,
+                  CSegment2D* segment):
+        segment.A.x = self.xa[segment_index]
+        segment.A.y = self.ya[segment_index]
 
-        self.y[segment_index, 0] = A.y
-        self.y[segment_index, 1] = B.y
+        segment.B.x = self.xb[segment_index]
+        segment.B.y = self.yb[segment_index]
+
+    cdef void set(Segment2DCollection self, int segment_index,
+                  CPoint2D* A, CPoint2D * B):
+
+        self.xa[segment_index] = A.x
+        self.ya[segment_index] = A.y
+
+        self.xb[segment_index] = B.x
+        self.yb[segment_index] = B.y
 
     def __getitem__(Segment2DCollection self, int segment_index):
         cdef:
