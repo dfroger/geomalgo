@@ -2,13 +2,8 @@ base type: double and int
 
 for simple and frequent problem
 
-first tuto:
-    Cython API part: relation between Segment2D/CSegment2D, Point2D/CPoint2D
-    fourth part: back to high level interface
-
 triangulation/locator.pyx: search_points
     edge_width et edge_width_square wrong use
-
 
 change:
     cdef class Triangulation2D:

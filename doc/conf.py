@@ -37,6 +37,7 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
     'sphinx.ext.viewcode',
+    'sphinx.ext.graphviz',
 
     # from http://matplotlib.org/sampledoc/extensions.html
     # 'matplotlib.sphinxext.only_directives',
