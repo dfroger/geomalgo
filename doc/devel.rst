@@ -2,6 +2,20 @@
 Developer's Guide
 =================
 
+Build
+-----
+
+.. code-block:: bash
+
+   conda install python=3.5 cython craftr
+
+Test
+----
+
+.. code-block:: bash
+
+   conda install nose
+
 Documentation
 -------------
 
