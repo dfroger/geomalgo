@@ -9,8 +9,8 @@ from geomalgo.data import step, hole
 class TestStep(unittest.TestCase):
 
     def setUp(self):
-        self.intern_edges, self.boundary_edges = build_edges(step.trivtx,
-                                                             step.NV)
+        self.intern_edges, self.boundary_edges, _ = build_edges(step.trivtx,
+                                                                step.NV)
 
         self.boundary_edges.add_label(step.boundary_edge_label)
         self.boundary_edges.compute_length(step.x, step.y)
@@ -446,8 +446,8 @@ class TestStep(unittest.TestCase):
 class TestHole(unittest.TestCase):
 
     def setUp(self):
-        self.intern_edges, self.boundary_edges = build_edges(hole.trivtx,
-                                                             hole.NV)
+        self.intern_edges, self.boundary_edges, _ = build_edges(hole.trivtx,
+                                                                hole.NV)
         self.edge_map = self.intern_edges.edge_map
 
     def assert_intern_triangles(self, A, B, T, U):
