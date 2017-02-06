@@ -9,3 +9,5 @@ from .triangulation.boundary_edges cimport BoundaryEdges
 from .triangulation.intern_edges cimport InternEdges
 
 from .triangulation.interpolator cimport TriangulationInterpolator
+
+from .triangulation.constant cimport INTERN_EDGE, BOUNDARY_EDGE
