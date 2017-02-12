@@ -32,6 +32,6 @@ from .base2d.triangle2d cimport (
 
 from .base2d.vector2d cimport (
     CVector2D, new_vector2d, del_vector2d, cross_product2d, subtract_vector2d,
-    add_vector2d, dot_product2d, compute_norm2d, normalize_vector2d,
+    add_vector2d, vector2d_times_scalar, dot_product2d, compute_norm2d, normalize_vector2d,
     compute_normal2d, Vector2D
 )
