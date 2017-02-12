@@ -87,7 +87,7 @@ class TestIsLeft(unittest.TestCase):
         A = Point2D(0, 0)
         B = Point2D(1, 0)
         P = Point2D(2, 0)
-        with self.assertRaisesRegex(ValueError, "Point in on line \(AB\)"):
+        with self.assertRaisesRegex(ValueError, "Point is on line \(AB\)"):
             P.is_left(A,B)
 
 

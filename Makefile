@@ -43,4 +43,4 @@ cover:
 # ================================ notebooks =================================
 
 nb:
-	PYTHONPATH=$(PWD) CFLAGS='-Wno-unused-function -Wno-unused-variable' jupyter notebook --NotebookApp.token= --brower=chromium
+	PYTHONPATH=$(PWD) CFLAGS='-Wno-unused-function -Wno-unused-variable' jupyter notebook --NotebookApp.token= --browser=firefox

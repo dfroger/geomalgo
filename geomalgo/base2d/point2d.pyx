@@ -73,30 +73,17 @@ cdef class Point2D:
 
         return 'Point2D({self.x}, {self.y})'.format(self=self)
 
-    def __add__(Point2D self, Vector2D vec):
+    def __add__(Point2D A, Vector2D AB):
         cdef:
-            Point2D result = Point2D.__new__(Point2D)
-        point2d_plus_vector2d(result.cpoint2d, self.cpoint2d, 1, vec.cvector2d)
-        return result
+            Point2D B = Point2D.__new__(Point2D)
+        point2d_plus_vector2d(B.cpoint2d, A.cpoint2d, 1, AB.cvector2d)
+        return B
 
-    def __sub__(Point2D self, Point2D other):
-        """Compute vector between two points
-
-        Parameters
-        ----------
-        other: geomalgo.Point2D
-            Point to compute vector to
-
-        Returns
-        -------
-        geomalgo.Vector2D
-            Vector between self and other
-
-        """
+    def __sub__(Point2D B, Point2D A):
         cdef:
-            Vector2D vector = Vector2D.__new__(Vector2D)
-        subtract_points2d(vector.cvector2d, self.cpoint2d, other.cpoint2d)
-        return vector
+            Vector2D AB = Vector2D.__new__(Vector2D)
+        subtract_points2d(AB.cvector2d, B.cpoint2d, A.cpoint2d)
+        return AB
 
     def __richcmp__(Point2D self, Point2D other, int op):
         if op == 2: # ==
@@ -139,14 +126,12 @@ cdef class Point2D:
         theta = atan2(self.y, self.x);
         return PolarPoint(r, theta)
 
-    def is_left(Point2D self, Point2D A, Point2D B, comparer=math.isclose):
-        """Test if point is left|on|right of an infinite line (AB).
-        """
-
+    def is_left(Point2D self, Point2D A, Point2D B, isclose=math.isclose):
         res = is_left(A.cpoint2d, B.cpoint2d, self.cpoint2d)
 
-        if comparer(res, 0.):
-            raise ValueError("Point in on line (AB)")
+        if isclose(res, 0.):
+            raise ValueError("{} is on line (AB)".format(
+                             self.name or 'Point'))
 
         return res > 0.
 
