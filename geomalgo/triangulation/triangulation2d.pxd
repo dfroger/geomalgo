@@ -9,4 +9,4 @@ cdef class Triangulation2D:
         double[:] y
         int[:,:] trivtx
 
-    cdef get(Triangulation2D self, int I, CTriangle2D* T)
+    cdef void get(Triangulation2D self, int I, CTriangle2D* T)

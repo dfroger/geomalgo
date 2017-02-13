@@ -17,7 +17,7 @@ cdef class Triangulation2D:
         self.y = y
         self.trivtx = trivtx
 
-    cdef get(Triangulation2D self, int triangle_index, CTriangle2D* triangle):
+    cdef void get(Triangulation2D self, int triangle_index, CTriangle2D* triangle):
         """
         Set 2D triangle point coordinates from its index in a triangulation
 
