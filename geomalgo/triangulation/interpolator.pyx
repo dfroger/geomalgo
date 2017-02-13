@@ -33,7 +33,7 @@ cdef class TriangulationInterpolator:
 
         cdef:
             int P, T
-            int nout # Number of points out of the domain
+            int nout=0 # Number of points out of the domain
             double x, y
             # Shorter names
             double[:,:] gradx = self.gradx
@@ -44,12 +44,13 @@ cdef class TriangulationInterpolator:
         assert ypoints.shape[0] == self.NP
         assert self.triangles.shape[0] == self.NP
 
-        nout = self.locator.search_points(xpoints, ypoints, self.triangles)
+        self.locator.search_points(xpoints, ypoints, triangles=self.triangles)
 
         # Loop on all points we want to interpolate on.
         for P in range(self.NP):
             T = self.triangles[P]
             if T == -1:
+                nout += 1
                 continue
 
             x = xpoints[P]

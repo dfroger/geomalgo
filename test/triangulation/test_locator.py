@@ -108,10 +108,11 @@ class TestTriangulationLocator(unittest.TestCase):
 
         locator = ga.TriangulationLocator(HOLE.triangulation, nx=5, ny=5)
 
-        triangles = np.empty(NP, dtype='int32')
-        nout = locator.search_points(xcenter, ycenter, triangles)
+        triangles = locator.search_points(xcenter, ycenter)
+        assert_equal(triangles, np.arange(NP))
 
-        self.assertEqual(nout, 0)
+        # same test with pre-allocated result.
+        locator.search_points(xcenter, ycenter, triangles=np.empty(NP, dtype='int32'))
         assert_equal(triangles, np.arange(NP))
 
     def test_hole_aligned(self):
@@ -203,9 +204,7 @@ class TestTriangulationLocator(unittest.TestCase):
 
         locator = ga.TriangulationLocator(HOLE.triangulation, nx=5, ny=5)
 
-        triangles = np.full(NP, fill_value=-2, dtype='int32')
-        nout = locator.search_points(x, y, triangles)
-        self.assertEqual(nout, NP)
+        triangles = locator.search_points(x, y)
 
         assert_equal(triangles, np.full(NP, fill_value=-1, dtype='int32'))
 

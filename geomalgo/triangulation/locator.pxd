@@ -13,6 +13,6 @@ cdef class TriangulationLocator:
         int[:] celltri
         int[:] celltri_idx
 
-    cpdef int search_points(TriangulationLocator self,
-                            double[:] xpoints, double[:] ypoints,
-                            int[:] triangles)
+    cpdef int[:] search_points(TriangulationLocator self,
+                               double[:] xpoints, double[:] ypoints,
+                               int[:] triangles=*)
