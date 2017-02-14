@@ -250,7 +250,7 @@ cdef class Triangle2D:
         self.ctri2d.B = self.B.cpoint2d
         self.ctri2d.C = self.C.cpoint2d
 
-    def plot(self, style='b-'):
+    def plot(self, color='blue', lw=2):
         x = [self.A.x, self.B.x, self.C.x, self.A.x]
         y = [self.A.y, self.B.y, self.C.y, self.A.y]
-        plt.plot(x, y, style)
+        plt.plot(x, y, color=color, lw=lw)

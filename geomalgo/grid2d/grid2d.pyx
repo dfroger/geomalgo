@@ -6,6 +6,7 @@ It supports finding which cell contains a given 2D point.
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 from ..base2d cimport Point2D
 from ..triangulation cimport Triangulation2D
@@ -28,12 +29,12 @@ cdef class Grid2D:
         self.xmin = xmin
         self.xmax = xmax
         self.nx = nx
-        self.dx = (xmax - xmin) / nx
+        self.x, self.dx = np.linspace(xmin, xmax, nx+1, retstep=True)
 
         self.ymin = ymin
         self.ymax = ymax
         self.ny = ny
-        self.dy = (ymax - ymin) / ny
+        self.y, self.dy = np.linspace(ymin, ymax, ny+1, retstep=True)
 
     @staticmethod
     def from_triangulation(Triangulation2D TG, int nx, int ny):
@@ -56,6 +57,13 @@ cdef class Grid2D:
         cell.index = compute_index(self.nx, cell.ix, cell.iy)
         return cell
 
+    def plot(self, color='blue', lw=2):
+        # Plot vertical lines.
+        for x in self.x:
+            plt.plot([x, x], [self.ymin, self.ymax], color=color, lw=lw)
+        # Plot horizonal lines
+        for y in self.y:
+            plt.plot([self.xmin, self.xmax], [y, y], color=color, lw=lw)
 
 cdef class Cell2D:
     pass

@@ -16,13 +16,14 @@ cdef class Grid2D:
         double xmin
         double xmax
         int nx
+        double dx
+        double[:] x
 
         double ymin
         double ymax
         int ny
-
-        double dx
         double dy
+        double[:] y
 
     cdef void c_find_cell(Grid2D self, Cell2D cell, CPoint2D* P)
 
