@@ -23,6 +23,75 @@ DEF IX_MAX = 1
 DEF IY_MIN = 2
 DEF IY_MAX = 3
 
+DEF OUT_IDX = -1
+
+
+# Grid is larger than bounding box with 2*edge_width, which ensure that points
+# near boundary are found in cells (0, nx-1, ny-1), and not (-1, nx, ny).
+#
+#    ggggggggggggggggggggggggggg
+#    g           ^             g
+#    g           | dist        g
+#    g           v             g   b = bounding box
+#    g      bbbbbbbbbbbbb      g   g = grid
+#    g      b           b      g
+#    g<---->b           b<---->g   dist >= 2*edge_width
+#    g dist b           b dist g
+#    g      b           b      g
+#    g      bbbbbbbbbbbbb      g
+#    g           ^             g
+#    g           | dist        g
+#    g           v             g
+#    ggggggggggggggggggggggggggg
+
+
+def choose_edge_width(edge_min):
+    return edge_min * 1.E-07
+
+
+def choose_bb_grid_distance(edge_width):
+    return edge_width * 2
+
+
+def build_grid(Triangulation2D TG, int nx, int ny, double dist=-1):
+    bb = compute_bounding_box(TG)
+
+    if dist < 0:
+        edge_min, edge_max = compute_edge_min_max(TG)
+        edge_width = choose_edge_width(edge_min)
+        dist = choose_bb_grid_distance(edge_width)
+
+    return Grid2D(bb.xmin-dist, bb.xmax+dist, nx,
+                  bb.ymin-dist, bb.ymax+dist, ny)
+
+
+def check_grid(Grid2D grid, BoundingBox bb, edge_width):
+    dist = choose_bb_grid_distance(edge_width)
+
+    msg = ('grid must be at distance 2*edge_width={} from the triangulation'
+           ' bounding box, but {{}} is at a distance: {{}}'
+           .format(dist))
+
+    dist *= 0.9  # tolerance
+
+    if bb.xmin - grid.xmin < dist:
+        msg = msg.format('xmin', bb.xmin - grid.xmin)
+
+    elif bb.ymin - grid.ymin < dist:
+        msg = msg.format('ymin', bb.ymin - grid.ymin)
+
+    elif grid.xmax - bb.xmax < dist:
+        msg = msg.format('xmax', grid.xmax - bb.xmax)
+
+    elif grid.ymax - bb.ymax < dist:
+        msg = msg.format('ymax', grid.ymax - bb.ymax)
+
+    else:
+        return
+
+    raise ValueError(msg)
+
+
 def build_triangle_to_cell(int[:,:] bounds, Triangulation2D TG, Grid2D grid,
                            double edge_width):
 
@@ -38,50 +107,36 @@ def build_triangle_to_cell(int[:,:] bounds, Triangulation2D TG, Grid2D grid,
     for T in range(TG.NT):
         TG.get(T, &ABC)
 
-        # In the schema, grid is aligned with
-        # vertical and horitonzal triangle edges.
+        #    C--------------C--------------C
+        #    |              |              |
+        #    |          C---B---D          |
+        #    |            \ | /            |
+        #    |    cell 0    A    cell 1    |
+        #    |              |              |
+        #    |              |              |
+        #    C--------------C--------------C
         #
-        # triangles: s, t, u, v
-        # cells: a, b, c, d
+        # If a point is on [AB], we don't know if it will be detected in
+        # triangle ABC or ADB, so we map each triangle to cells containing
+        # triangle points and cells at a distance edge_width of points.
         #
-        # We want for example triangle t to be associated
-        # not just with cell a, but also with cell b.
-        # This way, if a point on edge pq is detected to
-        # be in cell b, it will be searched in triangle t.
-        #
-        # The same apply for triangle u and cells c and d, etc.
-        #
-        # This is done wy adding edge_width to triangle vertices
-        # coordiante when search the cell ranges of a triangle.
-        #
-        # However, for triangle s, we don't want ix_min to be -1, or
-        # for triangle v, we don't want ix_max to be 4, etc.
-        #                       iy
-        # +----+----+----+----+
-        # | \  | \  | \  | \  |
-        # |  \ |  \ |  \ |  \ | 2
-        # +----q----+----+----+
-        # |s\ t|  hole   |u\ v|
-        # |a \ | b    c  |  \d| 1
-        # +----p----+----+----+
-        # | \  | \  | \  | \  |
-        # |  \ |  \ |  \ |  \ | 0
-        # +----+----+----+----+
-        #   0     1   2    3     ix
+        # The grid is around the triangulation at a distance 2*edge_width (see
+        # utils.build_grid), so it is guaranted that ix is not -1 or nx
+        # (same for y).
 
         # Cell blocks south-west point
         P.x = min(A.x, B.x, C.x) - edge_width
         P.y = min(A.y, B.y, C.y) - edge_width
         grid.c_find_cell(cell, &P)
-        bounds[T,IX_MIN] = max(cell.ix, 0)
-        bounds[T,IY_MIN] = max(cell.iy, 0)
+        bounds[T,IX_MIN] = cell.ix
+        bounds[T,IY_MIN] = cell.iy
 
         # Cell blocks north-east point
         P.x = max(A.x, B.x, C.x) + edge_width
         P.y = max(A.y, B.y, C.y) + edge_width
         grid.c_find_cell(cell, &P)
-        bounds[T,IX_MAX] = min(cell.ix+1, grid.nx)
-        bounds[T,IY_MAX] = min(cell.iy+1, grid.ny)
+        bounds[T,IX_MAX] = cell.ix+1
+        bounds[T,IY_MAX] = cell.iy+1
 
 
 def build_cell_to_triangle(int[:,:] bounds, int nx, int ny):
@@ -128,26 +183,25 @@ def build_cell_to_triangle(int[:,:] bounds, int nx, int ny):
 
 cdef class TriangulationLocator:
     def __init__(TriangulationLocator self, Triangulation2D TG,
-                 int nx=0, int ny=0, double edge_width=-1,
+                 Grid2D grid=None, double edge_width=-1,
                  int[:,:] bounds=None):
 
         cdef:
-            double edge_min, edge_max
+            double dist, edge_min, edge_max
 
-        if 0 in (nx, ny):
-            bb = compute_bounding_box(TG)
-
-        if 0 in (nx, ny) or edge_width < 0:
-            edge_min, edge_max = compute_edge_min_max(TG)
-
-        if nx == 0:
-            nx = max(1, int((bb.xmax - bb.xmin) / (edge_max * 10)))
-
-        if ny == 0:
-            ny = max(1, int((bb.ymax - bb.ymin) / (edge_max * 10)))
+        bb = compute_bounding_box(TG)
+        edge_min, edge_max = compute_edge_min_max(TG)
 
         if edge_width < 0:
-            edge_width = edge_min * 1.E-07
+            edge_width = choose_edge_width(edge_min)
+
+        if grid is None:
+            nx = max(1, int((bb.xmax - bb.xmin) / (edge_max * 10)))
+            ny = max(1, int((bb.ymax - bb.ymin) / (edge_max * 10)))
+            dist = choose_bb_grid_distance(edge_width)
+            grid = build_grid(TG, nx, ny, dist)
+        else:
+            check_grid(grid, bb, edge_width)
 
         self.TG = TG
         self.edge_width = edge_width
@@ -159,11 +213,10 @@ cdef class TriangulationLocator:
             assert bounds.shape == (TG.NT, 4)
             bounds = bounds
 
-        self.grid = Grid2D.from_triangulation(TG, nx, ny)
-
         build_triangle_to_cell(bounds, TG, self.grid, edge_width)
 
-        self.celltri, self.celltri_idx = build_cell_to_triangle(bounds, nx, ny)
+        self.celltri, self.celltri_idx = build_cell_to_triangle(
+                                             bounds, grid.nx, grid.ny)
 
     cpdef int[:] search_points(TriangulationLocator self,
                                double[:] xpoints, double[:] ypoints,
@@ -191,13 +244,12 @@ cdef class TriangulationLocator:
             # Check if cell is in grid.
             if not 0 <= cell.ix < self.grid.nx or \
                not 0 <= cell.iy < self.grid.ny:
-                triangles[IP] = -1
+                triangles[IP] = OUT_IDX
                 continue
 
             cell_index = compute_index(self.grid.nx, cell.ix, cell.iy)
 
             # Loop on cell triangles.
-            edge_width = 0  # don't check triangles edges for now.
             IT0 = self.celltri_idx[cell_index]
             IT1 = self.celltri_idx[cell_index+1]
             for IT in range(IT0, IT1):
@@ -215,12 +267,12 @@ cdef class TriangulationLocator:
                     T = self.celltri[IT]
                     self.TG.get(T, &ABC)
 
-                    if triangle2d_on_edges(&ABC, &P, edge_width) != -1:
+                    if triangle2d_on_edges(&ABC, &P, self.edge_width_square) != -1:
                         triangles[IP] = T
                         break
 
                 else:
-                    triangles[IP] = -1
+                    triangles[IP] = OUT_IDX
 
         return triangles
 

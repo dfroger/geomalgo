@@ -99,21 +99,6 @@ class TestGrid2D(unittest.TestCase):
         self.assertEqual(cell.iy, 0)
         self.assertEqual(cell.index, 0)
 
-    def test_from_triangulation(self):
-        """Test a grid is created from a triangulation"""
-        grid = Grid2D.from_triangulation(step.triangulation, 5, 4)
-
-        self.assertEqual(grid.xmin,  0.)
-        self.assertEqual(grid.xmax,  2.5)
-        self.assertEqual(grid.nx, 5)
-
-        self.assertEqual(grid.ymin, 10.)
-        self.assertEqual(grid.ymax, 12.)
-        self.assertEqual(grid.ny, 4)
-
-        self.assertAlmostEqual(grid.dx, 0.5)
-        self.assertAlmostEqual(grid.dy, 0.5)
-
 
 if __name__ == '__main__':
     unittest.main()

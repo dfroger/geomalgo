@@ -9,7 +9,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from ..base2d cimport Point2D
-from ..triangulation cimport Triangulation2D
 
 
 cpdef (int, int) compute_row_col(int index, int nx):
@@ -35,16 +34,6 @@ cdef class Grid2D:
         self.ymax = ymax
         self.ny = ny
         self.y, self.dy = np.linspace(ymin, ymax, ny+1, retstep=True)
-
-    @staticmethod
-    def from_triangulation(Triangulation2D TG, int nx, int ny):
-        x = np.asarray(TG.x)
-        y = np.asarray(TG.y)
-
-        xmin, xmax = x.min(), x.max()
-        ymin, ymax = y.min(), y.max()
-
-        return Grid2D(xmin, xmax, nx, ymin, ymax, ny)
 
     cdef void c_find_cell(Grid2D self, Cell2D cell, CPoint2D* P):
         cell.ix = coord_to_index(P.x, self.xmin, self.dx)

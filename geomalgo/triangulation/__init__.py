@@ -14,8 +14,17 @@ __all__ = [
     'TriangulationLocator', 'TriangulationInterpolator',
 ]
 
+
+# ==============
 # not in __all__
+# ==============
+
+
 from .util import (
     compute_bounding_box, compute_edge_min_max, compute_centers,
     compute_signed_area, compute_interpolator
+)
+
+from .locator import (
+    choose_edge_width, choose_bb_grid_distance, build_grid, check_grid
 )

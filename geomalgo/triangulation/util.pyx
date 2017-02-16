@@ -7,6 +7,8 @@ from ..base2d cimport (
     BoundingBox, CTriangle2D, CPoint2D, triangle2d_set, triangle2d_center,
     triangle2d_signed_area, triangle2d_gradx_grady_det, point2d_distance)
 
+from ..grid2d cimport Grid2D
+
 
 def compute_centers(Triangulation2D TG):
     # TODO: optinal output arrays

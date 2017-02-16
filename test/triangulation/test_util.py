@@ -50,5 +50,6 @@ class TestUtil(unittest.TestCase):
         self.assertAlmostEqual(edge_min, 1)
         self.assertAlmostEqual(edge_max, sqrt(3.25))
 
+
 if __name__ == '__main__':
     unittest.main()

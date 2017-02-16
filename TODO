@@ -1,9 +1,8 @@
+rename edge_width to half_thickness
+
 base type: double and int
 
 for simple and frequent problem
-
-triangulation/locator.pyx: search_points
-    edge_width et edge_width_square wrong use
 
 change:
     cdef class Triangulation2D:
