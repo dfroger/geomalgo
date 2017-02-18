@@ -79,3 +79,44 @@ Dev:
 - Upload Conda package to anaconda
 - Add dependency to matplotlib
 - Split edges.[pxd|pyx] into multiple files
+
+0.3.0 (2017-02-18)
+==================
+
+Major changes:
+- add TriangulationLocator class
+- add TriangulationInterpolator class:w
+- move documentation to geomalog-doc Git repository
+
+New features:
+- add optional name argument to Point2D.plot
+- add Point2D plus Vector2D addition
+- add Line2D class
+- add Point2D to Line2D distance
+- add Point2D to Segment2D distance
+- add square distance functions
+- add grid2d class
+- test point is in triangle with edge width
+- triangulation signed area computation
+- triangulation centers computation
+- add triangulation .to_numpy() and to_matplotlib()
+- add triangulation min max
+- add BoundingBox class
+- can create Segment2D from tuple
+
+Changes:
+- remove CSegment2D.AB member
+- vector cross product is now u^v instead of u*v
+- remove triangle2d_counterclockwise function
+- change args order of some functions
+- more consistant segment_intersect return
+- Segment2DCollection stores 4 arrays
+- build_edges returns edge_map
+
+Dev:
+- update Craftr 2 build files
+- add Makefiles
+- turn off warning compiler flag
+
+Fixes:
+- add missing function in .pxd
