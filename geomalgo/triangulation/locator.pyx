@@ -203,6 +203,8 @@ cdef class TriangulationLocator:
         else:
             check_grid(grid, bb, edge_width)
 
+        self.grid = grid
+
         self.TG = TG
         self.edge_width = edge_width
         self.edge_width_square = edge_width**2
