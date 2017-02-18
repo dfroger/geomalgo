@@ -1,4 +1,4 @@
-__version__ = '0.3.0'
+__version__ = '0.3.1dev'
 
 from .base1d import *
 from .base2d import *
