@@ -36,7 +36,10 @@ cdef void compute_symetric_point3d(CPoint3D* S, CTriangle3D* T, CPoint3D* P)
 cdef class Triangle3D:
 
     cdef public:
+        int index
+
+    cdef:
         Point3D A
         Point3D B
         Point3D C
-        int index
+        CTriangle3D ctri3d

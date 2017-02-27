@@ -124,5 +124,8 @@ Fixes:
 0.4.0 (not yet released)
 ========================
 
+New features:
+- add Triangle3D.ctri3d
+
 Changes:
 - rename compute_area3d to triangle3d_area

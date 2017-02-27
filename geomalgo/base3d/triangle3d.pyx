@@ -84,21 +84,44 @@ cdef void compute_symetric_point3d(CPoint3D* S, CTriangle3D* T, CPoint3D* P):
 
 cdef class Triangle3D:
 
-    property area:
-        """Compute and return area of the vector"""
+    property A:
         def __get__(self):
-            cdef:
-                CTriangle3D T
-            T.A = self.A.cpoint3d
-            T.B = self.B.cpoint3d
-            T.C = self.C.cpoint3d
-            return triangle3d_area(&T)
+            return self.A
+        def __set__(self, Point3D A):
+            self.A = A
+            # C points to Python.
+            self.ctri3d.A = A.cpoint3d
+
+    property B:
+        def __get__(self):
+            return self.B
+        def __set__(self, Point3D B):
+            self.B = B
+            # C points to Python.
+            self.ctri3d.B = B.cpoint3d
+
+    property C:
+        def __get__(self):
+            return self.C
+        def __set__(self, Point3D C):
+            self.C = C
+            # C points to Python.
+            self.ctri3d.C = C.cpoint3d
+
+    property area:
+        def __get__(self):
+            return triangle3d_area(&self.ctri3d)
 
     def __init__(self, Point3D A, Point3D B, Point3D C, index=0):
         self.A = A
         self.B = B
         self.C = C
         self.index = index
+
+        # C points to Python.
+        self.ctri3d.A = A.cpoint3d
+        self.ctri3d.B = B.cpoint3d
+        self.ctri3d.C = C.cpoint3d
 
     def symetric_point(Triangle3D self, Point3D P):
         cdef:
