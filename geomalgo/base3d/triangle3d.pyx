@@ -112,6 +112,13 @@ cdef class Triangle3D:
         def __get__(self):
             return triangle3d_area(&self.ctri3d)
 
+    property center:
+        def __get__(self):
+            cdef:
+                Point3D C = Point3D.__new__(Point3D)
+            triangle3d_center(&self.ctri3d, C.cpoint3d)
+            return C
+
     def __init__(self, Point3D A, Point3D B, Point3D C, index=0):
         self.A = A
         self.B = B

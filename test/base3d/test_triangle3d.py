@@ -42,5 +42,21 @@ class TestTriangle3D(unittest.TestCase):
         self.assertEqual(S.y, 2)
         self.assertEqual(S.z, 3)
 
+class TestCenter(unittest.TestCase):
+
+    def test_normal(self):
+
+        A = Point3D(3,0,0)
+        B = Point3D(0,6,0)
+        C = Point3D(0,0,9)
+
+        triangle = Triangle3D(A, B, C)
+
+        E = triangle.center
+
+        self.assertAlmostEqual(E.x, 1.)
+        self.assertAlmostEqual(E.y, 2.)
+        self.assertAlmostEqual(E.z, 3.)
+
 if __name__ == '__main__':
     unittest.main()
