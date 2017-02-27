@@ -23,7 +23,7 @@ cdef void del_triangle3d(CTriangle3D* T)
 # ============================================================================
 
 
-cdef double compute_area3d(CTriangle3D* T)
+cdef double triangle3d_area(CTriangle3D* T)
 
 cdef void compute_symetric_point3d(CPoint3D* S, CTriangle3D* T, CPoint3D* P)
 

@@ -120,3 +120,9 @@ Dev:
 
 Fixes:
 - add missing function in .pxd
+
+0.4.0 (not yet released)
+========================
+
+Changes:
+- rename compute_area3d to triangle3d_area

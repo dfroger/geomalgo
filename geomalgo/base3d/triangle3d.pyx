@@ -23,7 +23,7 @@ cdef void del_triangle3d(CTriangle3D* T):
 # ============================================================================
 
 
-cdef double compute_area3d(CTriangle3D* T):
+cdef double triangle3d_area(CTriangle3D* T):
     """
     Compute the (positive) area of a 3D triangle.
 
@@ -92,7 +92,7 @@ cdef class Triangle3D:
             T.A = self.A.cpoint3d
             T.B = self.B.cpoint3d
             T.C = self.C.cpoint3d
-            return compute_area3d(&T)
+            return triangle3d_area(&T)
 
     def __init__(self, Point3D A, Point3D B, Point3D C, index=0):
         self.A = A
