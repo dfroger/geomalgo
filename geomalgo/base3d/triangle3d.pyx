@@ -4,12 +4,24 @@ from .point3d cimport subtract_points3d, point3d_plus_vector3d
 from .vector3d cimport (CVector3D, dot_product3d, cross_product3d,
                         compute_norm3d)
 
+
+# ============================================================================
+# Structures
+# ============================================================================
+
+
 cdef CTriangle3D* new_triangle3d():
     return <CTriangle3D*> malloc(sizeof(CTriangle3D))
 
 cdef void del_triangle3d(CTriangle3D* T):
     if T is not NULL:
         free(T)
+
+
+# ============================================================================
+# Computational functions
+# ============================================================================
+
 
 cdef double compute_area3d(CTriangle3D* T):
     """
@@ -27,6 +39,7 @@ cdef double compute_area3d(CTriangle3D* T):
 
     return 0.5 * compute_norm3d(&z)
 
+
 cdef void compute_triangle_normal(CVector3D* normal, CTriangle3D* T):
     """
     Extracted from
@@ -42,6 +55,7 @@ cdef void compute_triangle_normal(CVector3D* normal, CTriangle3D* T):
 
     # Get triangle plane normal.
     cross_product3d(normal, &u, &v)
+
 
 cdef void compute_symetric_point3d(CPoint3D* S, CTriangle3D* T, CPoint3D* P):
     """
@@ -61,6 +75,12 @@ cdef void compute_symetric_point3d(CPoint3D* S, CTriangle3D* T, CPoint3D* P):
     distance = dot_product3d(&u,&n)
 
     point3d_plus_vector3d(S, P, -2. * distance / norm2, &n)
+
+
+# ============================================================================
+# Python API
+# ============================================================================
+
 
 cdef class Triangle3D:
 

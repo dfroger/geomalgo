@@ -133,7 +133,6 @@ cdef class Triangle2D:
             # C points to Python.
             self.ctri2d.A = A.cpoint2d
 
-
     property B:
         def __get__(self):
             return self.B
@@ -141,7 +140,6 @@ cdef class Triangle2D:
             self.B = B
             # C points to Python.
             self.ctri2d.B = B.cpoint2d
-
 
     property C:
         def __get__(self):
@@ -151,11 +149,9 @@ cdef class Triangle2D:
             # C points to Python.
             self.ctri2d.C = C.cpoint2d
 
-
     property area:
         def __get__(self):
             return fabs(self.signed_area)
-
 
     property center:
         def __get__(self):
@@ -164,11 +160,9 @@ cdef class Triangle2D:
             triangle2d_center(&self.ctri2d, C.cpoint2d)
             return C
 
-
     property counterclockwise:
         def __get__(self):
             return self.signed_area > 0.
-
 
     def __init__(self, Point2D A, Point2D B, Point2D C, index=0,
                  force_counterclockwise=False):
@@ -195,7 +189,6 @@ cdef class Triangle2D:
 
         self.recompute()
 
-
     def recompute(Triangle2D self):
         """Must be called manually if any point coordinate changed"""
         self.signed_area = triangle2d_signed_area(&self.ctri2d)
@@ -203,12 +196,10 @@ cdef class Triangle2D:
         triangle2d_gradx_grady_det(&self.ctri2d, self.signed_area,
                                    self.gradx, self.grady, self.det)
 
-
     def includes_point(Triangle2D self, Point2D point,
                        double edge_width=0.):
         return triangle2d_includes_point2d(&self.ctri2d, point.cpoint2d,
                                            edge_width**2)
-
 
     def interpolate(Triangle2D self, double[:] data, Point2D P):
         cdef:
@@ -219,7 +210,6 @@ cdef class Triangle2D:
         f2 = self.det[2] + P.x*self.gradx[2] + P.y*self.grady[2]
 
         return f0*data[0] + f1*data[1] + f2*data[2]
-
 
     cdef _set_precomputed(Triangle2D self, Point2D A, Point2D B, Point2D C,
                           int index, double signed_area, double gradx[3],

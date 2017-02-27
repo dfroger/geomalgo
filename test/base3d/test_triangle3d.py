@@ -2,7 +2,7 @@ import unittest
 
 from geomalgo import Point3D, Triangle3D
 
-class TestTriangle(unittest.TestCase):
+class TestTriangle3D(unittest.TestCase):
 
     def test_create_triangle(self):
         A = Point3D(0,0,0)
@@ -12,9 +12,11 @@ class TestTriangle(unittest.TestCase):
         triangle = Triangle3D(A,B,C)
         self.assertEqual(triangle.B.y, 1)
 
+        # Change coordiante.
         triangle.B.y = 3
         self.assertEqual(triangle.B.y, 3)
 
+        # Change point.
         triangle.B = Point3D(-1, -2, -3)
         self.assertEqual(triangle.B.y, -2)
 
