@@ -1,3 +1,9 @@
+import matplotlib.pyplot as plt
+from matplotlib import colors
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+import numpy as np
+
+
 from libc.stdlib cimport malloc, free
 
 from .point3d cimport subtract_points3d, point3d_plus_vector3d
@@ -139,3 +145,12 @@ cdef class Triangle3D:
         T.C = self.C.cpoint3d
         compute_symetric_point3d(S.cpoint3d, &T, P.cpoint3d)
         return S
+
+    def plot(self, facecolor='b', alpha=0.2, edgecolor='k'):
+        vtx = np.array([(P.x, P.y, P.z) for P in (self.A, self.B, self.C)])
+
+        tri = Poly3DCollection([vtx], facecolors=colors.to_rgba(facecolor, alpha))
+        tri.set_edgecolor(edgecolor)
+
+        ax = plt.gca(projection='3d')
+        ax.add_collection3d(tri)

@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 from libc.stdlib cimport malloc, free
 
 
@@ -25,3 +27,14 @@ cdef class Segment3D:
     def __init__(self, Point3D A, Point3D B):
         self.A = A
         self.B = B
+
+    def plot(self):
+        ax = plt.gca(projection='3d')
+
+        points = (self.A, self.B)
+
+        x = [P.x for P in points]
+        y = [P.y for P in points]
+        z = [P.z for P in points]
+
+        ax.plot(x, y ,z)

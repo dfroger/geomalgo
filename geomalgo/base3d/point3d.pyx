@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+
 from libc.stdlib cimport malloc, free
 from libc.math cimport sqrt, atan2
 
@@ -93,3 +95,7 @@ cdef class Point3D:
         r = sqrt(self.x**2 + self.y**2)
         theta = atan2(self.y, self.x);
         return CylindricalPoint(r, theta, self.z)
+
+    def plot(self, s=100, color='b'):
+        ax = plt.gca(projection='3d')
+        ax.scatter(self.x, self.y, self.z, s=s, color=color)
