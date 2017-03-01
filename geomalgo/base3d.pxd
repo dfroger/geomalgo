@@ -12,7 +12,7 @@ from .base3d.segment3d cimport (
 )
 
 from .base3d.triangle3d cimport (
-    Triangle3D, CTriangle3D, new_triangle3d, del_triangle3d, compute_area3d,
+    Triangle3D, CTriangle3D, new_triangle3d, del_triangle3d, triangle3d_area,
     compute_symetric_point3d, Triangle3D
 )
 
