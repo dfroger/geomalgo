@@ -70,11 +70,12 @@ cdef class Point3D:
     def __dealloc__(self):
         del_point3d(self.cpoint3d)
 
-    def __init__(self, x, y, z, index=0):
+    def __init__(self, x, y, z, index=0, name=None):
         self.cpoint3d.x = x
         self.cpoint3d.y = y
         self.cpoint3d.z = z
         self.index = index
+        self.name = name
 
     def __str__(self):
         return 'Point3D({self.x}, {self.y}, {self.z})'.format(self=self)
@@ -96,6 +97,14 @@ cdef class Point3D:
         theta = atan2(self.y, self.x);
         return CylindricalPoint(r, theta, self.z)
 
-    def plot(self, s=100, color='b'):
+    def plot(self, name=None, s=100, color='b', offset=(0, 0, 0.05)):
         ax = plt.gca(projection='3d')
         ax.scatter(self.x, self.y, self.z, s=s, color=color)
+        if name is None:
+            name = self.name
+        if name:
+            ax.text(self.x + offset[0],
+                    self.y + offset[1],
+                    self.z + offset[2],
+                    name,
+                    color=color)

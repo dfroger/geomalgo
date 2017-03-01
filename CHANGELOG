@@ -5,6 +5,7 @@ New features:
 - add Triangle3D.ctri3d
 - add Triangle3D.center
 - add Point3D.plot(), Segment3D.plot(), Triangle3D.plot()
+- add Point3D.name
 
 Changes:
 - rename compute_area3d to triangle3d_area

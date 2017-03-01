@@ -156,7 +156,7 @@ cdef class Point2D:
         plt.plot(self.x, self.y, marker=marker, markersize=markersize, color=color)
         if name is None:
             name = self.name
-        if name is not None:
+        if name:
             plt.text(self.x+offset[0], self.y+offset[1], name,
                      color=color,
                      horizontalalignment='center')

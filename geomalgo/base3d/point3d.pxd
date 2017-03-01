@@ -45,5 +45,6 @@ cdef inline double c_point3d_distance(CPoint3D* A, CPoint3D* B):
 cdef class Point3D:
     cdef public:
         int index
+        str name
     cdef:
         CPoint3D* cpoint3d
