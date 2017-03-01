@@ -1,84 +1,14 @@
-0.0.3 (2016-06-11)
-==================
-
-- Add Polyong2D with point inclusion test
-- Add Triangle2D with point inclusion test
-
-0.0.4 (2016-06-18)
-==================
-
-- Add CTriangulation2D
-- Add Optional index to Point2D, Point3D, Triangle2D and Triangle3D
-
-Dev:
-
-- Replace Waf with Craftr
-- Reorganize directories for 1D, 2D and 3D objects
-- Add test in conda recipe
-- Add Travis script
-
-0.0.5 (2016-07-15)
-==================
-
-- Add Vector2D
-- Add PolarPoint
-- Add Plane
-- Add CylindricalPoint
-- Add Segment2D
-- Add segment2d intersection
-
-0.0.6 (2016-08-15)
-==================
-
-- Compute segment length
-- Compute Segment2D middle point
-- Add Triangle2D.center
-- Various internal code reorganization
-- Add Triangle2D.interpolate
-- Triangulation: add boundary and intern edges
-- Triangulation: add boundary and intern edges map
-- Triangulation: add example data
-- Add various geomalgo cimport Add Triangle2D._set_precomputed
-
-0.1.0 (2016-09-03)
-==================
-
-- Add boundary edge reference
-- Add boundary edge length
-- Add boundary edge normal
-- Add vector2D normal
-- Start documentation skeleton
-
-0.2.0 (2016-10-09)
-==================
+0.4.0 (not yet released)
+========================
 
 New features:
-- Install .pxd files
-- Add Segment2DCollection
-- Add Triangulation2D.get
-- Add EdgeMap.neighbours()
-- Add BoundaryEdges.reorder method
-- Add InternInterface.reorder function
+- add Triangle3D.ctri3d
+- add Triangle3D.center
+- add Point3D.plot(), Segment3D.plot(), Triangle3D.plot()
 
 Changes:
-- Rename boundary edge references to labels
-- search_edge_idx instead of search_edge
+- rename compute_area3d to triangle3d_area
 
-Fixes:
-- Fix clockwise triangle area
-- Fix triangulation cimport
-
-Documentation:
-- Examples for:
-    - Segment2D
-    - Triangle2D
-- API:
-    - Point2D
-
-Dev:
-- Upload Conda package to anaconda
-- Add dependency to matplotlib
-- Split edges.[pxd|pyx] into multiple files
 
 0.3.0 (2017-02-18)
 ==================
@@ -121,13 +51,90 @@ Dev:
 Fixes:
 - add missing function in .pxd
 
-0.4.0 (not yet released)
-========================
+
+0.2.0 (2016-10-09)
+==================
 
 New features:
-- add Triangle3D.ctri3d
-- add Triangle3D.center
-- add Point3D.plot(), Segment3D.plot(), Triangle3D.plot()
+- Install .pxd files
+- Add Segment2DCollection
+- Add Triangulation2D.get
+- Add EdgeMap.neighbours()
+- Add BoundaryEdges.reorder method
+- Add InternInterface.reorder function
 
 Changes:
-- rename compute_area3d to triangle3d_area
+- Rename boundary edge references to labels
+- search_edge_idx instead of search_edge
+
+Fixes:
+- Fix clockwise triangle area
+- Fix triangulation cimport
+
+Documentation:
+- Examples for:
+    - Segment2D
+    - Triangle2D
+- API:
+    - Point2D
+
+Dev:
+- Upload Conda package to anaconda
+- Add dependency to matplotlib
+- Split edges.[pxd|pyx] into multiple files
+
+
+0.1.0 (2016-09-03)
+==================
+
+- Add boundary edge reference
+- Add boundary edge length
+- Add boundary edge normal
+- Add vector2D normal
+- Start documentation skeleton
+
+
+0.0.6 (2016-08-15)
+==================
+
+- Compute segment length
+- Compute Segment2D middle point
+- Add Triangle2D.center
+- Various internal code reorganization
+- Add Triangle2D.interpolate
+- Triangulation: add boundary and intern edges
+- Triangulation: add boundary and intern edges map
+- Triangulation: add example data
+- Add various geomalgo cimport Add Triangle2D._set_precomputed
+
+
+0.0.5 (2016-07-15)
+==================
+
+- Add Vector2D
+- Add PolarPoint
+- Add Plane
+- Add CylindricalPoint
+- Add Segment2D
+- Add segment2d intersection
+
+
+0.0.4 (2016-06-18)
+==================
+
+- Add CTriangulation2D
+- Add Optional index to Point2D, Point3D, Triangle2D and Triangle3D
+
+Dev:
+
+- Replace Waf with Craftr
+- Reorganize directories for 1D, 2D and 3D objects
+- Add test in conda recipe
+- Add Travis script
+
+
+0.0.3 (2016-06-11)
+==================
+
+- Add Polyong2D with point inclusion test
+- Add Triangle2D with point inclusion test
