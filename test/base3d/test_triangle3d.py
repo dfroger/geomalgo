@@ -58,5 +58,29 @@ class TestCenter(unittest.TestCase):
         self.assertAlmostEqual(E.y, 2.)
         self.assertAlmostEqual(E.z, 3.)
 
+
+class TestBarycentricCoords(unittest.TestCase):
+
+    def setUp(self):
+        self.A = Point3D(1, 1, 2)
+        self.B = Point3D(6, 0, 1)
+        self.C = Point3D(7, 3, 3)
+
+        self.T = Triangle3D(self.A, self.B, self.C)
+
+    def check_coords(self, P, expected_a, expected_b, expected_c):
+        a, b, c = self.T.barycentric_coords(P)
+        self.assertAlmostEqual(a, expected_a)
+        self.assertAlmostEqual(b, expected_b)
+        self.assertAlmostEqual(c, expected_c)
+
+    def test_normal(self):
+        self.check_coords(self.A, 1, 0, 0)
+        self.check_coords(self.B, 0, 1, 0)
+        self.check_coords(self.C, 0, 0, 1)
+
+        self.check_coords(self.T.center, 1/3, 1/3, 1/3)
+
+
 if __name__ == '__main__':
     unittest.main()

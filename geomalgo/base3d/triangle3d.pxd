@@ -35,6 +35,10 @@ cdef inline void triangle3d_center(CTriangle3D* T, CPoint3D* C):
 cdef void compute_symetric_point3d(CPoint3D* S, CTriangle3D* T, CPoint3D* P)
 
 
+cdef inline (double, double, double) triangle3d_barycentric_coords(double s, double t):
+    return 1-s-t, s, t
+
+
 # ============================================================================
 # Python API
 # ============================================================================

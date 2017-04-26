@@ -83,6 +83,32 @@ cdef void compute_symetric_point3d(CPoint3D* S, CTriangle3D* T, CPoint3D* P):
     point3d_plus_vector3d(S, P, -2. * distance / norm2, &n)
 
 
+cdef (double, double) triangle3d_parametric_equation(CTriangle3D* T, CPoint3D* P):
+    cdef:
+        double s, t
+        CVector3D u, v, w
+        double uu, vv, uv, wv, wu
+        double denum
+
+    subtract_points3d(&u, T.B, T.A)
+    subtract_points3d(&v, T.C, T.A)
+    subtract_points3d(&w,   P, T.A)
+
+    uu = dot_product3d(&u, &u)
+    vv = dot_product3d(&v, &v)
+    uv = dot_product3d(&u, &v)
+    wv = dot_product3d(&w, &v)
+    wu = dot_product3d(&w, &u)
+
+    denum = uv**2 - uu*vv
+
+    s = (uv*wv - vv*wu) / denum
+    t = (uv*wu - uu*wv) / denum
+
+    return s, t
+
+
+
 # ============================================================================
 # Python API
 # ============================================================================
@@ -145,6 +171,13 @@ cdef class Triangle3D:
         T.C = self.C.cpoint3d
         compute_symetric_point3d(S.cpoint3d, &T, P.cpoint3d)
         return S
+
+    def barycentric_coords(Triangle3D self, Point3D P):
+        cdef:
+            double s, t, a, b, c
+        s, t = triangle3d_parametric_equation(&self.ctri3d, P.cpoint3d)
+        a, b, c = triangle3d_barycentric_coords(s, t)
+        return a, b, c
 
     def plot(self, facecolor='b', alpha=0.2, edgecolor='k'):
         vtx = np.array([(P.x, P.y, P.z) for P in (self.A, self.B, self.C)])
