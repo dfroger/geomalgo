@@ -84,6 +84,7 @@ cdef void compute_symetric_point3d(CPoint3D* S, CTriangle3D* T, CPoint3D* P):
 
 
 cdef (double, double) triangle3d_parametric_equation(CTriangle3D* T, CPoint3D* P):
+    # TODO: document barycentric coods: 1-s-t, s, t
     cdef:
         double s, t
         CVector3D u, v, w
@@ -176,8 +177,7 @@ cdef class Triangle3D:
         cdef:
             double s, t, a, b, c
         s, t = triangle3d_parametric_equation(&self.ctri3d, P.cpoint3d)
-        a, b, c = triangle3d_barycentric_coords(s, t)
-        return a, b, c
+        return 1-s-t, s, t
 
     def plot(self, facecolor='b', alpha=0.2, edgecolor='k'):
         vtx = np.array([(P.x, P.y, P.z) for P in (self.A, self.B, self.C)])
