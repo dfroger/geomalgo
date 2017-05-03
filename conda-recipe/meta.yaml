@@ -1,23 +1,25 @@
+{% set name = "geomalgo" %}
+{% set version = "0.3.1dev" %}
+
 package:
-  name: geomalgo
-  version: 0.3.1dev
+  name: {{ name|lower }}
+  version: {{ version }}
 
 source:
     path: ..
 
 build:
   number: 0
-  binary_relocation: true
+  script: python setup.py install --single-version-externally-managed --record record.txt
 
 requirements:
   build:
     - python
+    - setuptools
     - cython
-    - numpy
-    - matplotlib
+    - toolchain
   run:
     - python
-    - cython
     - numpy
     - matplotlib
 
@@ -26,11 +28,22 @@ test:
         test
     requires:
         - nose
-        - coverage
     commands:
         - nosetests
 
 about:
-  home: https://github.com/dfroger/geomalgo
-  license: BSD
-  summary: Cython implementation of http://geomalgorithms.com
+  home: https://github.com/geomalgo/geomalgo
+  license: GPL-3.0
+  license_family: GPL
+  license_file: LICENSE
+  summary: 'Basic geometric 2D and 3D algorithms'
+  description: |
+      geomalgo aims at prodiving basic geometric 2D and 3D algorithms, for
+      example computing the area of 2D triangle, or finding intersection
+      points of 3D triangle and a 3D segment.
+  doc_url: http://geomalgo.readthedocs.io
+  dev_url: https://github.com/geomalgo/geomalgo
+
+extra:
+  recipe-maintainers:
+    - dfroger
