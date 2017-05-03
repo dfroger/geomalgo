@@ -1,3 +1,6 @@
+TriangulationInterpolator.__init__ do not need TG argument, it is already
+provided by locator
+
 rename edge_width to half_thickness
 
 base type: double and int
