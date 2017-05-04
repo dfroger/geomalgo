@@ -84,7 +84,8 @@ cdef void compute_symetric_point3d(CPoint3D* S, CTriangle3D* T, CPoint3D* P):
 
 
 cdef (double, double) triangle3d_parametric_equation(CTriangle3D* T, CPoint3D* P):
-    # TODO: document barycentric coods: 1-s-t, s, t
+    # XXX should be optimized like triangle2d_gradx_grady_det
+    # TODO: document barycentric coords: 1-s-t, s, t
     cdef:
         double s, t
         CVector3D u, v, w

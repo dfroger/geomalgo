@@ -7,11 +7,25 @@ from ..base2d cimport CTriangle2D, Triangle2D
 cdef class Triangulation2D:
 
     def __init__(Triangulation2D self, double[:] x, double[:] y, int[:,:] trivtx):
+        nx = x.shape[0]
+        ny = y.shape[0]
+
+        if nx != ny:
+            raise ValueError(
+                'Vector x and y must have the same length, but got '
+                '{} and {}'
+                .format(nx, ny)
+            )
+
+        if trivtx.shape[1] != 3:
+            raise ValueError(
+                'trivtx must be an array of shape (NT, 3), '
+                'but got: ({}, {})'
+                .format(trivtx.shape[0], trivtx.shape[1])
+            )
+
         self.NV = x.shape[0]
         self.NT = trivtx.shape[0]
-
-        assert y.shape[0] == self.NV
-        assert trivtx.shape[1] == 3
 
         self.x = x
         self.y = y
