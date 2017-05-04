@@ -28,7 +28,7 @@ cdef class Segment3D:
         self.A = A
         self.B = B
 
-    def plot(self):
+    def plot(self, *args, **kwargs):
         ax = plt.gca(projection='3d')
 
         points = (self.A, self.B)
@@ -37,4 +37,4 @@ cdef class Segment3D:
         y = [P.y for P in points]
         z = [P.z for P in points]
 
-        ax.plot(x, y ,z)
+        ax.plot(x, y ,z, *args, **kwargs)
